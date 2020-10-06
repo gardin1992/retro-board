@@ -6,6 +6,7 @@ import {
   Tooltip,
   Typography,
   colors,
+  IconButton,
 } from '@material-ui/core';
 import { SessionMetadata } from 'retro-board-common';
 import { AvatarGroup } from '@material-ui/lab';
@@ -14,13 +15,19 @@ import ItemStat from './ItemStat';
 import styled from 'styled-components';
 import useOnHover from '../../hooks/useOnHover';
 import useTranslations, { useLanguage } from '../../translations';
+import { DeleteForever } from '@material-ui/icons';
 
 interface PreviousGameItemProps {
   session: SessionMetadata;
   onClick: (session: SessionMetadata) => void;
+  onDelete: (session: SessionMetadata) => void;
 }
 
-const PreviousGameItem = ({ session, onClick }: PreviousGameItemProps) => {
+const PreviousGameItem = ({
+  session,
+  onClick,
+  onDelete,
+}: PreviousGameItemProps) => {
   const {
     PreviousGame: translations,
     SessionName: { defaultSessionName },
@@ -30,6 +37,9 @@ const PreviousGameItem = ({ session, onClick }: PreviousGameItemProps) => {
   const handleClick = useCallback(() => {
     onClick(session);
   }, [onClick, session]);
+  const handleDelete = useCallback(() => {
+    onDelete(session);
+  }, [onDelete, session]);
   return (
     <Card onClick={handleClick} raised={hover} ref={hoverRef}>
       <CardContent>
@@ -38,6 +48,11 @@ const PreviousGameItem = ({ session, onClick }: PreviousGameItemProps) => {
             Date.parse((session.created as unknown) as string),
             { locale: language.dateLocale, addSuffix: true }
           )}
+          {session.canBeDeleted ? (
+            <IconButton onClick={handleDelete}>
+              <DeleteForever />
+            </IconButton>
+          ) : null}
         </Typography>
         <Typography variant="h5" component="h2">
           {session.name || defaultSessionName}
