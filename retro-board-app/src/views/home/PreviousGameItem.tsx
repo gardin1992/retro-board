@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import {
   Card as CardBase,
@@ -7,6 +7,12 @@ import {
   Typography,
   colors,
   IconButton,
+  Dialog,
+  DialogTitle,
+  DialogActions,
+  Button,
+  DialogContentText,
+  DialogContent,
 } from '@material-ui/core';
 import { SessionMetadata } from 'retro-board-common';
 import { AvatarGroup } from '@material-ui/lab';
@@ -38,63 +44,116 @@ const PreviousGameItem = ({
     onClick(session);
   }, [onClick, session]);
   const handleDelete = useCallback(() => {
+    setDeleteDialogOpen(false);
     onDelete(session);
   }, [onDelete, session]);
+  const handleOpenDialog = useCallback(
+    (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+      event.stopPropagation();
+      event.preventDefault();
+      setDeleteDialogOpen(true);
+    },
+    []
+  );
+  const handleCloseDialog = useCallback(() => {
+    setDeleteDialogOpen(false);
+  }, []);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   return (
-    <Card onClick={handleClick} raised={hover} ref={hoverRef}>
-      <CardContent>
-        <Typography color="textSecondary" gutterBottom>
-          {formatDistanceToNow(
-            Date.parse((session.created as unknown) as string),
-            { locale: language.dateLocale, addSuffix: true }
-          )}
-          {session.canBeDeleted ? (
-            <IconButton onClick={handleDelete}>
-              <DeleteForever />
-            </IconButton>
-          ) : null}
-        </Typography>
-        <Typography variant="h5" component="h2">
-          {session.name || defaultSessionName}
-        </Typography>
-        <Typography color="textSecondary" style={{ marginBottom: 20 }}>
-          {translations.createdBy} <em>{session.createdBy.name}</em>
-        </Typography>
-        <Stats>
-          <ItemStat
-            value={session.numberOfPosts}
-            label={translations.posts!}
-            color={colors.green[500]}
-          />
-          <ItemStat
-            value={session.participants.length}
-            label={translations.participants!}
-            color={colors.indigo[500]}
-          />
-          <ItemStat
-            value={
-              session.numberOfNegativeVotes + session.numberOfPositiveVotes
-            }
-            label={translations.votes!}
-            color={colors.red[500]}
-          />
-          <ItemStat
-            value={session.numberOfActions}
-            label={translations.actions!}
-            color={colors.amber[500]}
-          />
-        </Stats>
-        <AvatarGroup title={translations.participants!} spacing="small">
-          {session.participants.map((user) => {
-            return (
-              <Tooltip title={user.name} key={user.id}>
-                <CustomAvatar user={user} />
-              </Tooltip>
-            );
-          })}
-        </AvatarGroup>
-      </CardContent>
-    </Card>
+    <>
+      <Card onClick={handleClick} raised={hover} ref={hoverRef}>
+        <CardContent>
+          <Typography color="textSecondary" gutterBottom>
+            <Top>
+              <LastUpdated>
+                {formatDistanceToNow(
+                  Date.parse((session.created as unknown) as string),
+                  { locale: language.dateLocale, addSuffix: true }
+                )}
+              </LastUpdated>
+              <Delete>
+                {session.canBeDeleted ? (
+                  <IconButton onClick={handleOpenDialog}>
+                    <DeleteForever />
+                  </IconButton>
+                ) : null}
+              </Delete>
+            </Top>
+          </Typography>
+          <Typography variant="h5" component="h2">
+            {session.name || defaultSessionName}
+          </Typography>
+          <Typography color="textSecondary" style={{ marginBottom: 20 }}>
+            {translations.createdBy} <em>{session.createdBy.name}</em>
+          </Typography>
+          <Stats>
+            <ItemStat
+              value={session.numberOfPosts}
+              label={translations.posts!}
+              color={colors.green[500]}
+            />
+            <ItemStat
+              value={session.participants.length}
+              label={translations.participants!}
+              color={colors.indigo[500]}
+            />
+            <ItemStat
+              value={
+                session.numberOfNegativeVotes + session.numberOfPositiveVotes
+              }
+              label={translations.votes!}
+              color={colors.red[500]}
+            />
+            <ItemStat
+              value={session.numberOfActions}
+              label={translations.actions!}
+              color={colors.amber[500]}
+            />
+          </Stats>
+          <AvatarGroup title={translations.participants!} spacing="small">
+            {session.participants.map((user) => {
+              return (
+                <Tooltip title={user.name} key={user.id}>
+                  <CustomAvatar user={user} />
+                </Tooltip>
+              );
+            })}
+          </AvatarGroup>
+        </CardContent>
+      </Card>
+      <Dialog
+        onClose={handleCloseDialog}
+        aria-labelledby="delete-session-dialog"
+        open={deleteDialogOpen}
+      >
+        <DialogTitle id="delete-session-dialog">
+          Deleting "{session.name || defaultSessionName}"
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Deleting a session is <b>irreversible</b>. It will delete all posts,
+            votes, groups, and the session itself. The data <b>cannot</b> be
+            restored.
+          </DialogContentText>
+          <DialogContentText>
+            Are you sure you want to delete this session and all its content?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog}>
+            No, sorry, I made a mistake
+          </Button>
+          <Button
+            variant="contained"
+            color="inherit"
+            style={{ backgroundColor: colors.red[500], color: 'white' }}
+            onClick={handleDelete}
+          >
+            Yes, I'm sure
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 };
 
@@ -114,6 +173,25 @@ const Stats = styled.div`
   margin-bottom: 10px;
   background-color: ${colors.grey[100]};
   margin: 0 -20px 20px;
+`;
+
+const Top = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 20px;
+`;
+
+const LastUpdated = styled.div`
+  flex: 1;
+`;
+
+const Delete = styled.div`
+  svg {
+    color: ${colors.red[500]};
+  }
+  position: relative;
+  left: 12px;
 `;
 
 export default PreviousGameItem;
