@@ -37,6 +37,7 @@ const PreviousGameItem = ({
   const {
     PreviousGame: translations,
     SessionName: { defaultSessionName },
+    DeleteSession,
   } = useTranslations();
   const language = useLanguage();
   const [hover, hoverRef] = useOnHover();
@@ -127,29 +128,21 @@ const PreviousGameItem = ({
         open={deleteDialogOpen}
       >
         <DialogTitle id="delete-session-dialog">
-          Deleting "{session.name || defaultSessionName}"
+          {DeleteSession.header!(session.name || defaultSessionName!)}
         </DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            Deleting a session is <b>irreversible</b>. It will delete all posts,
-            votes, groups, and the session itself. The data <b>cannot</b> be
-            restored.
-          </DialogContentText>
-          <DialogContentText>
-            Are you sure you want to delete this session and all its content?
-          </DialogContentText>
+          <DialogContentText>{DeleteSession.firstLine}</DialogContentText>
+          <DialogContentText>{DeleteSession.secondLine}</DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDialog}>
-            No, sorry, I made a mistake
-          </Button>
+          <Button onClick={handleCloseDialog}>{DeleteSession.cancel}</Button>
           <Button
             variant="contained"
             color="inherit"
             style={{ backgroundColor: colors.red[500], color: 'white' }}
             onClick={handleDelete}
           >
-            Yes, I'm sure
+            {DeleteSession.yesImSure}
           </Button>
         </DialogActions>
       </Dialog>
