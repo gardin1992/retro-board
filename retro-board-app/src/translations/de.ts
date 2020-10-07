@@ -187,4 +187,11 @@ export default {
     yesImSure: undefined,
     cancel: undefined,
   },
+  RevealCards: {
+    buttonLabel: undefined,
+    dialogTitle: undefined,
+    dialogContent: undefined,
+    confirmButton: undefined,
+    cancelButton: undefined,
+  },
 } as Translation;

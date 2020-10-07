@@ -25,6 +25,7 @@ import {
 } from './moving-logic';
 import { getNext, getMiddle } from './lexorank';
 import { Visibility } from '@material-ui/icons';
+import RevealButton from './RevealButton';
 
 interface GameModeProps {
   columns: ColumnContent[];
@@ -148,14 +149,7 @@ function GameMode({
         <HeaderWrapper>
           <ExtraOptions>
             {state.session.options.blurCards ? (
-              <Button
-                variant="contained"
-                color="secondary"
-                startIcon={<Visibility />}
-                onClick={handleReveal}
-              >
-                Reveal
-              </Button>
+              <RevealButton onClick={handleReveal} />
             ) : null}
           </ExtraOptions>
           <Typography

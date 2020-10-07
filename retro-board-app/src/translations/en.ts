@@ -194,4 +194,12 @@ export default {
     yesImSure: `Yes, I'm sure`,
     cancel: `No, I'm sorry, I made a mistake`,
   },
+  RevealCards: {
+    buttonLabel: 'Reveal',
+    dialogTitle: 'Reveal all cards',
+    dialogContent:
+      'This will reveal all blurred cards for everyone. This cannot be undone.',
+    confirmButton: `Let's reveal!`,
+    cancelButton: 'No thanks',
+  },
 } as Translation;

@@ -178,4 +178,11 @@ export interface Translation {
     yesImSure?: string;
     cancel?: string;
   };
+  RevealCards: {
+    buttonLabel?: string;
+    dialogTitle?: string;
+    dialogContent?: string;
+    confirmButton?: string;
+    cancelButton?: string;
+  };
 }

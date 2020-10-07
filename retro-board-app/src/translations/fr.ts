@@ -196,4 +196,11 @@ export default {
     yesImSure: `Oui, j'en suis sûr`,
     cancel: 'Non, je me suis trompé(e)',
   },
+  RevealCards: {
+    buttonLabel: 'Révéler',
+    dialogTitle: 'Révéler tous les posts',
+    dialogContent: `Cela va révéler (déflouter) tout les posts. L'opération n'est pas reversible.`,
+    confirmButton: `Révéler`,
+    cancelButton: 'Non merci',
+  },
 } as Translation;
