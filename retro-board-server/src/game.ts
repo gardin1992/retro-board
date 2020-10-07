@@ -14,6 +14,7 @@ import { find } from 'lodash';
 import { v4 } from 'uuid';
 import { Store } from './types';
 import { setScope, reportQueryError } from './sentry';
+import SessionOptions from './db/entities/SessionOptions';
 
 const {
   RECEIVE_POST,
@@ -36,6 +37,7 @@ const {
   JOIN_SESSION,
   RENAME_SESSION,
   LEAVE_SESSION,
+  EDIT_OPTIONS,
 } = Actions;
 
 interface ExtendedSocket extends socketIo.Socket {
@@ -355,6 +357,27 @@ export default (store: Store, io: SocketIO.Server) => {
     }
   };
 
+  const onEditOptions = async (
+    userId: string | null,
+    session: Session,
+    data: SessionOptions,
+    socket: ExtendedSocket
+  ) => {
+    if (!userId) {
+      return;
+    }
+    // Prevent non author from modifying options
+    if (userId !== session.createdBy.id) {
+      return;
+    }
+    const modifiedSession: Session = {
+      ...session,
+      options: data,
+    };
+    // TODO THE REST
+    sendToAll(socket, session.id, RECEIVE_BOARD, modifiedSession);
+  };
+
   io.on('connection', async (socket: ExtendedSocket) => {
     const ip =
       socket.handshake.headers['x-forwarded-for'] || socket.handshake.address;
@@ -391,6 +414,7 @@ export default (store: Store, io: SocketIO.Server) => {
       { type: JOIN_SESSION, handler: onJoinSession },
       { type: RENAME_SESSION, handler: onRenameSession },
       { type: LEAVE_SESSION, handler: onLeaveSession },
+      { type: EDIT_OPTIONS, handler: onEditOptions },
     ];
 
     actions.forEach((action) => {

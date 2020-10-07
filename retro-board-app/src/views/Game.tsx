@@ -47,6 +47,7 @@ function GamePage() {
     onEditPostGroup,
     onLike,
     onRenameSession,
+    onEditOptions,
     reconnect,
   } = useGame(gameId);
 
@@ -113,6 +114,7 @@ function GamePage() {
             onDeleteGroup={onDeletePostGroup}
             onEditGroup={onEditPostGroup}
             onRenameSession={onRenameSession}
+            onEditOptions={onEditOptions}
           />
         )}
       />

@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import styled from 'styled-components';
 import { Post, PostGroup, SessionOptions } from 'retro-board-common';
-import { Typography, makeStyles, Box } from '@material-ui/core';
+import { Typography, makeStyles, Box, Button } from '@material-ui/core';
 import {
   DragDropContext,
   DropResult,
@@ -24,6 +24,7 @@ import {
   calculateRank,
 } from './moving-logic';
 import { getNext, getMiddle } from './lexorank';
+import { PanoramaFishEye, Visibility } from '@material-ui/icons';
 
 interface GameModeProps {
   columns: ColumnContent[];
@@ -43,6 +44,7 @@ interface GameModeProps {
   onEdit: (post: Post) => void;
   onEditGroup: (group: PostGroup) => void;
   onDeleteGroup: (group: PostGroup) => void;
+  onEditOptions: (options: SessionOptions) => void;
 }
 
 const useStyles = makeStyles({
@@ -79,6 +81,7 @@ function GameMode({
   onEdit,
   onEditGroup,
   onDeleteGroup,
+  onEditOptions,
   columns,
   options,
 }: GameModeProps) {
@@ -89,8 +92,18 @@ function GameMode({
   const user = useUser();
   const isLoggedIn = !!user;
 
+  const handleReveal = useCallback(() => {
+    if (state && state.session) {
+      const modifiedOptions: SessionOptions = {
+        ...state.session.options,
+        blurCards: false,
+      };
+      onEditOptions(modifiedOptions);
+    }
+  }, [onEditOptions, state]);
+
   const handleOnDragEnd = useCallback(
-    (result: DropResult, provided: ResponderProvided) => {
+    (result: DropResult, _provided: ResponderProvided) => {
       if (!!result.destination) {
         const entities = getMovingEntities(
           result.draggableId,
@@ -150,6 +163,14 @@ function GameMode({
             />
           </Typography>
           <RemainingVotes up={remainingVotes.up} down={remainingVotes.down} />
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<Visibility />}
+            onClick={handleReveal}
+          >
+            Reveal
+          </Button>
         </HeaderWrapper>
 
         <DragDropContext onDragEnd={handleOnDragEnd}>

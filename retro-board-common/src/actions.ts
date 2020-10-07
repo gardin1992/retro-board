@@ -23,4 +23,5 @@ export default {
   JOIN_SESSION: 'retrospected/session/join',
   LEAVE_SESSION: 'retrospected/session/leave',
   RECEIVE_CLIENT_LIST: 'retrospected/session/receive/client-list',
+  EDIT_OPTIONS: 'retrospected/session/options/edit',
 };
