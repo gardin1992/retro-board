@@ -24,7 +24,7 @@ import {
   calculateRank,
 } from './moving-logic';
 import { getNext, getMiddle } from './lexorank';
-import { PanoramaFishEye, Visibility } from '@material-ui/icons';
+import { Visibility } from '@material-ui/icons';
 
 interface GameModeProps {
   columns: ColumnContent[];

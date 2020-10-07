@@ -8,6 +8,7 @@ import {
   Card,
   CardContent,
   colors,
+  Tooltip,
 } from '@material-ui/core';
 import {
   ThumbUpOutlined,
@@ -109,6 +110,9 @@ const PostItem = ({
     },
     [onEditGiphy]
   );
+  const actualContent = useMemo(() => {
+    return !isBlurred ? post.content : generateLoremIpsum(post.content);
+  }, [isBlurred, post]);
   return (
     <>
       <Draggable
@@ -118,7 +122,11 @@ const PostItem = ({
       >
         {(provided: DraggableProvided) => (
           <PostCard ref={provided.innerRef} {...provided.draggableProps}>
-            {isBlurred ? <BlurOverlay /> : null}
+            {isBlurred ? (
+              <Tooltip title="Cards from other people will be shown when the moderator chooses to reveal them.">
+                <BlurOverlay />
+              </Tooltip>
+            ) : null}
             {canReorder ? (
               <DragHandle {...provided.dragHandleProps}>
                 <DragIndicator />
@@ -128,9 +136,7 @@ const PostItem = ({
               <Typography variant="body1">
                 <EditableLabel
                   readOnly={!canEdit || isBlurred}
-                  value={
-                    !isBlurred ? post.content : generateLoremIpsum(post.content)
-                  }
+                  value={actualContent}
                   onChange={onEdit}
                   label="Post content"
                   multiline
