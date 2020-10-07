@@ -82,6 +82,8 @@ export default {
     allowReordering: 'Herordenen toestaan',
     allowReorderingHelp:
       'Toestaan om retropunten mbv drag-en-drop te herordenen',
+    blurCards: undefined,
+    blurCardsHelp: undefined,
     template: 'Template',
     templateHelp: 'Gebruik een vooringestelde set kolommen',
     numberOfColumns: 'Aantal kolommen',

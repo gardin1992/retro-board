@@ -83,6 +83,8 @@ export default {
     allowReordering: 'Re-organiser',
     allowReorderingHelp:
       "Permettre aux utilisateurs de réorganiser l'ordre des posts",
+    blurCards: 'Flouter',
+    blurCardsHelp: `Les posts sont floutés, jusqu'à ce qu'un modérateur révèle les posts`,
     template: 'Règles prédéfinies',
     templateHelp: 'Sélectionnez un jeu de colonnes prédéfini',
     numberOfColumns: 'Nombre de colonnes',

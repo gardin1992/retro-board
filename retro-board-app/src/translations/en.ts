@@ -80,6 +80,9 @@ export default {
     allowGroupingHelp: 'Allow the creation of groups to group posts together',
     allowReordering: 'Allow Re-ordering',
     allowReorderingHelp: 'Allow re-ordering posts by drag-and-drop',
+    blurCards: 'Blur Cards',
+    blurCardsHelp:
+      'Cards content is blurred until the moderator reveals the content',
     template: 'Template',
     templateHelp: 'Use a pre-defined set of columns',
     numberOfColumns: 'Number of columns',

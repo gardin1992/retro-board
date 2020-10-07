@@ -72,6 +72,8 @@ export interface Translation {
     allowGroupingHelp?: string;
     allowReordering?: string;
     allowReorderingHelp?: string;
+    blurCards?: string;
+    blurCardsHelp?: string;
     template?: string;
     templateHelp?: string;
     numberOfColumns?: string;

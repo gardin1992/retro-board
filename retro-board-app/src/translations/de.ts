@@ -79,6 +79,8 @@ export default {
     allowGroupingHelp: undefined,
     allowReordering: undefined,
     allowReorderingHelp: undefined,
+    blurCards: undefined,
+    blurCardsHelp: undefined,
     template: 'Vorlage',
     templateHelp: 'Nutze ein vordefiniertes Spaltenset',
     numberOfColumns: 'Anzahl an Spalten',

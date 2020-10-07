@@ -74,6 +74,8 @@ export default {
     allowGroupingHelp: undefined,
     allowReordering: undefined,
     allowReorderingHelp: undefined,
+    blurCards: undefined,
+    blurCardsHelp: undefined,
     template: undefined,
     templateHelp: undefined,
     numberOfColumns: undefined,
