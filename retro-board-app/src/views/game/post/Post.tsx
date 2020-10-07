@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useMemo, useRef } from 'react';
 import styled from 'styled-components';
+import { LoremIpsum } from 'lorem-ipsum';
 import {
   Typography,
   makeStyles,
@@ -79,6 +80,7 @@ const PostItem = ({
     canShowAuthor,
     canReorder,
     canUseGiphy,
+    isBlurred,
   } = useUserPermissions(post);
   const classes = useStyles();
   const { Actions: translations, Post: postTranslations } = useTranslations();
@@ -116,6 +118,7 @@ const PostItem = ({
       >
         {(provided: DraggableProvided) => (
           <PostCard ref={provided.innerRef} {...provided.draggableProps}>
+            {isBlurred ? <BlurOverlay /> : null}
             {canReorder ? (
               <DragHandle {...provided.dragHandleProps}>
                 <DragIndicator />
@@ -124,8 +127,10 @@ const PostItem = ({
             <CardContent>
               <Typography variant="body1">
                 <EditableLabel
-                  readOnly={!canEdit}
-                  value={post.content}
+                  readOnly={!canEdit || isBlurred}
+                  value={
+                    !isBlurred ? post.content : generateLoremIpsum(post.content)
+                  }
                   onChange={onEdit}
                   label="Post content"
                   multiline
@@ -341,5 +346,32 @@ const CloseButtonContainer = styled.div`
   background-color: ${colors.red[400]};
   cursor: pointer;
 `;
+
+const BlurOverlay = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(3px);
+  z-index: 100;
+`;
+
+const lorem = new LoremIpsum({
+  sentencesPerParagraph: {
+    max: 8,
+    min: 4,
+  },
+  wordsPerSentence: {
+    max: 16,
+    min: 4,
+  },
+});
+
+function generateLoremIpsum(originalText: string) {
+  const words = originalText.split(' ').length;
+  return lorem.generateWords(words);
+}
 
 export default PostItem;
