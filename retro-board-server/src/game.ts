@@ -38,6 +38,7 @@ const {
   RENAME_SESSION,
   LEAVE_SESSION,
   EDIT_OPTIONS,
+  RECEIVE_OPTIONS,
 } = Actions;
 
 interface ExtendedSocket extends socketIo.Socket {
@@ -97,6 +98,20 @@ export default (store: Store, io: SocketIO.Server) => {
       return;
     }
     await store.saveSession(userId, session);
+  };
+
+  const updateOptions = async (
+    userId: string | null,
+    session: Session,
+    options: SessionOptions
+  ) => {
+    if (!userId || !session) {
+      return;
+    }
+    if (userId !== session.createdBy.id) {
+      return;
+    }
+    await store.updateOptions(session, options);
   };
 
   const persistPost = async (
@@ -370,12 +385,10 @@ export default (store: Store, io: SocketIO.Server) => {
     if (userId !== session.createdBy.id) {
       return;
     }
-    const modifiedSession: Session = {
-      ...session,
-      options: data,
-    };
-    // TODO THE REST
-    sendToAll(socket, session.id, RECEIVE_BOARD, modifiedSession);
+
+    await updateOptions(userId, session, data);
+
+    sendToAll(socket, session.id, RECEIVE_OPTIONS, data);
   };
 
   io.on('connection', async (socket: ExtendedSocket) => {

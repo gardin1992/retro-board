@@ -18,6 +18,7 @@ export default {
   RECEIVE_EDIT_POST_GROUP: 'retrospected/group/receive/edit',
 
   RECEIVE_BOARD: 'retrospected/posts/receive-all',
+  RECEIVE_OPTIONS: 'retrospected/session/options/receive',
   RENAME_SESSION: 'retrospected/session/rename',
   RECEIVE_SESSION_NAME: 'retrospected/session/receive/rename',
   JOIN_SESSION: 'retrospected/session/join',

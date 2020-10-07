@@ -144,6 +144,13 @@ const useGame = (sessionId: string) => {
       receiveBoard(posts);
     });
 
+    newSocket.on(Actions.RECEIVE_OPTIONS, (options: SessionOptions) => {
+      if (debug) {
+        console.log('Receive updated options: ', options);
+      }
+      editOptions(options);
+    });
+
     newSocket.on(Actions.RECEIVE_CLIENT_LIST, (clients: string[]) => {
       if (debug) {
         console.log('Receive players list: ', clients);
@@ -213,6 +220,7 @@ const useGame = (sessionId: string) => {
     setPlayers,
     deletePost,
     updatePost,
+    editOptions,
 
     receivePostGroup,
     deletePostGroup,
