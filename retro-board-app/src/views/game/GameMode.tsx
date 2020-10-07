@@ -146,7 +146,18 @@ function GameMode({
       ) : null}
       <Box className={classes.container}>
         <HeaderWrapper>
-          <div />
+          <ExtraOptions>
+            {state.session.options.blurCards ? (
+              <Button
+                variant="contained"
+                color="secondary"
+                startIcon={<Visibility />}
+                onClick={handleReveal}
+              >
+                Reveal
+              </Button>
+            ) : null}
+          </ExtraOptions>
           <Typography
             variant="h5"
             align="center"
@@ -163,14 +174,6 @@ function GameMode({
             />
           </Typography>
           <RemainingVotes up={remainingVotes.up} down={remainingVotes.down} />
-          <Button
-            variant="contained"
-            color="primary"
-            startIcon={<Visibility />}
-            onClick={handleReveal}
-          >
-            Reveal
-          </Button>
         </HeaderWrapper>
 
         <DragDropContext onDragEnd={handleOnDragEnd}>
@@ -231,16 +234,16 @@ const HeaderWrapper = styled.div`
   align-items: center;
 
   > *:first-child {
-    width: 90px;
+    flex: 1;
   }
 
   > *:nth-child(2) {
-    flex: 1;
+    flex: 3;
     margin: 0 20px;
   }
 
   > *:last-child {
-    width: 90px;
+    flex: 1;
   }
 
   @media (max-width: 500px) {
@@ -250,6 +253,15 @@ const HeaderWrapper = styled.div`
     > *:last-child {
       margin: 20px 0;
     }
+  }
+`;
+
+const ExtraOptions = styled.div`
+  display: flex;
+  justify-content: flex-start;
+
+  @media (max-width: 500px) {
+    margin-bottom: 20px;
   }
 `;
 
