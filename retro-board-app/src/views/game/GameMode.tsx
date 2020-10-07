@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import styled from 'styled-components';
 import { Post, PostGroup, SessionOptions } from 'retro-board-common';
-import { Typography, makeStyles, Box, Button } from '@material-ui/core';
+import { Typography, makeStyles, Box } from '@material-ui/core';
 import {
   DragDropContext,
   DropResult,
@@ -10,6 +10,7 @@ import {
 import useTranslations from '../../translations';
 import useGlobalState from '../../state';
 import useRemainingVotes from './useRemainingVotes';
+import useCanReveal from './useCanReveal';
 import { getIcon } from '../../state/icons';
 import Column from './Column';
 import EditableLabel from '../../components/EditableLabel';
@@ -24,7 +25,6 @@ import {
   calculateRank,
 } from './moving-logic';
 import { getNext, getMiddle } from './lexorank';
-import { Visibility } from '@material-ui/icons';
 import RevealButton from './RevealButton';
 
 interface GameModeProps {
@@ -92,6 +92,7 @@ function GameMode({
   const remainingVotes = useRemainingVotes();
   const user = useUser();
   const isLoggedIn = !!user;
+  const canReveal = useCanReveal();
 
   const handleReveal = useCallback(() => {
     if (state && state.session) {
@@ -148,9 +149,7 @@ function GameMode({
       <Box className={classes.container}>
         <HeaderWrapper>
           <ExtraOptions>
-            {state.session.options.blurCards ? (
-              <RevealButton onClick={handleReveal} />
-            ) : null}
+            {canReveal ? <RevealButton onClick={handleReveal} /> : null}
           </ExtraOptions>
           <Typography
             variant="h5"
