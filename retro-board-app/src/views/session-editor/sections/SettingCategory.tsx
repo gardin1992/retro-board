@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import Typography from '@material-ui/core/Typography';
 import { Alert } from '@material-ui/lab';
 
 interface SettingCategoryProps {
@@ -9,20 +8,14 @@ interface SettingCategoryProps {
 }
 
 const SettingCategory: React.FC<SettingCategoryProps> = ({
-  title,
   subtitle,
   children,
 }) => {
   return (
     <Container>
-      <Typography
-        variant="h6"
-        gutterBottom
-        style={{ marginTop: 10, marginBottom: 10 }}
-      >
-        {title}
-      </Typography>
-      <Alert severity="success">{subtitle}</Alert>
+      <Alert severity="success" style={{ marginTop: 10 }}>
+        {subtitle}
+      </Alert>
       <ChildrenContainer>{children}</ChildrenContainer>
     </Container>
   );

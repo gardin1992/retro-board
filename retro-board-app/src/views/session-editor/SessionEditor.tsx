@@ -80,9 +80,9 @@ function SessionEditor({
           scrollButtons="auto"
           aria-label="scrollable auto tabs example"
         >
-          <Tab label="Template" value="template" />
-          <Tab label="Posts" value="posts" />
-          <Tab label="Votes" value="voting" />
+          <Tab label={Customize.template} value="template" />
+          <Tab label={Customize.postCategory} value="posts" />
+          <Tab label={Customize.votingCategory} value="voting" />
         </Tabs>
       </AppBar>
       <DialogContent>
