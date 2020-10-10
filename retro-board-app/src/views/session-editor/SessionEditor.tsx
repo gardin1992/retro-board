@@ -14,12 +14,9 @@ import SettingCategory from '../home/components/SettingCategory';
 import useTranslations from '../../translations';
 import useToggle from '../../hooks/useToggle';
 import { ColumnSettings, Template } from '../../state/types';
-import { buildDefaults, merge } from '../../state/columns';
+import { buildDefaults } from '../../state/columns';
 import { trackEvent } from '../../track';
-import { getTemplate } from '../../state';
 import OptionItem from './OptionItem';
-import Slider from './Slider';
-import ColumnEditor from './ColumnEditor';
 import MaxVoteSlider from './MaxVoteSlider';
 import BooleanOption from './BooleanOption';
 import TemplatePicker from './TemplatePicker';
@@ -58,23 +55,7 @@ function SessionEditor({
   const [allowGrouping, setAllowGrouping] = useState(true);
   const [allowReordering, setAllowReordering] = useState(true);
   const [blurCards, setBlurCards] = useState(false);
-  // const [numberOfColumns, setNumberOfColumns] = useState(3);
-  // const [defaultDefinitions, setDefaultDefinitions] = useState(
-  //   buildDefaults('default', translations)
-  // );
-
-  // const [definitions, setDefinitions] = useState<ColumnSettings[]>(
-  //   buildDefaults('default', translations).map(
-  //     (d) =>
-  //       ({ type: d.type, color: '', icon: null, label: '' } as ColumnSettings)
-  //   )
-  // );
-
   const [definitions, setDefinitions] = useState<ColumnSettings[]>(columns);
-
-  // useEffect(() => {
-  //   setDefaultDefinitions(buildDefaults('default', translations));
-  // }, [translations]);
 
   useEffect(() => {
     setAllowActions(options.allowActions);
@@ -90,23 +71,13 @@ function SessionEditor({
   }, [options]);
 
   useEffect(() => {
-    // setNumberOfColumns(columns.length);
     setDefinitions(columns);
   }, [columns]);
 
-  const handleColumnChange = useCallback(
-    (value: ColumnSettings, index: number) => {
-      setDefinitions((cols) => Object.assign([], cols, { [index]: value }));
-      trackEvent('custom-modal/column/change');
-    },
-    []
-  );
 
   const handleTemplateChange = useCallback(
     (templateType: Template) => {
       const template = buildDefaults(templateType, translations);
-      // setNumberOfColumns(getTemplate(templateType, translations).length);
-      // setDefaultDefinitions(template);
       setDefinitions(template);
       trackEvent('custom-modal/template/select');
     },
@@ -128,7 +99,6 @@ function SessionEditor({
         maxUpVotes,
       },
       definitions,
-      // merge(definitions, defaultDefinitions, numberOfColumns),
       isDefaultTemplate
     );
   }, [
@@ -168,15 +138,6 @@ function SessionEditor({
             <TemplatePicker onSelect={handleTemplateChange} />
           </OptionItem>
           <TemplateEditor columns={definitions} onChange={setDefinitions} />
-            {/* {definitions.map((def, index) => (
-              <ColumnEditor
-                key={index}
-                value={def}
-                defaults={definitions[index]}
-                onChange={(value) => handleColumnChange(value, index)}
-              />
-            ))}
-            <Button onClick={handleAddColumn} */}
         </SettingCategory>
         <SettingCategory
           title={Customize.votingCategory!}

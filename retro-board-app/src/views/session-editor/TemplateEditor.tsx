@@ -4,6 +4,7 @@ import ColumnEditor from './ColumnEditor';
 import useTranslation from '../../translations/useTranslations';
 import { getTemplateColumnByType } from '../../state/columns';
 import { Button } from '@material-ui/core';
+import { trackEvent } from '../../track';
 
 const MAX_NUMBER_OF_COLUMNS = 5;
 
@@ -15,14 +16,17 @@ interface TemplateEditorProps {
 function TemplateEditor({ columns, onChange }: TemplateEditorProps) {
   const translations = useTranslation();
   const handleColumnChange = useCallback((value: ColumnSettings, index: number) => {
-    onChange(Object.assign([], columns, { [index]: value }))
+    onChange(Object.assign([], columns, { [index]: value }));
+    trackEvent('custom-modal/column/change');
   }, [onChange, columns]);
   const handleAddColumn = useCallback(() => {
     const custom = getTemplateColumnByType(translations)('custom');
     onChange([...columns, custom]);
+    trackEvent('custom-modal/column/add');
   }, [onChange, columns, translations]);
   const handleRemoveColumn  =useCallback((column: ColumnSettings) => {
     onChange(columns.filter(c => c!== column));
+    trackEvent('custom-modal/column/remove');
   }, [onChange, columns]);
   return (
     <>
@@ -30,7 +34,6 @@ function TemplateEditor({ columns, onChange }: TemplateEditorProps) {
       <ColumnEditor
         key={index}
         value={def}
-        defaults={columns[index]}
         onChange={(value) => handleColumnChange(value, index)}
         onRemove={handleRemoveColumn}
       />

@@ -12,12 +12,11 @@ import { Delete } from '@material-ui/icons';
 
 interface ColumnEditorProps {
   value: ColumnSettings;
-  defaults: ColumnSettings;
   onChange: (value: ColumnSettings) => void;
   onRemove: (value: ColumnSettings) => void;
 }
 
-const ColumnEditor = ({ value, defaults, onChange, onRemove }: ColumnEditorProps) => {
+const ColumnEditor = ({ value, onChange, onRemove }: ColumnEditorProps) => {
   const [pickerOpen, setPickerOpen] = useState(false);
   const openPicker = useCallback(() => setPickerOpen(true), []);
   const closePicker = useCallback(() => setPickerOpen(false), []);
@@ -59,7 +58,7 @@ const ColumnEditor = ({ value, defaults, onChange, onRemove }: ColumnEditorProps
       <ColorAndIconContainer>
         <ColorContainer>
           <ColorPickerValue
-            color={value.color || defaults.color}
+            color={value.color}
             onClick={pickerOpen ? closePicker : openPicker}
           />
           {pickerOpen && (
@@ -79,7 +78,7 @@ const ColumnEditor = ({ value, defaults, onChange, onRemove }: ColumnEditorProps
                     '#CFD8DC',
                   ]}
                   triangle="hide"
-                  color={value.color || defaults.color}
+                  color={value.color}
                   onChange={handleColorChange}
                 ></TwitterPicker>
               </PickerContainer>
@@ -89,7 +88,6 @@ const ColumnEditor = ({ value, defaults, onChange, onRemove }: ColumnEditorProps
         <IconContainer>
           <IconPicker
             value={value.icon}
-            defaultValue={defaults.icon!}
             onChange={handleIconChange}
           />
         </IconContainer>
@@ -98,7 +96,7 @@ const ColumnEditor = ({ value, defaults, onChange, onRemove }: ColumnEditorProps
         <EditableLabel
           value={value.label}
           onChange={handleLabelChange}
-          placeholder={defaults.label}
+          placeholder={value.label || '(empty)'}
         />
       </Typography>
     </Container>

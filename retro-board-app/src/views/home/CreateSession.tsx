@@ -36,19 +36,17 @@ const CreateSessionModal = ({
       columns: ColumnSettings[],
       makeDefault: boolean
     ) => {
-      const numberOfColumns = 5;
-      console.log('Options: ', options, 'Columns: ', columns);
       trackEvent('custom-modal/create');
       if (makeDefault) {
         trackEvent('custom-modal/template/set-defaut');
       }
       onLaunch(
         options,
-        merge(columns, defaultDefinitions, numberOfColumns),
+        merge(columns),
         makeDefault
       );
     },
-    [onLaunch, defaultDefinitions]
+    [onLaunch]
   );
 
   return (

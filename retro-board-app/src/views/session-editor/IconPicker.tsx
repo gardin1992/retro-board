@@ -6,11 +6,10 @@ import MenuItem from '@material-ui/core/MenuItem';
 
 interface IconPickerProps {
   value: IconName | null;
-  defaultValue: IconName;
   onChange: (value: IconName) => void;
 }
 
-const IconPicker = ({ value, defaultValue, onChange }: IconPickerProps) => {
+const IconPicker = ({ value, onChange }: IconPickerProps) => {
   const icons = getAllIcons();
   const handleChange = useCallback(
     (
@@ -23,7 +22,7 @@ const IconPicker = ({ value, defaultValue, onChange }: IconPickerProps) => {
     },
     [onChange]
   );
-  const actualValue: IconName = value || defaultValue;
+  const actualValue: IconName = value || 'help';
   return (
     <Select
       value={actualValue}
