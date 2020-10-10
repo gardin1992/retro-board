@@ -10,7 +10,7 @@ import {
   Checkbox,
   Button,
 } from '@material-ui/core';
-import SettingCategory from '../home/components/SettingCategory';
+import SettingCategory from './SettingCategory';
 import useTranslations from '../../translations';
 import useToggle from '../../hooks/useToggle';
 import { ColumnSettings, Template } from '../../state/types';
