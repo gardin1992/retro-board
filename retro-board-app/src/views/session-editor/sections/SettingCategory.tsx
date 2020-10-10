@@ -19,10 +19,10 @@ const SettingCategory: React.FC<SettingCategoryProps> = ({
 }) => {
   return (
     <Container>
-      <Typography variant="h6" gutterBottom>
+      <Typography variant="h6" gutterBottom style={{ marginTop: 10 }}>
         {title}
       </Typography>
-      <Alert severity="info">{subtitle}</Alert>
+      <Alert severity="success">{subtitle}</Alert>
       <ChildrenContainer>{children}</ChildrenContainer>
     </Container>
   );

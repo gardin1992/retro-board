@@ -21,14 +21,19 @@ const OptionItem = ({
   return (
     <Container>
       <HeaderContainer wide={wide}>
-        <Label>
+        <Label wide={wide}>
           <Typography component="div" style={{ fontWeight: 300 }}>
             {label}
           </Typography>
         </Label>
-        <ComponentContainer>{children}</ComponentContainer>
+        <ComponentContainer wide={wide}>{children}</ComponentContainer>
       </HeaderContainer>
-      <Alert>{help}</Alert>
+      <Alert
+        severity="info"
+        style={{ margin: '0 -15px 0px -15px', borderRadius: '10px' }}
+      >
+        {help}
+      </Alert>
     </Container>
   );
 };
@@ -36,23 +41,25 @@ const OptionItem = ({
 const Container = styled.div`
   border: 1px solid ${colors.grey[200]};
   background-color: ${colors.grey[50]};
-  padding: 5px 15px;
+  padding: 0px 15px;
   margin: 15px 0;
   border-radius: 10px;
 `;
 
-const ComponentContainer = styled.div`
-  flex: 1;
+const ComponentContainer = styled.div<{ wide: boolean }>`
+  flex: ${(props) => (props.wide ? '1' : 'unset')};
 `;
 
-const Label = styled.div`
+const Label = styled.div<{ wide: boolean }>`
   width: 220px;
   font-weight: lighter;
+  flex: ${(props) => (props.wide ? 'unset' : '1')};
 `;
 
 const HeaderContainer = styled.div<{ wide: boolean }>`
   display: flex;
   align-items: center;
+
   min-height: 50px;
   @media screen and (max-width: 600px) {
     ${(props) =>
