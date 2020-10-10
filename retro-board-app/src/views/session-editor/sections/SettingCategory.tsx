@@ -1,10 +1,6 @@
-import React, { useState, useCallback } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import Typography from '@material-ui/core/Typography';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Alert } from '@material-ui/lab';
 
 interface SettingCategoryProps {
@@ -19,7 +15,11 @@ const SettingCategory: React.FC<SettingCategoryProps> = ({
 }) => {
   return (
     <Container>
-      <Typography variant="h6" gutterBottom style={{ marginTop: 10 }}>
+      <Typography
+        variant="h6"
+        gutterBottom
+        style={{ marginTop: 10, marginBottom: 10 }}
+      >
         {title}
       </Typography>
       <Alert severity="success">{subtitle}</Alert>

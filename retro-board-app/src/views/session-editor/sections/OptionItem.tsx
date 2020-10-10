@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import Typography from '@material-ui/core/Typography';
-import Tooltip from '@material-ui/core/Tooltip';
 import { Alert } from '@material-ui/lab';
 import { colors } from '@material-ui/core';
 
@@ -59,7 +58,6 @@ const Label = styled.div<{ wide: boolean }>`
 const HeaderContainer = styled.div<{ wide: boolean }>`
   display: flex;
   align-items: center;
-
   min-height: 50px;
   @media screen and (max-width: 600px) {
     ${(props) =>

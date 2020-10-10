@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { SessionOptions } from 'retro-board-common';
 import {
   Dialog,
-  DialogTitle,
   DialogContent,
   useMediaQuery,
   DialogActions,
@@ -19,7 +18,6 @@ import { ColumnSettings } from '../../state/types';
 import TemplateSection from './sections/template/TemplateSection';
 import PostsSection from './sections/posts/PostsSection';
 import VotingSection from './sections/votes/VotingSection';
-import { TabPanel } from '@material-ui/lab';
 
 interface SessionEditorProps {
   open: boolean;
