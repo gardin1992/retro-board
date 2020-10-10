@@ -140,8 +140,7 @@ const LabelContainer = styled.div`
 const ColorPickerValue = styled.div<{ color: string }>`
   width: 24px;
   height: 24px;
-  border-radius: 10px;
-  border: 1px solid grey;
+  box-shadow: 2px 2px 5px 2px rgba(224, 224, 224, 1);
   background-color: ${(props) => props.color};
   cursor: pointer;
 `;
