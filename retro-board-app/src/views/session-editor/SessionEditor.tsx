@@ -10,14 +10,12 @@ import {
   Checkbox,
   Button,
 } from '@material-ui/core';
-import SettingCategory from './SettingCategory';
 import useTranslations from '../../translations';
 import useToggle from '../../hooks/useToggle';
 import { ColumnSettings } from '../../state/types';
-import OptionItem from './OptionItem';
-import MaxVoteSlider from './MaxVoteSlider';
-import BooleanOption from './BooleanOption';
 import TemplateSection from './sections/template/TemplateSection';
+import PostsSection from './sections/posts/PostsSection';
+import VotingSection from './sections/votes/VotingSection';
 
 interface SessionEditorProps {
   open: boolean;
@@ -33,7 +31,7 @@ interface SessionEditorProps {
 
 function SessionEditor({
   open,
-  options,
+  options: incomingOptions,
   columns,
   onChange,
   onClose,
@@ -42,65 +40,27 @@ function SessionEditor({
   const { Customize, Generic } = translations;
   const fullScreen = useMediaQuery('(max-width:600px)');
   const [isDefaultTemplate, toggleIsDefaultTemplate] = useToggle(false);
-  const [maxUpVotes, setMaxUpVotes] = useState<number | null>(null);
-  const [maxDownVotes, setMaxDownVotes] = useState<number | null>(null);
-  const [allowActions, setAllowActions] = useState(true);
-  const [allowSelfVoting, setAllowSelfVoting] = useState(false);
-  const [allowMultipleVotes, setAllowMultipleVotes] = useState(false);
-  const [allowAuthorVisible, setAllowAuthorVisible] = useState(false);
-  const [allowGiphy, setAllowGiphy] = useState(true);
-  const [allowGrouping, setAllowGrouping] = useState(true);
-  const [allowReordering, setAllowReordering] = useState(true);
-  const [blurCards, setBlurCards] = useState(false);
   const [definitions, setDefinitions] = useState<ColumnSettings[]>(columns);
-
-  useEffect(() => {
-    setAllowActions(options.allowActions);
-    setAllowAuthorVisible(options.allowAuthorVisible);
-    setAllowGiphy(options.allowGiphy);
-    setAllowGrouping(options.allowGrouping);
-    setAllowMultipleVotes(options.allowMultipleVotes);
-    setAllowReordering(options.allowReordering);
-    setAllowSelfVoting(options.allowSelfVoting);
-    setBlurCards(options.blurCards);
-    setMaxDownVotes(options.maxDownVotes);
-    setMaxUpVotes(options.maxUpVotes);
-  }, [options]);
+  const [options, setOptions] = useState(incomingOptions);
 
   useEffect(() => {
     setDefinitions(columns);
   }, [columns]);
 
+  useEffect(() => {
+    setOptions(options);
+  }, [options]);
+
 
   const handleCreate = useCallback(() => {
     onChange(
-      {
-        allowActions,
-        allowAuthorVisible,
-        allowGiphy,
-        allowGrouping,
-        allowMultipleVotes,
-        allowReordering,
-        allowSelfVoting,
-        blurCards,
-        maxDownVotes,
-        maxUpVotes,
-      },
+      options,
       definitions,
       isDefaultTemplate
     );
   }, [
     onChange,
-    allowActions,
-    allowAuthorVisible,
-    allowGiphy,
-    allowGrouping,
-    allowMultipleVotes,
-    allowReordering,
-    allowSelfVoting,
-    blurCards,
-    maxDownVotes,
-    maxUpVotes,
+    options,
     definitions,
     isDefaultTemplate,
   ]);
@@ -116,88 +76,8 @@ function SessionEditor({
       <DialogTitle>{Customize.title}</DialogTitle>
       <DialogContent>
         <TemplateSection columns={definitions} onChange={setDefinitions} />
-        <SettingCategory
-          title={Customize.votingCategory!}
-          subtitle={Customize.votingCategorySub!}
-        >
-          <OptionItem
-            label={Customize.maxUpVotes!}
-            help={Customize.maxUpVotesHelp!}
-          >
-            <MaxVoteSlider value={maxUpVotes} onChange={setMaxUpVotes} />
-          </OptionItem>
-          <OptionItem
-            label={Customize.maxDownVotes!}
-            help={Customize.maxDownVotesHelp!}
-          >
-            <MaxVoteSlider value={maxDownVotes} onChange={setMaxDownVotes} />
-          </OptionItem>
-          <OptionItem
-            label={Customize.allowSelfVoting!}
-            help={Customize.allowSelfVotingHelp!}
-          >
-            <BooleanOption
-              value={allowSelfVoting}
-              onChange={setAllowSelfVoting}
-            />
-          </OptionItem>
-          <OptionItem
-            label={Customize.allowMultipleVotes!}
-            help={Customize.allowMultipleVotesHelp!}
-          >
-            <BooleanOption
-              value={allowMultipleVotes}
-              onChange={setAllowMultipleVotes}
-            />
-          </OptionItem>
-        </SettingCategory>
-        <SettingCategory
-          title={Customize.postCategory!}
-          subtitle={Customize.postCategorySub!}
-        >
-          <OptionItem
-            label={Customize.allowActions!}
-            help={Customize.allowActionsHelp!}
-          >
-            <BooleanOption value={allowActions} onChange={setAllowActions} />
-          </OptionItem>
-          <OptionItem
-            label={Customize.allowAuthorVisible!}
-            help={Customize.allowAuthorVisibleHelp!}
-          >
-            <BooleanOption
-              value={allowAuthorVisible}
-              onChange={setAllowAuthorVisible}
-            />
-          </OptionItem>
-          <OptionItem
-            label={Customize.allowReordering!}
-            help={Customize.allowReorderingHelp!}
-          >
-            <BooleanOption
-              value={allowReordering}
-              onChange={setAllowReordering}
-            />
-          </OptionItem>
-          <OptionItem
-            label={Customize.allowGrouping!}
-            help={Customize.allowGroupingHelp!}
-          >
-            <BooleanOption value={allowGrouping} onChange={setAllowGrouping} />
-          </OptionItem>
-          <OptionItem
-            label={Customize.allowGiphy!}
-            help={Customize.allowGiphyHelp!}
-          >
-            <BooleanOption value={allowGiphy} onChange={setAllowGiphy} />
-          </OptionItem>
-          <OptionItem
-            label={Customize.blurCards!}
-            help={Customize.blurCardsHelp!}
-          >
-            <BooleanOption value={blurCards} onChange={setBlurCards} />
-          </OptionItem>
-        </SettingCategory>
+        <VotingSection options={options} onChange={setOptions} />
+        <PostsSection options={options} onChange={setOptions} />
       </DialogContent>
       <DialogActions>
         <FormControlLabel
