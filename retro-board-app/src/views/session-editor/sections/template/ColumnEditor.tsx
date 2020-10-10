@@ -7,8 +7,8 @@ import { ColumnSettings } from '../../../../state/types';
 import { IconName } from 'retro-board-common';
 import { TwitterPicker, ColorResult } from 'react-color';
 import IconPicker from './IconPicker';
-import { IconButton } from '@material-ui/core';
-import { Delete } from '@material-ui/icons';
+import { IconButton, colors, useMediaQuery } from '@material-ui/core';
+import { DeleteForeverOutlined } from '@material-ui/icons';
 
 interface ColumnEditorProps {
   value: ColumnSettings;
@@ -17,6 +17,7 @@ interface ColumnEditorProps {
 }
 
 const ColumnEditor = ({ value, onChange, onRemove }: ColumnEditorProps) => {
+  const fullScreen = useMediaQuery('(max-width:600px)');
   const [pickerOpen, setPickerOpen] = useState(false);
   const openPicker = useCallback(() => setPickerOpen(true), []);
   const closePicker = useCallback(() => setPickerOpen(false), []);
@@ -54,7 +55,6 @@ const ColumnEditor = ({ value, onChange, onRemove }: ColumnEditorProps) => {
   }, [value, onRemove]);
   return (
     <Container>
-      <IconButton onClick={handleRemove}><Delete /></IconButton>
       <ColorAndIconContainer>
         <ColorContainer>
           <ColorPickerValue
@@ -86,19 +86,32 @@ const ColumnEditor = ({ value, onChange, onRemove }: ColumnEditorProps) => {
           )}
         </ColorContainer>
         <IconContainer>
-          <IconPicker
-            value={value.icon}
-            onChange={handleIconChange}
-          />
+          <IconPicker value={value.icon} onChange={handleIconChange} />
         </IconContainer>
+        {fullScreen ? (
+          <DeleteContainer>
+            <IconButton onClick={handleRemove}>
+              <DeleteForeverOutlined />
+            </IconButton>
+          </DeleteContainer>
+        ) : null}
       </ColorAndIconContainer>
-      <Typography>
-        <EditableLabel
-          value={value.label}
-          onChange={handleLabelChange}
-          placeholder={value.label || '(empty)'}
-        />
-      </Typography>
+      <LabelContainer>
+        <Typography>
+          <EditableLabel
+            value={value.label}
+            onChange={handleLabelChange}
+            placeholder={value.label || '(empty)'}
+          />
+        </Typography>
+      </LabelContainer>
+      {!fullScreen ? (
+        <DeleteContainer>
+          <IconButton onClick={handleRemove}>
+            <DeleteForeverOutlined />
+          </IconButton>
+        </DeleteContainer>
+      ) : null}
     </Container>
   );
 };
@@ -108,11 +121,20 @@ const Container = styled.div`
   align-items: center;
   padding: 10px 0;
   width: 100%;
-
   @media (max-width: 600px) {
     flex-direction: column;
     align-items: flex-start;
   }
+`;
+
+const DeleteContainer = styled.div`
+  svg {
+    color: ${colors.red[500]};
+  }
+`;
+
+const LabelContainer = styled.div`
+  flex: 1;
 `;
 
 const ColorPickerValue = styled.div<{ color: string }>`

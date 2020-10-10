@@ -26,21 +26,21 @@ function TemplateSection({ columns, onChange }: TemplateSectionProps) {
     [translations, onChange]
   );
 
-
   return (
     <SettingCategory
-          title={Customize.customTemplateCategory!}
-          subtitle={Customize.customTemplateCategorySub!}
-        >
-          <OptionItem
-            label={Customize.template!}
-            help={Customize.templateHelp!}
-          >
-            <TemplatePicker onSelect={handleTemplateChange} />
-          </OptionItem>
-          <TemplateEditor columns={columns} onChange={onChange} />
-        </SettingCategory>
-  )
+      title={Customize.customTemplateCategory!}
+      subtitle={Customize.customTemplateCategorySub!}
+    >
+      <OptionItem
+        label={Customize.template!}
+        help={Customize.templateHelp!}
+        wide
+      >
+        <TemplatePicker onSelect={handleTemplateChange} />
+      </OptionItem>
+      <TemplateEditor columns={columns} onChange={onChange} />
+    </SettingCategory>
+  );
 }
 
 export default TemplateSection;
