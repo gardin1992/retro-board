@@ -51,8 +51,8 @@ function SessionEditor({
   }, [columns]);
 
   useEffect(() => {
-    setOptions(options);
-  }, [options]);
+    setOptions(incomingOptions);
+  }, [incomingOptions]);
 
   const handleCreate = useCallback(() => {
     onChange(options, definitions, isDefaultTemplate);

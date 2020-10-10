@@ -18,10 +18,8 @@ export function buildDefaults(
   return base;
 }
 
-export function merge(
+export function toColumnDefinitions(
   colDef: ColumnSettings[],
-  // defaultDef: ColumnSettings[],
-  // numberOfColumns: number
 ): ColumnDefinition[] {
   return colDef.map(
     (def, index) =>

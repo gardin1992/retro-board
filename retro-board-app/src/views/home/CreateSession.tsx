@@ -4,7 +4,7 @@ import {
   ColumnDefinition,
   defaultOptions,
 } from 'retro-board-common';
-import { buildDefaults, merge } from '../../state/columns';
+import { buildDefaults, toColumnDefinitions } from '../../state/columns';
 import { ColumnSettings } from '../../state/types';
 import useTranslations from '../../translations';
 import { trackEvent } from './../../track';
@@ -40,11 +40,7 @@ const CreateSessionModal = ({
       if (makeDefault) {
         trackEvent('custom-modal/template/set-defaut');
       }
-      onLaunch(
-        options,
-        merge(columns),
-        makeDefault
-      );
+      onLaunch(options, toColumnDefinitions(columns), makeDefault);
     },
     [onLaunch]
   );
