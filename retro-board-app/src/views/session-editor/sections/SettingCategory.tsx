@@ -5,6 +5,7 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { Alert } from '@material-ui/lab';
 
 interface SettingCategoryProps {
   title: string;
@@ -16,24 +17,21 @@ const SettingCategory: React.FC<SettingCategoryProps> = ({
   subtitle,
   children,
 }) => {
-  const [open, setOpen] = useState(true);
-  const toggleOpen = useCallback(() => {
-    setOpen(state => !state);
-  }, []);
   return (
-    <ExpansionPanel expanded={open} onChange={toggleOpen}>
-      <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-        <Typography>{title}</Typography>
-      </ExpansionPanelSummary>
-      <ExpansionPanelDetails>
-        <ChildrenContainer>{children}</ChildrenContainer>
-      </ExpansionPanelDetails>
-    </ExpansionPanel>
+    <Container>
+      <Typography variant="h6" gutterBottom>
+        {title}
+      </Typography>
+      <Alert severity="info">{subtitle}</Alert>
+      <ChildrenContainer>{children}</ChildrenContainer>
+    </Container>
   );
 };
 
 const ChildrenContainer = styled.div`
   width: 100%;
 `;
+
+const Container = styled.div``;
 
 export default SettingCategory;

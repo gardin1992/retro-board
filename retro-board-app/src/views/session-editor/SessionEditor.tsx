@@ -9,6 +9,9 @@ import {
   FormControlLabel,
   Checkbox,
   Button,
+  AppBar,
+  Tabs,
+  Tab,
 } from '@material-ui/core';
 import useTranslations from '../../translations';
 import useToggle from '../../hooks/useToggle';
@@ -16,6 +19,7 @@ import { ColumnSettings } from '../../state/types';
 import TemplateSection from './sections/template/TemplateSection';
 import PostsSection from './sections/posts/PostsSection';
 import VotingSection from './sections/votes/VotingSection';
+import { TabPanel } from '@material-ui/lab';
 
 interface SessionEditorProps {
   open: boolean;
@@ -42,6 +46,7 @@ function SessionEditor({
   const [isDefaultTemplate, toggleIsDefaultTemplate] = useToggle(false);
   const [definitions, setDefinitions] = useState<ColumnSettings[]>(columns);
   const [options, setOptions] = useState(incomingOptions);
+  const [currentTab, setCurrentTab] = useState('template');
 
   useEffect(() => {
     setDefinitions(columns);
@@ -51,19 +56,13 @@ function SessionEditor({
     setOptions(options);
   }, [options]);
 
-
   const handleCreate = useCallback(() => {
-    onChange(
-      options,
-      definitions,
-      isDefaultTemplate
-    );
-  }, [
-    onChange,
-    options,
-    definitions,
-    isDefaultTemplate,
-  ]);
+    onChange(options, definitions, isDefaultTemplate);
+  }, [onChange, options, definitions, isDefaultTemplate]);
+
+  const handleTab = useCallback((_: React.ChangeEvent<{}>, value: string) => {
+    setCurrentTab(value);
+  }, []);
 
   return (
     <Dialog
@@ -73,11 +72,31 @@ function SessionEditor({
       fullScreen={fullScreen}
       keepMounted={false}
     >
-      <DialogTitle>{Customize.title}</DialogTitle>
+      <AppBar position="static" color="default">
+        <Tabs
+          value={currentTab}
+          onChange={handleTab}
+          indicatorColor="primary"
+          textColor="primary"
+          variant="scrollable"
+          scrollButtons="auto"
+          aria-label="scrollable auto tabs example"
+        >
+          <Tab label="Template" value="template" />
+          <Tab label="Posts" value="posts" />
+          <Tab label="Votes" value="voting" />
+        </Tabs>
+      </AppBar>
       <DialogContent>
-        <TemplateSection columns={definitions} onChange={setDefinitions} />
-        <VotingSection options={options} onChange={setOptions} />
-        <PostsSection options={options} onChange={setOptions} />
+        {currentTab === 'template' ? (
+          <TemplateSection columns={definitions} onChange={setDefinitions} />
+        ) : null}
+        {currentTab === 'posts' ? (
+          <PostsSection options={options} onChange={setOptions} />
+        ) : null}
+        {currentTab === 'voting' ? (
+          <VotingSection options={options} onChange={setOptions} />
+        ) : null}
       </DialogContent>
       <DialogActions>
         <FormControlLabel
