@@ -140,7 +140,6 @@ When using the Docker deployment, your database runs from a container. But if yo
 ## Roadmap and ideas 🚗 💡
 
 - Highlight posts where the user voted
-- Bluring posts for a set amount of time so people can't see other people's messages
 
 ## Versions History
 
