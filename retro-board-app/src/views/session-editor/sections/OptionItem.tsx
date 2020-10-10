@@ -29,7 +29,10 @@ const OptionItem = ({
       </HeaderContainer>
       <Alert
         severity="info"
-        style={{ margin: '0 -15px 0px -15px', borderRadius: '10px' }}
+        style={{
+          margin: '0 -15px 0px -15px',
+          borderRadius: '0px 0px 10px 10px',
+        }}
       >
         {help}
       </Alert>
