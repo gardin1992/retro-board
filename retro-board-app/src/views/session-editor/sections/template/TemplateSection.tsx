@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
-import SettingCategory from '../../SettingCategory';
-import OptionItem from '../../OptionItem';
+import SettingCategory from '../SettingCategory';
+import OptionItem from '../OptionItem';
 import TemplatePicker from './TemplatePicker';
 import useTranslations from '../../../../translations';
 import { ColumnSettings, Template } from '../../../../state/types';

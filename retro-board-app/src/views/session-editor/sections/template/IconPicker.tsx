@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { getIcon, getAllIcons } from '../../state/icons';
+import { getIcon, getAllIcons } from '../../../../state/icons';
 import { IconName } from 'retro-board-common';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';

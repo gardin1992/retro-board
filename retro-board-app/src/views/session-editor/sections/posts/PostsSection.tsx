@@ -1,9 +1,9 @@
 import React, { useCallback } from 'react';
 import { SessionOptions } from 'retro-board-common';
-import SettingCategory from '../../SettingCategory';
-import OptionItem from '../../OptionItem';
+import SettingCategory from '../SettingCategory';
+import OptionItem from '../OptionItem';
 import useTranslations from '../../../../translations';
-import BooleanOption from '../../BooleanOption';
+import BooleanOption from '../BooleanOption';
 
 interface PostsSectionProps {
   options: SessionOptions;

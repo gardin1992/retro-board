@@ -1,10 +1,10 @@
 import React, { useCallback } from 'react';
 import { SessionOptions } from 'retro-board-common';
-import SettingCategory from '../../SettingCategory';
-import OptionItem from '../../OptionItem';
+import SettingCategory from '../SettingCategory';
+import OptionItem from '../OptionItem';
 import useTranslations from '../../../../translations';
-import BooleanOption from '../../BooleanOption';
-import MaxVoteSlider from '../../MaxVoteSlider';
+import BooleanOption from '../BooleanOption';
+import MaxVoteSlider from './MaxVoteSlider';
 
 interface VotingSectionProps {
   options: SessionOptions;
