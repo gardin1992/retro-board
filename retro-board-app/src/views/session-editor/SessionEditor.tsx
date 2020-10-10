@@ -13,14 +13,11 @@ import {
 import SettingCategory from './SettingCategory';
 import useTranslations from '../../translations';
 import useToggle from '../../hooks/useToggle';
-import { ColumnSettings, Template } from '../../state/types';
-import { buildDefaults } from '../../state/columns';
-import { trackEvent } from '../../track';
+import { ColumnSettings } from '../../state/types';
 import OptionItem from './OptionItem';
 import MaxVoteSlider from './MaxVoteSlider';
 import BooleanOption from './BooleanOption';
-import TemplatePicker from './TemplatePicker';
-import TemplateEditor from './TemplateEditor';
+import TemplateSection from './sections/template/TemplateSection';
 
 interface SessionEditorProps {
   open: boolean;
@@ -75,15 +72,6 @@ function SessionEditor({
   }, [columns]);
 
 
-  const handleTemplateChange = useCallback(
-    (templateType: Template) => {
-      const template = buildDefaults(templateType, translations);
-      setDefinitions(template);
-      trackEvent('custom-modal/template/select');
-    },
-    [translations]
-  );
-
   const handleCreate = useCallback(() => {
     onChange(
       {
@@ -127,18 +115,7 @@ function SessionEditor({
     >
       <DialogTitle>{Customize.title}</DialogTitle>
       <DialogContent>
-        <SettingCategory
-          title={Customize.customTemplateCategory!}
-          subtitle={Customize.customTemplateCategorySub!}
-        >
-          <OptionItem
-            label={Customize.template!}
-            help={Customize.templateHelp!}
-          >
-            <TemplatePicker onSelect={handleTemplateChange} />
-          </OptionItem>
-          <TemplateEditor columns={definitions} onChange={setDefinitions} />
-        </SettingCategory>
+        <TemplateSection columns={definitions} onChange={setDefinitions} />
         <SettingCategory
           title={Customize.votingCategory!}
           subtitle={Customize.votingCategorySub!}

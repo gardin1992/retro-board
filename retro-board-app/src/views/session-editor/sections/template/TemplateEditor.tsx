@@ -1,10 +1,10 @@
 import React, { useCallback } from 'react';
-import { ColumnSettings } from '../../state/types';
-import ColumnEditor from './ColumnEditor';
-import useTranslation from '../../translations/useTranslations';
-import { getTemplateColumnByType } from '../../state/columns';
+import { ColumnSettings } from '../../../../state/types';
+import ColumnEditor from '../../ColumnEditor';
+import useTranslation from '../../../../translations/useTranslations';
+import { getTemplateColumnByType } from '../../../../state/columns';
 import { Button } from '@material-ui/core';
-import { trackEvent } from '../../track';
+import { trackEvent } from '../../../../track';
 
 const MAX_NUMBER_OF_COLUMNS = 5;
 
