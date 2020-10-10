@@ -16,12 +16,12 @@ export function buildDefaults(
   translations: Translation
 ): ColumnSettings[] {
   const base = getTemplate(template, translations);
-  const custom = getTemplateColumnByType(translations)('custom');
-  if (base.length < MAX_NUMBER_OF_COLUMNS) {
-    for (let i = 0; i <= MAX_NUMBER_OF_COLUMNS - base.length; i++) {
-      base.push({ ...custom });
-    }
-  }
+  // const custom = getTemplateColumnByType(translations)('custom');
+  // if (base.length < MAX_NUMBER_OF_COLUMNS) {
+  //   for (let i = 0; i <= MAX_NUMBER_OF_COLUMNS - base.length; i++) {
+  //     base.push({ ...custom });
+  //   }
+  // }
   return base;
 }
 

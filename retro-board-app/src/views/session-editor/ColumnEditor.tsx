@@ -7,14 +7,17 @@ import { ColumnSettings } from '../../state/types';
 import { IconName } from 'retro-board-common';
 import { TwitterPicker, ColorResult } from 'react-color';
 import IconPicker from './IconPicker';
+import { IconButton } from '@material-ui/core';
+import { Delete } from '@material-ui/icons';
 
 interface ColumnEditorProps {
   value: ColumnSettings;
   defaults: ColumnSettings;
   onChange: (value: ColumnSettings) => void;
+  onRemove: (value: ColumnSettings) => void;
 }
 
-const ColumnEditor = ({ value, defaults, onChange }: ColumnEditorProps) => {
+const ColumnEditor = ({ value, defaults, onChange, onRemove }: ColumnEditorProps) => {
   const [pickerOpen, setPickerOpen] = useState(false);
   const openPicker = useCallback(() => setPickerOpen(true), []);
   const closePicker = useCallback(() => setPickerOpen(false), []);
@@ -47,8 +50,12 @@ const ColumnEditor = ({ value, defaults, onChange }: ColumnEditorProps) => {
     },
     [onChange, value]
   );
+  const handleRemove = useCallback(() => {
+    onRemove(value);
+  }, [value, onRemove]);
   return (
     <Container>
+      <IconButton onClick={handleRemove}><Delete /></IconButton>
       <ColorAndIconContainer>
         <ColorContainer>
           <ColorPickerValue

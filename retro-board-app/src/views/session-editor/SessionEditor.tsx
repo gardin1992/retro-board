@@ -23,6 +23,7 @@ import ColumnEditor from './ColumnEditor';
 import MaxVoteSlider from './MaxVoteSlider';
 import BooleanOption from './BooleanOption';
 import TemplatePicker from './TemplatePicker';
+import TemplateEditor from './TemplateEditor';
 
 interface SessionEditorProps {
   open: boolean;
@@ -57,21 +58,23 @@ function SessionEditor({
   const [allowGrouping, setAllowGrouping] = useState(true);
   const [allowReordering, setAllowReordering] = useState(true);
   const [blurCards, setBlurCards] = useState(false);
-  const [numberOfColumns, setNumberOfColumns] = useState(3);
-  const [defaultDefinitions, setDefaultDefinitions] = useState(
-    buildDefaults('default', translations)
-  );
+  // const [numberOfColumns, setNumberOfColumns] = useState(3);
+  // const [defaultDefinitions, setDefaultDefinitions] = useState(
+  //   buildDefaults('default', translations)
+  // );
 
-  const [definitions, setDefinitions] = useState<ColumnSettings[]>(
-    buildDefaults('default', translations).map(
-      (d) =>
-        ({ type: d.type, color: '', icon: null, label: '' } as ColumnSettings)
-    )
-  );
+  // const [definitions, setDefinitions] = useState<ColumnSettings[]>(
+  //   buildDefaults('default', translations).map(
+  //     (d) =>
+  //       ({ type: d.type, color: '', icon: null, label: '' } as ColumnSettings)
+  //   )
+  // );
 
-  useEffect(() => {
-    setDefaultDefinitions(buildDefaults('default', translations));
-  }, [translations]);
+  const [definitions, setDefinitions] = useState<ColumnSettings[]>(columns);
+
+  // useEffect(() => {
+  //   setDefaultDefinitions(buildDefaults('default', translations));
+  // }, [translations]);
 
   useEffect(() => {
     setAllowActions(options.allowActions);
@@ -87,7 +90,7 @@ function SessionEditor({
   }, [options]);
 
   useEffect(() => {
-    setNumberOfColumns(columns.length);
+    // setNumberOfColumns(columns.length);
     setDefinitions(columns);
   }, [columns]);
 
@@ -102,8 +105,9 @@ function SessionEditor({
   const handleTemplateChange = useCallback(
     (templateType: Template) => {
       const template = buildDefaults(templateType, translations);
-      setNumberOfColumns(getTemplate(templateType, translations).length);
-      setDefaultDefinitions(template);
+      // setNumberOfColumns(getTemplate(templateType, translations).length);
+      // setDefaultDefinitions(template);
+      setDefinitions(template);
       trackEvent('custom-modal/template/select');
     },
     [translations]
@@ -123,7 +127,8 @@ function SessionEditor({
         maxDownVotes,
         maxUpVotes,
       },
-      merge(definitions, defaultDefinitions, numberOfColumns),
+      definitions,
+      // merge(definitions, defaultDefinitions, numberOfColumns),
       isDefaultTemplate
     );
   }, [
@@ -138,9 +143,7 @@ function SessionEditor({
     blurCards,
     maxDownVotes,
     maxUpVotes,
-    defaultDefinitions,
     definitions,
-    numberOfColumns,
     isDefaultTemplate,
   ]);
 
@@ -164,27 +167,16 @@ function SessionEditor({
           >
             <TemplatePicker onSelect={handleTemplateChange} />
           </OptionItem>
-          <OptionItem
-            label={Customize.numberOfColumns!}
-            help={Customize.numberOfColumnsHelp!}
-          >
-            <Slider
-              value={numberOfColumns}
-              onChange={setNumberOfColumns}
-              from={1}
-              to={5}
-            />
-          </OptionItem>
-          <>
-            {definitions.slice(0, numberOfColumns).map((def, index) => (
+          <TemplateEditor columns={definitions} onChange={setDefinitions} />
+            {/* {definitions.map((def, index) => (
               <ColumnEditor
                 key={index}
                 value={def}
-                defaults={defaultDefinitions[index]}
+                defaults={definitions[index]}
                 onChange={(value) => handleColumnChange(value, index)}
               />
             ))}
-          </>
+            <Button onClick={handleAddColumn} */}
         </SettingCategory>
         <SettingCategory
           title={Customize.votingCategory!}
