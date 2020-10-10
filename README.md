@@ -463,7 +463,7 @@ Many thanks to the following contributors who helped translating the app:
 
 - Hungarian: [@iaretiga](https://github.com/iaretiga)
 - Portuguese (Brazilian): [@renancouto](https://github.com/renancouto)
-- Dutch: [@Sonaryr](https://github.com/Sonaryr)
+- Dutch: [@Sonaryr](https://github.com/Sonaryr), [@jghaanstra](https://github.com/jghaanstra)
 - Russian: [@vectart](https://github.com/vectart), [@regmagik](https://github.com/regmagik)
 - Spanish: [@andresin87](https://github.com/andresin87)
 - Chinese: [@aqutw](https://github.com/aqutw)
