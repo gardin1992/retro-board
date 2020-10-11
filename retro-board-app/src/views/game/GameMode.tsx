@@ -1,6 +1,11 @@
 import React, { useCallback } from 'react';
 import styled from 'styled-components';
-import { Post, PostGroup, SessionOptions } from 'retro-board-common';
+import {
+  Post,
+  PostGroup,
+  SessionOptions,
+  ColumnDefinition,
+} from 'retro-board-common';
 import { Typography, makeStyles, Box } from '@material-ui/core';
 import {
   DragDropContext,
@@ -28,6 +33,7 @@ import { getNext, getMiddle } from './lexorank';
 import RevealButton from './RevealButton';
 import ModifyOptions from './ModifyOptions';
 import useCanModifyOptions from './useCanModifyOptions';
+import { ColumnSettings } from '../../state/types';
 
 interface GameModeProps {
   columns: ColumnContent[];
@@ -48,6 +54,7 @@ interface GameModeProps {
   onEditGroup: (group: PostGroup) => void;
   onDeleteGroup: (group: PostGroup) => void;
   onEditOptions: (options: SessionOptions) => void;
+  onEditColumns: (columns: ColumnDefinition[]) => void;
 }
 
 const useStyles = makeStyles({
@@ -85,6 +92,7 @@ function GameMode({
   onEditGroup,
   onDeleteGroup,
   onEditOptions,
+  onEditColumns,
   columns,
   options,
 }: GameModeProps) {
@@ -154,7 +162,10 @@ function GameMode({
           <ExtraOptions>
             {canReveal ? <RevealButton onClick={handleReveal} /> : null}
             {canModifyOptions ? (
-              <ModifyOptions onEditOptions={onEditOptions} />
+              <ModifyOptions
+                onEditOptions={onEditOptions}
+                onEditColumns={onEditColumns}
+              />
             ) : null}
           </ExtraOptions>
           <Typography

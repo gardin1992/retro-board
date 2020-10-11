@@ -3,26 +3,26 @@ import useGlobalState from '../../state';
 import { Button } from '@material-ui/core';
 import SessionEditor from '../session-editor/SessionEditor';
 import { ColumnSettings } from '../../state/types';
-import { SessionOptions } from 'retro-board-common';
+import { SessionOptions, ColumnDefinition } from 'retro-board-common';
+import { toColumnDefinitions } from '../../state/columns';
 
 interface ModifyOptionsProps {
   onEditOptions: (options: SessionOptions) => void;
+  onEditColumns: (columns: ColumnDefinition[]) => void;
 }
 
-function ModifyOptions({ onEditOptions }: ModifyOptionsProps) {
+function ModifyOptions({ onEditOptions, onEditColumns }: ModifyOptionsProps) {
   const [open, setOpen] = useState(false);
   const { state } = useGlobalState();
 
   const handleChange = useCallback(
-    (
-      options: SessionOptions,
-      columns: ColumnSettings[],
-      makeDefault: boolean
-    ) => {
+    (options: SessionOptions, columns: ColumnSettings[], _: boolean) => {
       setOpen(false);
+      // TODO: make these conditional
       onEditOptions(options);
+      onEditColumns(toColumnDefinitions(columns));
     },
-    [onEditOptions]
+    [onEditOptions, onEditColumns]
   );
 
   if (!state.session) {
