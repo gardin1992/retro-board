@@ -31,10 +31,12 @@ function ModifyOptions({ onEditOptions, onEditColumns }: ModifyOptionsProps) {
       }
       const { options, columns } = state.session;
       if (options !== updatedOptions) {
+        console.log('options are updated');
         onEditOptions(updatedOptions);
         trackEvent('game/session/edit-options');
       }
       if (columns !== updatedColumns) {
+        console.log('columns are updated');
         onEditColumns(toColumnDefinitions(updatedColumns));
         trackEvent('game/session/edit-columns');
       }
