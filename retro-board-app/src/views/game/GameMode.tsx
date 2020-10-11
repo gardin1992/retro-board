@@ -26,6 +26,8 @@ import {
 } from './moving-logic';
 import { getNext, getMiddle } from './lexorank';
 import RevealButton from './RevealButton';
+import ModifyOptions from './ModifyOptions';
+import useCanModifyOptions from './useCanModifyOptions';
 
 interface GameModeProps {
   columns: ColumnContent[];
@@ -93,6 +95,7 @@ function GameMode({
   const user = useUser();
   const isLoggedIn = !!user;
   const canReveal = useCanReveal();
+  const canModifyOptions = useCanModifyOptions();
 
   const handleReveal = useCallback(() => {
     if (state && state.session) {
@@ -150,6 +153,9 @@ function GameMode({
         <HeaderWrapper>
           <ExtraOptions>
             {canReveal ? <RevealButton onClick={handleReveal} /> : null}
+            {canModifyOptions ? (
+              <ModifyOptions onEditOptions={onEditOptions} />
+            ) : null}
           </ExtraOptions>
           <Typography
             variant="h5"
