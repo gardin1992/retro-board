@@ -273,7 +273,6 @@ const ExtraOptions = styled.div`
 
   > * {
     margin-right: 10px;
-    // margin-bottom: 20px;
   }
 
   @media (max-width: 500px) {
