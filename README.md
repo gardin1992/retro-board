@@ -150,6 +150,7 @@ When using the Docker deployment, your database runs from a container. But if yo
 - Allow changing the default language for new users via environement variables ([#135](https://github.com/antoinejaussoin/retro-board/issues/135))
 - Allow a moderator to blur cards written by others, to keep everything hidden until the end of the retrospective ([#100](https://github.com/antoinejaussoin/retro-board/issues/100))
 - Complete redesign of the Custom Session settings modal
+- Ability to modify session settings once the game has started. This is only available to the session moderator (author).
 
 ### Version 3.1.1
 
