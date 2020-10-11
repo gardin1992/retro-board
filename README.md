@@ -152,6 +152,7 @@ When using the Docker deployment, your database runs from a container. But if yo
 - Complete redesign of the Custom Session settings modal
 - Ability to modify session settings once the game has started. This is only available to the session moderator (author) ([#92](https://github.com/antoinejaussoin/retro-board/issues/92)).
 - Ability to display past sessions for Anonymous users. This is limited to viewing past sessions on the same browser, any login to a different browser will create a different anonymous account, for safety reasons ([#112](https://github.com/antoinejaussoin/retro-board/issues/112)).
+- Dependencies update
 
 ### Version 3.1.1
 
