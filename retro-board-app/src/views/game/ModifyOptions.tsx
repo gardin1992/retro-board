@@ -29,15 +29,17 @@ function ModifyOptions({ onEditOptions, onEditColumns }: ModifyOptionsProps) {
       }
       const { options, columns } = state.session;
       if (options !== updatedOptions) {
-        onEditOptions(options);
+        console.log('Options have changed', options, updatedOptions);
+        onEditOptions(updatedOptions);
         trackEvent('game/session/edit-options');
       }
       if (columns !== updatedColumns) {
-        onEditColumns(toColumnDefinitions(columns));
+        console.log('Columns have changed');
+        onEditColumns(toColumnDefinitions(updatedColumns));
         trackEvent('game/session/edit-columns');
       }
     },
-    [onEditOptions, onEditColumns, state]
+    [onEditOptions, onEditColumns, state.session]
   );
 
   if (!state.session) {
@@ -49,14 +51,16 @@ function ModifyOptions({ onEditOptions, onEditColumns }: ModifyOptionsProps) {
   return (
     <>
       <Button onClick={() => setOpen(true)}>Options</Button>
-      <SessionEditor
-        edit
-        open={open}
-        columns={columns}
-        options={options}
-        onClose={() => setOpen(false)}
-        onChange={handleChange}
-      />
+      {open ? (
+        <SessionEditor
+          edit
+          open={open}
+          columns={columns}
+          options={options}
+          onClose={() => setOpen(false)}
+          onChange={handleChange}
+        />
+      ) : null}
     </>
   );
 }

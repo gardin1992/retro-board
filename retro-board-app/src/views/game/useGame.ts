@@ -230,11 +230,10 @@ const useGame = (sessionId: string) => {
     deletePost,
     updatePost,
     editOptions,
-
+    editColumns,
     receivePostGroup,
     deletePostGroup,
     updatePostGroup,
-
     renameSession,
     disconnected,
   ]);

@@ -33,7 +33,6 @@ import { getNext, getMiddle } from './lexorank';
 import RevealButton from './RevealButton';
 import ModifyOptions from './ModifyOptions';
 import useCanModifyOptions from './useCanModifyOptions';
-import { ColumnSettings } from '../../state/types';
 
 interface GameModeProps {
   columns: ColumnContent[];
