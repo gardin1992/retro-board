@@ -36,7 +36,6 @@ import VoteButton from './VoteButton';
 import ActionButton from './ActionButton';
 import ActionsBar from './ActionsBar';
 import { trackEvent } from '../../../track';
-import { IPrng } from 'lorem-ipsum/types/src/lib/generator';
 
 interface PostItemProps {
   index: number;
