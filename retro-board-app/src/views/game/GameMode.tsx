@@ -241,6 +241,7 @@ const HeaderWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 20px;
 
   > *:first-child {
     flex: 1;
@@ -258,6 +259,7 @@ const HeaderWrapper = styled.div`
   @media (max-width: 500px) {
     margin-top: 40px;
     flex-direction: column;
+    margin-bottom: 0px;
 
     > *:last-child {
       margin: 20px 0;
@@ -269,8 +271,17 @@ const ExtraOptions = styled.div`
   display: flex;
   justify-content: flex-start;
 
+  > * {
+    margin-right: 10px;
+    // margin-bottom: 20px;
+  }
+
   @media (max-width: 500px) {
     margin-bottom: 20px;
+
+    > * {
+      margin-top: 10px;
+    }
   }
 `;
 

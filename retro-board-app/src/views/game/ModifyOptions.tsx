@@ -6,6 +6,8 @@ import { ColumnSettings } from '../../state/types';
 import { SessionOptions, ColumnDefinition } from 'retro-board-common';
 import { toColumnDefinitions } from '../../state/columns';
 import { trackEvent } from '../../track';
+import { Settings } from '@material-ui/icons';
+import useTranslations from '../../translations';
 
 interface ModifyOptionsProps {
   onEditOptions: (options: SessionOptions) => void;
@@ -13,6 +15,7 @@ interface ModifyOptionsProps {
 }
 
 function ModifyOptions({ onEditOptions, onEditColumns }: ModifyOptionsProps) {
+  const { Join } = useTranslations();
   const [open, setOpen] = useState(false);
   const { state } = useGlobalState();
 
@@ -23,7 +26,6 @@ function ModifyOptions({ onEditOptions, onEditColumns }: ModifyOptionsProps) {
       _: boolean
     ) => {
       setOpen(false);
-      // TODO: make these conditional
       if (!state.session) {
         return;
       }
@@ -50,7 +52,14 @@ function ModifyOptions({ onEditOptions, onEditColumns }: ModifyOptionsProps) {
 
   return (
     <>
-      <Button onClick={() => setOpen(true)}>Options</Button>
+      <Button
+        variant="contained"
+        color="primary"
+        startIcon={<Settings />}
+        onClick={() => setOpen(true)}
+      >
+        {Join.standardTab.customizeButton}
+      </Button>
       {open ? (
         <SessionEditor
           edit
