@@ -99,7 +99,6 @@ const createCustom = (
   setDefault: boolean,
   author: User
 ): Promise<Session> => {
-  console.log('Columns: ', columns.length);
   try {
     const id = shortId();
     const session = await sessionRepository.findOne({ id });
