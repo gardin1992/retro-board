@@ -281,7 +281,7 @@ export default (store: Store, io: SocketIO.Server) => {
       return;
     }
     session.name = data.name;
-    await persistSession(userId, session);
+    await persistSession(session.createdBy.id, session);
     sendToAll(socket, session.id, RECEIVE_SESSION_NAME, data.name);
   };
 
