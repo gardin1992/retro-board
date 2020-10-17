@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { NextFunction } from 'express';
 import bodyParser from 'body-parser';
 import socketIo from 'socket.io';
 import socketIoRedisAdapter from 'socket.io-redis';
@@ -25,6 +25,8 @@ import { RegisterPayload, ValidateEmailPayload, ResetPasswordPayload, ResetChang
 import registerUser from './auth/register/register-user';
 import { sendVerificationEmail, sendResetPassword } from './email/emailSender';
 import { v4 } from 'uuid';
+import mung from 'express-mung';
+import { hasField } from './security/payload-checker';
 
 initSentry();
 
@@ -68,6 +70,15 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 const httpServer = new http.Server(app);
+
+app.use(mung.json((body, req, res) => {
+  if (body) {
+    const hasPassword = hasField('password', body);
+    if (hasPassword) {
+      console.error('The following object has a password property: ', body);
+    }
+  }
+}));
 
 app.get('/api/ping', (req, res) => {
   res.send('pong');
@@ -307,8 +318,11 @@ db().then((store) => {
     }
   });
 
+  
+
   setupSentryErrorHandler(app);
 });
+
 
 
 httpServer.listen(port);

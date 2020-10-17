@@ -16,6 +16,7 @@ import { v4 } from 'uuid';
 import { Store } from './types';
 import { setScope, reportQueryError } from './sentry';
 import SessionOptions from './db/entities/SessionOptions';
+import { hasField } from './security/payload-checker';
 
 const {
   RECEIVE_POST,
@@ -86,6 +87,9 @@ export default (store: Store, io: SocketIO.Server) => {
     console.log(
       chalk`${d()}{green  ==> } ${s(action)} {grey ${JSON.stringify(data)}}`
     );
+    if (hasField('password', data)) {
+      console.error('The following object has a password property: ', data);
+    }
     socket.broadcast.to(getRoom(sessionId)).emit(action, data);
   };
 
@@ -93,6 +97,9 @@ export default (store: Store, io: SocketIO.Server) => {
     console.log(
       chalk`${d()}{green  --> } ${s(action)} {grey ${JSON.stringify(data)}}`
     );
+    if (hasField('password', data)) {
+      console.error('The following object has a password property: ', data);
+    }
     socket.emit(action, data);
   };
 
