@@ -15,7 +15,7 @@ export default async function registerUser(store: Store, details: RegisterPayloa
     id: v4(),
     name: details.name,
     photo: null,
-    language: 'en',
+    language: details.language,
     username: details.username,
     password: hashedPassword,
     emailVerification: v4(),

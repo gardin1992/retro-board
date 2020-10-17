@@ -150,8 +150,8 @@ interface RegisterResponse {
   error: 'already-exists' | 'other' | null;
 }
 
-export async function register(name: string, email: string, password: string): Promise<RegisterResponse> {
-  const payload: RegisterPayload = { username: email, password, name };
+export async function register(name: string, email: string, password: string, language: string): Promise<RegisterResponse> {
+  const payload: RegisterPayload = { username: email, password, name, language };
   const response = await fetch(`/api/register`, {
     method: 'POST',
     mode: 'cors',
