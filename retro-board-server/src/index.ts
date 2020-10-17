@@ -13,7 +13,7 @@ import passportInit from './auth/passport';
 import authRouter from './auth/router';
 import session from 'express-session';
 import game from './game';
-import { getUser } from './utils';
+import { getUser, hashPassword } from './utils';
 import {
   initSentry,
   setupSentryErrorHandler,
@@ -280,9 +280,10 @@ db().then((store) => {
       return;
     }
     if (user.emailVerification && user.emailVerification === validatePayload.code) {
+      const hashedPassword = await hashPassword(validatePayload.password);
       const updatedUser = await store.updateUser(user.id, {
         emailVerification: null,
-        password: validatePayload.password,
+        password: hashedPassword,
       });
       req.logIn(user.id, (err) => {
         if (err) {
