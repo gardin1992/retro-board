@@ -7,6 +7,7 @@ import {
   User,
   SessionMetadata,
   PostGroup,
+  FullUser,
 } from 'retro-board-common';
 import { SessionTemplateEntity, SessionEntity } from './db/entities';
 import UserEntity from './db/entities/User';
@@ -24,7 +25,7 @@ export interface Store {
     author: User
   ) => Promise<Session>;
   saveSession: (userId: string, session: Session) => Promise<void>;
-  getOrSaveUser: (user: User) => Promise<UserEntity>;
+  getOrSaveUser: (user: UserEntity) => Promise<UserEntity>;
   updateUser: (
     userId: string,
     updatedFields: Partial<UserEntity>

@@ -24,7 +24,6 @@ const testingInitialState: State = {
       name: 'John Doe',
       accountType: 'anonymous',
       photo: null,
-      username: 'johndoe',
       language: 'en',
     },
     options: {
@@ -48,7 +47,6 @@ const AllTheProviders: React.SFC = ({ children }) => {
     name: 'John Doe',
     accountType: 'anonymous',
     photo: null,
-    username: 'johndoe',
     language: 'en',
   });
   useEffect(() => {
@@ -57,7 +55,6 @@ const AllTheProviders: React.SFC = ({ children }) => {
       name: 'John Doe',
       accountType: 'anonymous',
       photo: null,
-      username: 'johndoe',
       language: 'en',
     });
   }, []);

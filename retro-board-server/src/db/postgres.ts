@@ -21,6 +21,7 @@ import {
   defaultSession,
   VoteType,
   User,
+  FullUser,
 } from 'retro-board-common';
 import { Store } from '../types';
 import getOrmConfig from './orm-config';
@@ -269,7 +270,7 @@ const deletePostGroup = (postGroupRepository: PostGroupRepository) => async (
 };
 
 const getOrSaveUser = (userRepository: UserRepository) => async (
-  user: User
+  user: UserEntity
 ): Promise<UserEntity> => {
   const existingUser = await userRepository.findOne({
     where: { username: user.username, accountType: user.accountType },
@@ -277,7 +278,7 @@ const getOrSaveUser = (userRepository: UserRepository) => async (
   if (existingUser) {
     return existingUser;
   }
-  return await userRepository.saveFromJson(user);
+  return await userRepository.save(user);
 };
 
 const deleteSessions = (sessionRepository: SessionRepository) => async (

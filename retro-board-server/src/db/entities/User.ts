@@ -68,7 +68,6 @@ export default class UserEntity {
       language: this.language,
       name: this.name,
       photo: this.photo,
-      username: this.username,
     };
   }
 }

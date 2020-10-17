@@ -78,9 +78,12 @@ export interface PostGroup extends PostContainer, Rankable, Entity {
 export interface User extends Entity {
   name: string;
   accountType: AccountType;
-  username: string | null;
   photo: string | null;
   language: string;
+}
+
+export interface FullUser extends User {
+  username: string | null;
 }
 
 export type AccountType =
