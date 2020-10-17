@@ -147,7 +147,6 @@ export default (store: Store, io: SocketIO.Server) => {
     if (!userId) {
       return;
     }
-    console.log('About to persist post: ', post);
     await store.savePost(userId, sessionId, post);
   };
 
@@ -348,7 +347,7 @@ export default (store: Store, io: SocketIO.Server) => {
       if (session.options.allowMultipleVotes || !existingVote) {
         const vote: Vote = {
           id: v4(),
-          user: user,
+          user: user.toJson(),
           type: data.type,
         };
         await persistVote(userId, session.id, post.id, vote);

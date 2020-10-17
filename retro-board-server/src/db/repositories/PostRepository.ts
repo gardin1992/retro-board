@@ -10,8 +10,6 @@ export default class PostRepository extends Repository<PostEntity> {
     userId: string,
     post: JsonPost
   ): Promise<void> {
-    console.log('Session id: ', sessionId);
-    console.log('User id: ', userId);
     const session = await this.manager.findOne(SessionEntity, sessionId);
     if (session) {
       await this.save({
