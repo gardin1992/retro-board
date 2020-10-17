@@ -10,6 +10,7 @@ import { User, AccountType } from 'retro-board-common';
 import chalk from 'chalk';
 import loginAnonymous from './logins/anonymous-user';
 import loginUser from './logins/password-user';
+import UserEntity from '../db/entities/User';
 
 export default (store: Store) => {
   // Allowing passport to serialize and deserialize users into sessions
@@ -29,18 +30,13 @@ export default (store: Store) => {
     profile: any,
     cb: Function
   ) => {
-    const user: User = {
-      accountType: type,
-      id: v4(),
-      name: profile.displayName,
-      photo: profile.photos?.length ? profile.photos[0].value : null,
-      language: 'en',
-      username:
-        profile.username ||
-        (profile.emails.length ? profile.emails[0].value : null),
-      password: null,
-      emailVerification: null,
-    };
+    const user: UserEntity = new UserEntity(v4(), profile.displayName);
+    user.accountType = type;
+    user.photo = profile.photos?.length ? profile.photos[0].value : null,
+    user.language = 'en';
+    user.username = profile.username ||
+    (profile.emails.length ? profile.emails[0].value : null);
+
     const dbUser = await store.getOrSaveUser(user);
     cb(null, dbUser.id);
   };

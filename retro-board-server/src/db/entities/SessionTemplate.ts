@@ -10,7 +10,7 @@ import {
 } from 'typeorm';
 import { TemplateColumnDefinition } from './ColumnDefinition';
 import { SessionOptions as JsonSessionOptions } from 'retro-board-common';
-import User from './User';
+import UserEntity from './User';
 import SessionOptions from './SessionOptions';
 
 @Entity({ name: 'templates' })
@@ -20,8 +20,8 @@ export default class SessionTemplate {
   @Column({ nullable: false, type: 'character varying' })
   @Index()
   public name: string | null;
-  @ManyToOne(() => User, { eager: true, cascade: true, nullable: false })
-  public createdBy: User;
+  @ManyToOne(() => UserEntity, { eager: true, cascade: true, nullable: false })
+  public createdBy: UserEntity;
   @OneToMany(
     () => TemplateColumnDefinition,
     colDef => colDef.template,
@@ -42,7 +42,7 @@ export default class SessionTemplate {
   constructor(
     id: string,
     name: string | null,
-    createdBy: User,
+    createdBy: UserEntity,
     options: Partial<JsonSessionOptions>
   ) {
     this.id = id;

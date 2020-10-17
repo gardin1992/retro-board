@@ -11,7 +11,7 @@ import {
 import Post from './Post';
 import { ColumnDefinition } from './ColumnDefinition';
 import { SessionOptions as JsonSessionOptions } from 'retro-board-common';
-import User from './User';
+import UserEntity from './User';
 import SessionOptions from './SessionOptions';
 import PostGroup from './PostGroup';
 
@@ -22,8 +22,8 @@ export default class Session {
   @Column({ nullable: true, type: 'character varying' })
   @Index()
   public name: string | null;
-  @ManyToOne(() => User, { eager: true, cascade: true, nullable: false })
-  public createdBy: User;
+  @ManyToOne(() => UserEntity, { eager: true, cascade: true, nullable: false })
+  public createdBy: UserEntity;
   @OneToMany(
     () => Post,
     post => post.session,
@@ -64,7 +64,7 @@ export default class Session {
   constructor(
     id: string,
     name: string | null,
-    createdBy: User,
+    createdBy: UserEntity,
     options: Partial<JsonSessionOptions>
   ) {
     this.id = id;

@@ -21,12 +21,14 @@ import {
   SessionOptions,
   defaultSession,
   VoteType,
+  User,
 } from 'retro-board-common';
 import { Store } from '../types';
 import getOrmConfig from './orm-config';
 import shortId from 'shortid';
 import { v4 } from 'uuid';
 import { SessionTemplate, Session, ColumnDefinition } from './entities';
+import UserEntity from './entities/User';
 
 export async function getDb() {
   const connection = await createConnection(getOrmConfig());
@@ -171,7 +173,7 @@ const getUser = (userRepository: UserRepository) => async (
 
 const getUserByUsername = (userRepository: UserRepository) => async (
   username: string
-): Promise<JsonUser | null> => {
+): Promise<UserEntity | null> => {
   const user = await userRepository.findOne({ username });
   return user || null;
 };
@@ -188,8 +190,8 @@ const getDefaultTemplate = (userRepository: UserRepository) => async (
 
 const updateUser = (userRepository: UserRepository) => async (
   id: string,
-  updatedUser: Partial<JsonUser>
-): Promise<JsonUser | null> => {
+  updatedUser: Partial<UserEntity>
+): Promise<UserEntity | null> => {
   const user = await userRepository.findOne(id);
   if (user) {
     await userRepository.update(id, updatedUser);
@@ -262,13 +264,13 @@ const deletePostGroup = (postGroupRepository: PostGroupRepository) => async (
 };
 
 const getOrSaveUser = (userRepository: UserRepository) => async (
-  user: JsonUser
-): Promise<JsonUser> => {
+  user: User
+): Promise<UserEntity> => {
   const existingUser = await userRepository.findOne({
     where: { username: user.username, accountType: user.accountType },
   });
   if (existingUser) {
-    return existingUser as JsonUser;
+    return existingUser;
   }
   return await userRepository.saveFromJson(user);
 };

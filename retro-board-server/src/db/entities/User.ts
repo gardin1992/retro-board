@@ -12,7 +12,7 @@ import { SessionTemplate } from '.';
 
 @Entity({ name: 'users' })
 @Index(['username', 'accountType'], { unique: true })
-export default class User {
+export default class UserEntity {
   @PrimaryColumn({ primary: true, generated: false, unique: true })
   public id: string;
   @Column()

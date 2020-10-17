@@ -7,15 +7,15 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { VoteType } from 'retro-board-common';
-import User from './User';
+import UserEntity from './User';
 import Post from './Post';
 
 @Entity({ name: 'votes' })
 export default class Vote {
   @PrimaryColumn({ primary: true, generated: false, unique: true })
   public id: string;
-  @ManyToOne(() => User, { eager: true, nullable: false })
-  public user: User;
+  @ManyToOne(() => UserEntity, { eager: true, nullable: false })
+  public user: UserEntity;
   @ManyToOne(() => Post, {
     eager: false,
     nullable: false,
@@ -29,7 +29,7 @@ export default class Vote {
   public created: Date | undefined;
   @UpdateDateColumn({ type: 'timestamp with time zone' })
   public updated: Date | undefined;
-  constructor(id: string, post: Post, user: User, type: VoteType) {
+  constructor(id: string, post: Post, user: UserEntity, type: VoteType) {
     this.id = id;
     this.post = post;
     this.type = type;

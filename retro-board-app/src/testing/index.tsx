@@ -25,8 +25,6 @@ const testingInitialState: State = {
       accountType: 'anonymous',
       photo: null,
       username: 'johndoe',
-      password: null,
-      emailVerification: null,
       language: 'en',
     },
     options: {
@@ -51,8 +49,6 @@ const AllTheProviders: React.SFC = ({ children }) => {
     accountType: 'anonymous',
     photo: null,
     username: 'johndoe',
-    password: null,
-    emailVerification: null,
     language: 'en',
   });
   useEffect(() => {
@@ -62,18 +58,13 @@ const AllTheProviders: React.SFC = ({ children }) => {
       accountType: 'anonymous',
       photo: null,
       username: 'johndoe',
-      password: null,
-      emailVerification: null,
       language: 'en',
     });
   }, []);
   return (
     <DragDropContext onDragEnd={() => {}}>
       <Droppable droppableId="test">
-        {(
-          dropProvided: DroppableProvided,
-          dropSnapshot: DroppableStateSnapshot
-        ) => (
+        {(dropProvided: DroppableProvided, _: DroppableStateSnapshot) => (
           <div ref={dropProvided.innerRef}>
             <UserContext.Provider value={{ user, setUser, initialised: true }}>
               <Provider initialState={testingInitialState}>{children}</Provider>

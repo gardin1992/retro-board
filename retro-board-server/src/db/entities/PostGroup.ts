@@ -10,7 +10,7 @@ import {
 } from 'typeorm';
 import { LexoRank } from 'lexorank';
 import Session from './Session';
-import User from './User';
+import UserEntity from './User';
 import Post from './Post';
 
 @Entity({ name: 'groups' })
@@ -26,8 +26,8 @@ export default class PostGroup {
   public rank: string;
   @Column()
   public label: string;
-  @ManyToOne(() => User, { eager: true, cascade: true, nullable: false })
-  public user: User;
+  @ManyToOne(() => UserEntity, { eager: true, cascade: true, nullable: false })
+  public user: UserEntity;
   @OneToMany(
     () => Post,
     post => post.session,
@@ -47,7 +47,7 @@ export default class PostGroup {
     session: Session,
     column: number,
     label: string,
-    user: User
+    user: UserEntity
   ) {
     this.id = id;
     this.session = session;

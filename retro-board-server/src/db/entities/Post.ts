@@ -10,7 +10,7 @@ import {
 } from 'typeorm';
 import { LexoRank } from 'lexorank';
 import Session from './Session';
-import User from './User';
+import UserEntity from './User';
 import Vote from './Vote';
 import PostGroup from './PostGroup';
 
@@ -39,8 +39,8 @@ export default class Post {
   public action: null | string;
   @Column({ nullable: true, type: 'character varying' })
   public giphy: null | string;
-  @ManyToOne(() => User, { eager: true, cascade: true, nullable: false })
-  public user: User;
+  @ManyToOne(() => UserEntity, { eager: true, cascade: true, nullable: false })
+  public user: UserEntity;
   @OneToMany(
     () => Vote,
     vote => vote.post,
@@ -60,7 +60,7 @@ export default class Post {
     session: Session,
     column: number,
     content: string,
-    user: User
+    user: UserEntity
   ) {
     this.id = id;
     this.session = session;

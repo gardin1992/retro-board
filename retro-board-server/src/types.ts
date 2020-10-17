@@ -9,11 +9,12 @@ import {
   PostGroup,
 } from 'retro-board-common';
 import { SessionTemplate } from './db/entities';
+import UserEntity from './db/entities/User';
 
 export interface Store {
   getSession: (userId: string | null, key: string) => Promise<Session | null>;
   getUser: (id: string) => Promise<User | null>;
-  getUserByUsername: (username: string) => Promise<User | null>;
+  getUserByUsername: (username: string) => Promise<UserEntity | null>;
   getDefaultTemplate: (userId: string) => Promise<SessionTemplate | null>;
   create: (author: User) => Promise<Session>;
   createCustom: (
@@ -23,11 +24,11 @@ export interface Store {
     author: User
   ) => Promise<Session>;
   saveSession: (userId: string, session: Session) => Promise<void>;
-  getOrSaveUser: (user: User) => Promise<User>;
+  getOrSaveUser: (user: User) => Promise<UserEntity>;
   updateUser: (
     userId: string,
-    updatedFields: Partial<User>
-  ) => Promise<User | null>;
+    updatedFields: Partial<UserEntity>
+  ) => Promise<UserEntity | null>;
   savePost: (userId: string, sessionId: string, post: Post) => Promise<void>;
   savePostGroup: (
     userId: string,
