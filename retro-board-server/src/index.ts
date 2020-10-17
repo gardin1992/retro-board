@@ -21,7 +21,12 @@ import {
   setScope,
   reportQueryError,
 } from './sentry';
-import { RegisterPayload, ValidateEmailPayload, ResetPasswordPayload, ResetChangePasswordPayload } from 'retro-board-common';
+import {
+  RegisterPayload,
+  ValidateEmailPayload,
+  ResetPasswordPayload,
+  ResetChangePasswordPayload,
+} from 'retro-board-common';
 import registerUser from './auth/register/register-user';
 import { sendVerificationEmail, sendResetPassword } from './email/emailSender';
 import { v4 } from 'uuid';
@@ -71,14 +76,16 @@ app.use(passport.session());
 
 const httpServer = new http.Server(app);
 
-app.use(mung.json((body, req, res) => {
-  if (body) {
-    const hasPassword = hasField('password', body);
-    if (hasPassword) {
-      console.error('The following object has a password property: ', body);
+app.use(
+  mung.json((body, req, res) => {
+    if (body) {
+      const hasPassword = hasField('password', body);
+      if (hasPassword) {
+        console.error('The following object has a password property: ', body);
+      }
     }
-  }
-}));
+  })
+);
 
 app.get('/api/ping', (req, res) => {
   res.send('pong');
@@ -170,7 +177,7 @@ db().then((store) => {
   app.get('/api/me', async (req, res) => {
     const user = await getUser(store, req);
     if (user) {
-      res.status(200).send(user.toJson());
+      res.status(200).send(user.toFullUser());
     } else {
       res.status(401).send('Not logged in');
     }
@@ -207,11 +214,10 @@ db().then((store) => {
         language: req.body.language,
       });
       if (updatedUser) {
-        res.status(200).send(updatedUser?.toJson());
+        res.status(200).send(updatedUser?.toFullUser());
       } else {
         res.status(401).send();
       }
-      
     } else {
       res.status(401).send();
     }
@@ -236,16 +242,20 @@ db().then((store) => {
       return;
     }
     const registerPayload = req.body as RegisterPayload;
-    if (await store.getUserByUsername(registerPayload.username) !== null) {
-      res.status(403).send("User already exists");
+    if ((await store.getUserByUsername(registerPayload.username)) !== null) {
+      res.status(403).send('User already exists');
       return;
     }
     const user = await registerUser(store, registerPayload);
     if (!user) {
       res.status(500).send();
     } else {
-      await sendVerificationEmail(registerPayload.username, registerPayload.name, user.emailVerification!);
-      res.status(200).send(user.toJson());
+      await sendVerificationEmail(
+        registerPayload.username,
+        registerPayload.name,
+        user.emailVerification!
+      );
+      res.status(200).send(user.toFullUser());
     }
   });
 
@@ -253,10 +263,13 @@ db().then((store) => {
     const validatePayload = req.body as ValidateEmailPayload;
     const user = await store.getUserByUsername(validatePayload.email);
     if (!user) {
-      res.status(404).send("Email not found");
+      res.status(404).send('Email not found');
       return;
     }
-    if (user.emailVerification && user.emailVerification === validatePayload.code) {
+    if (
+      user.emailVerification &&
+      user.emailVerification === validatePayload.code
+    ) {
       const updatedUser = await store.updateUser(user.id, {
         emailVerification: null,
       });
@@ -265,7 +278,7 @@ db().then((store) => {
           console.log('Cannot login Error: ', err);
           res.status(500).send('Cannot login');
         } else if (updatedUser) {
-          res.status(200).send(updatedUser.toJson());
+          res.status(200).send(updatedUser.toFullUser());
         } else {
           res.status(500).send('Unspecified error');
         }
@@ -279,7 +292,7 @@ db().then((store) => {
     const resetPayload = req.body as ResetPasswordPayload;
     const user = await store.getUserByUsername(resetPayload.email);
     if (!user) {
-      res.status(404).send("Email not found");
+      res.status(404).send('Email not found');
       return;
     }
     const code = v4();
@@ -294,10 +307,13 @@ db().then((store) => {
     const validatePayload = req.body as ResetChangePasswordPayload;
     const user = await store.getUserByUsername(validatePayload.email);
     if (!user) {
-      res.status(404).send("Email not found");
+      res.status(404).send('Email not found');
       return;
     }
-    if (user.emailVerification && user.emailVerification === validatePayload.code) {
+    if (
+      user.emailVerification &&
+      user.emailVerification === validatePayload.code
+    ) {
       const hashedPassword = await hashPassword(validatePayload.password);
       const updatedUser = await store.updateUser(user.id, {
         emailVerification: null,
@@ -308,7 +324,7 @@ db().then((store) => {
           console.log('Cannot login Error: ', err);
           res.status(500).send('Cannot login');
         } else if (updatedUser) {
-          res.status(200).send(updatedUser.toJson());
+          res.status(200).send(updatedUser.toFullUser());
         } else {
           res.status(500).send('Unspecified error');
         }
@@ -318,12 +334,8 @@ db().then((store) => {
     }
   });
 
-  
-
   setupSentryErrorHandler(app);
 });
-
-
 
 httpServer.listen(port);
 const env = process.env.NODE_ENV || 'dev';

@@ -7,7 +7,7 @@ import {
   UpdateDateColumn,
   ManyToOne,
 } from 'typeorm';
-import { AccountType, User } from 'retro-board-common';
+import { AccountType, User, FullUser } from 'retro-board-common';
 import { SessionTemplateEntity } from '.';
 
 export const ALL_FIELDS: Array<keyof UserEntity> = [
@@ -63,11 +63,18 @@ export default class UserEntity {
 
   toJson(): User {
     return {
-      accountType: this.accountType,
       id: this.id,
-      language: this.language,
       name: this.name,
       photo: this.photo,
+    };
+  }
+
+  toFullUser(): FullUser {
+    return {
+      ...this.toJson(),
+      accountType: this.accountType,
+      language: this.language,
+      username: this.username,
     };
   }
 }

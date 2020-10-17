@@ -1,7 +1,6 @@
 import {
   SessionOptions,
   ColumnDefinition,
-  User,
   Session,
   SessionTemplate,
   SessionMetadata,
@@ -9,6 +8,7 @@ import {
   ValidateEmailPayload,
   ResetPasswordPayload,
   ResetChangePasswordPayload,
+  FullUser,
 } from 'retro-board-common';
 import config from '../utils/getConfig';
 import { v4 } from 'uuid';
@@ -58,12 +58,12 @@ export async function createCustomGame(
   throw new Error('Could not create a session');
 }
 
-export async function me(): Promise<User | null> {
+export async function me(): Promise<FullUser | null> {
   const response = await fetch('/api/me', {
     credentials: 'same-origin',
   });
   if (response.ok) {
-    return (await response.json()) as User;
+    return (await response.json()) as FullUser;
   }
   return null;
 }
@@ -106,7 +106,9 @@ export async function logout() {
   return false;
 }
 
-export async function anonymousLogin(username: string): Promise<User | null> {
+export async function anonymousLogin(
+  username: string
+): Promise<FullUser | null> {
   const anonymousUsername = getAnonymousUsername(username);
   const response = await fetch(`/api/auth/anonymous/login`, {
     method: 'POST',
@@ -126,7 +128,10 @@ export async function anonymousLogin(username: string): Promise<User | null> {
   return null;
 }
 
-export async function accountLogin(email: string, password: string): Promise<User | null> {
+export async function accountLogin(
+  email: string,
+  password: string
+): Promise<FullUser | null> {
   const response = await fetch(`/api/auth/login`, {
     method: 'POST',
     mode: 'cors',
@@ -146,12 +151,22 @@ export async function accountLogin(email: string, password: string): Promise<Use
 }
 
 interface RegisterResponse {
-  user: User | null;
+  user: FullUser | null;
   error: 'already-exists' | 'other' | null;
 }
 
-export async function register(name: string, email: string, password: string, language: string): Promise<RegisterResponse> {
-  const payload: RegisterPayload = { username: email, password, name, language };
+export async function register(
+  name: string,
+  email: string,
+  password: string,
+  language: string
+): Promise<RegisterResponse> {
+  const payload: RegisterPayload = {
+    username: email,
+    password,
+    name,
+    language,
+  };
   const response = await fetch(`/api/register`, {
     method: 'POST',
     mode: 'cors',
@@ -169,12 +184,12 @@ export async function register(name: string, email: string, password: string, la
     return {
       user,
       error: null,
-    }
+    };
   } else if (response.status === 403) {
     return {
       user: null,
       error: 'already-exists',
-    }
+    };
   }
   return {
     user: null,
@@ -182,7 +197,10 @@ export async function register(name: string, email: string, password: string, la
   };
 }
 
-export async function verifyEmail(email: string, code: string): Promise<User | null> {
+export async function verifyEmail(
+  email: string,
+  code: string
+): Promise<FullUser | null> {
   const payload: ValidateEmailPayload = { email, code };
   const response = await fetch(`/api/validate`, {
     method: 'POST',
@@ -223,8 +241,12 @@ export async function resetPassword(email: string): Promise<boolean> {
   return false;
 }
 
-export async function resetChangePassword(email: string, password: string, code: string): Promise<User | null> {
-  const payload: ResetChangePasswordPayload = { email, password, code};
+export async function resetChangePassword(
+  email: string,
+  password: string,
+  code: string
+): Promise<FullUser | null> {
+  const payload: ResetChangePasswordPayload = { email, password, code };
   const response = await fetch(`/api/reset-password`, {
     method: 'POST',
     mode: 'cors',
@@ -238,7 +260,7 @@ export async function resetChangePassword(email: string, password: string, code:
     body: JSON.stringify(payload),
   });
   if (response.ok) {
-    const user: User = await response.json();
+    const user: FullUser = await response.json();
     return user;
   }
   return null;
@@ -255,7 +277,9 @@ function getAnonymousUsername(username: string): string {
   return storedUsername;
 }
 
-export async function updateLanguage(language: string): Promise<User | null> {
+export async function updateLanguage(
+  language: string
+): Promise<FullUser | null> {
   const response = await fetch(`/api/me/language`, {
     method: 'POST',
     mode: 'cors',

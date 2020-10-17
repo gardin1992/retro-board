@@ -205,10 +205,7 @@ export default (store: Store, io: SocketIO.Server) => {
           : {
               id: socket.id,
               name: `(Spectator #${i})`,
-              username: null,
               photo: null,
-              accountType: 'anonymous',
-              language: 'en',
             }
       );
 
