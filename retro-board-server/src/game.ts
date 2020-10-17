@@ -15,7 +15,7 @@ import { find } from 'lodash';
 import { v4 } from 'uuid';
 import { Store } from './types';
 import { setScope, reportQueryError } from './sentry';
-import SessionOptions from './db/entities/SessionOptions';
+import SessionOptionsEntity from './db/entities/SessionOptions';
 import { UserEntity } from './db/entities';
 import { hasField } from './security/payload-checker';
 
@@ -114,7 +114,7 @@ export default (store: Store, io: SocketIO.Server) => {
   const updateOptions = async (
     userId: string | null,
     session: Session,
-    options: SessionOptions
+    options: SessionOptionsEntity
   ) => {
     if (!userId || !session) {
       return;
@@ -147,6 +147,7 @@ export default (store: Store, io: SocketIO.Server) => {
     if (!userId) {
       return;
     }
+    console.log('About to persist post: ', post);
     await store.savePost(userId, sessionId, post);
   };
 
@@ -199,16 +200,17 @@ export default (store: Store, io: SocketIO.Server) => {
     const room = io.nsps['/'].adapter.rooms[getRoom(sessionId)];
     if (room) {
       const clients = Object.keys(room.sockets);
-      const names: User[] = clients.map(
-        (id, i) =>
-          !!users[id] ? users[id]!.toJson() : {
-            id: socket.id,
-            name: `(Spectator #${i})`,
-            username: null,
-            photo: null,
-            accountType: 'anonymous',
-            language: 'en'
-          }
+      const names: User[] = clients.map((id, i) =>
+        !!users[id]
+          ? users[id]!.toJson()
+          : {
+              id: socket.id,
+              name: `(Spectator #${i})`,
+              username: null,
+              photo: null,
+              accountType: 'anonymous',
+              language: 'en',
+            }
       );
 
       sendToSelf(socket, RECEIVE_CLIENT_LIST, names);
@@ -399,7 +401,7 @@ export default (store: Store, io: SocketIO.Server) => {
   const onEditOptions = async (
     userId: string | null,
     session: Session,
-    data: SessionOptions,
+    data: SessionOptionsEntity,
     socket: ExtendedSocket
   ) => {
     if (!userId) {

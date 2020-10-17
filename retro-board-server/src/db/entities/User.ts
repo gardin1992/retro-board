@@ -8,7 +8,7 @@ import {
   ManyToOne,
 } from 'typeorm';
 import { AccountType, User } from 'retro-board-common';
-import { SessionTemplate } from '.';
+import { SessionTemplateEntity } from '.';
 
 export const ALL_FIELDS: Array<keyof UserEntity> = [
   'id',
@@ -44,8 +44,8 @@ export default class UserEntity {
   public photo: string | null;
   @Column({ nullable: false, type: 'character varying', default: 'en' })
   public language: string;
-  @ManyToOne(() => SessionTemplate, { nullable: true, eager: false })
-  public defaultTemplate: SessionTemplate | null | undefined;
+  @ManyToOne(() => SessionTemplateEntity, { nullable: true, eager: false })
+  public defaultTemplate: SessionTemplateEntity | null | undefined;
   @CreateDateColumn({ type: 'timestamp with time zone', select: false })
   public created: Date | undefined;
   @UpdateDateColumn({ type: 'timestamp with time zone', select: false })

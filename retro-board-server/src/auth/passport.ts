@@ -68,10 +68,10 @@ export default (store: Store) => {
       ) => {
         if (password && password.length > 0) {
           const user = await loginUser(store, username, password);
-          done(!user ? 'User cant log in' : null, user?.toJson());
+          done(!user ? 'User cannot log in' : null, user?.id);
         } else {
           const user = await loginAnonymous(store, username);
-          done(null, user.toJson());
+          done(null, user.id);
         }
       }
     )

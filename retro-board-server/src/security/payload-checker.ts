@@ -3,12 +3,14 @@ export function hasField(field: string, obj: any): boolean {
     return false;
   }
   const properties = Object.getOwnPropertyNames(obj);
-  
+
   for (let i = 0; i < properties.length; i++) {
-    if (properties[i] === field) {
+    const property = properties[i];
+    const value = obj[properties[i]];
+    if (property === field) {
       return true;
     }
-    if (hasField(field, obj[properties[i]])) {
+    if (hasField(field, value)) {
       return true;
     }
   }

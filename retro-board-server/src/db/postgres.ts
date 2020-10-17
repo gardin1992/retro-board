@@ -11,13 +11,12 @@ import {
   SessionTemplateRepository,
 } from './repositories';
 import {
-  Session as JsonSession,
-  Post as JsonPost,
-  PostGroup as JsonPostGroup,
-  Vote as JsonVote,
-  User as JsonUser,
-  ColumnDefinition as JsonColumnDefintion,
-  SessionMetadata as JsonSessionMetadata,
+  Session,
+  Post,
+  PostGroup,
+  Vote,
+  ColumnDefinition,
+  SessionMetadata,
   SessionOptions,
   defaultSession,
   VoteType,
@@ -27,7 +26,13 @@ import { Store } from '../types';
 import getOrmConfig from './orm-config';
 import shortId from 'shortid';
 import { v4 } from 'uuid';
-import { SessionTemplate, Session, ColumnDefinition } from './entities';
+import {
+  SessionTemplateEntity,
+  SessionEntity,
+  PostEntity,
+  PostGroupEntity,
+  ColumnDefinitionEntity,
+} from './entities';
 import UserEntity, { ALL_FIELDS } from './entities/User';
 
 export async function getDb() {
@@ -38,7 +43,7 @@ export async function getDb() {
 const create = (
   sessionRepository: SessionRepository,
   userRepository: UserRepository
-) => async (author: JsonUser): Promise<JsonSession> => {
+) => async (author: User): Promise<Session> => {
   try {
     const id = shortId();
     const userWithDefaultTemplate = await userRepository.findOne(
@@ -58,7 +63,7 @@ const create = (
                 ...c,
                 id: v4(),
                 author: { id: author.id },
-              } as JsonColumnDefintion)
+              } as ColumnDefinition)
           ),
         },
         author.id
@@ -89,10 +94,10 @@ const createCustom = (
   userRepository: UserRepository
 ) => async (
   options: SessionOptions,
-  columns: JsonColumnDefintion[],
+  columns: ColumnDefinition[],
   setDefault: boolean,
-  author: JsonUser
-): Promise<JsonSession> => {
+  author: User
+): Promise<Session> => {
   console.log('Columns: ', columns.length);
   try {
     const id = shortId();
@@ -131,30 +136,27 @@ const getSession = (
   postRepository: PostRepository,
   postGroupRepository: PostGroupRepository,
   columnRepository: ColumnRepository
-) => async (
-  _: string | null,
-  sessionId: string
-): Promise<JsonSession | null> => {
+) => async (_: string | null, sessionId: string): Promise<Session | null> => {
   try {
     const session = await sessionRepository.findOne({ id: sessionId });
     if (session) {
       const posts = (await postRepository.find({
         where: { session },
         order: { created: 'ASC' },
-      })) as JsonPost[];
+      })) as PostEntity[];
       const groups = (await postGroupRepository.find({
         where: { session },
         order: { created: 'ASC' },
-      })) as JsonPostGroup[];
+      })) as PostGroupEntity[];
       const columns = (await columnRepository.find({
         where: { session },
         order: { index: 'ASC' },
-      })) as JsonColumnDefintion[];
+      })) as ColumnDefinitionEntity[];
       return {
-        ...session,
-        columns,
-        posts,
-        groups,
+        ...session.toJson(),
+        columns: columns.map((c) => c.toJson()),
+        posts: posts.map((p) => p.toJson()),
+        groups: groups.map((g) => g.toJson()),
       };
     } else {
       return null;
@@ -183,7 +185,7 @@ const getUserByUsername = (userRepository: UserRepository) => async (
 
 const getDefaultTemplate = (userRepository: UserRepository) => async (
   id: string
-): Promise<SessionTemplate | null> => {
+): Promise<SessionTemplateEntity | null> => {
   const userWithDefaultTemplate = await userRepository.findOne(
     { id },
     { relations: ['defaultTemplate', 'defaultTemplate.columns'] }
@@ -206,29 +208,29 @@ const updateUser = (userRepository: UserRepository) => async (
 
 const saveSession = (sessionRepository: SessionRepository) => async (
   userId: string,
-  session: JsonSession
+  session: Session
 ): Promise<void> => {
   await sessionRepository.saveFromJson(session, userId);
 };
 
 const updateOptions = (sessionRepository: SessionRepository) => async (
-  session: JsonSession,
+  session: Session,
   options: SessionOptions
 ): Promise<SessionOptions> => {
   return await sessionRepository.updateOptions(session, options);
 };
 
 const updateColumns = (columnRepository: ColumnRepository) => async (
-  session: JsonSession,
-  columns: JsonColumnDefintion[]
-): Promise<JsonColumnDefintion[]> => {
+  session: Session,
+  columns: ColumnDefinition[]
+): Promise<ColumnDefinition[]> => {
   return await columnRepository.updateColumns(session, columns);
 };
 
 const savePost = (postRepository: PostRepository) => async (
   userId: string,
   sessionId: string,
-  post: JsonPost
+  post: Post
 ): Promise<void> => {
   await postRepository.saveFromJson(sessionId, userId, post);
 };
@@ -236,7 +238,7 @@ const savePost = (postRepository: PostRepository) => async (
 const savePostGroup = (postGroupRepository: PostGroupRepository) => async (
   userId: string,
   sessionId: string,
-  group: JsonPostGroup
+  group: PostGroup
 ): Promise<void> => {
   await postGroupRepository.saveFromJson(sessionId, userId, group);
 };
@@ -245,7 +247,7 @@ const saveVote = (voteRepository: VoteRepository) => async (
   userId: string,
   sessionId: string,
   postId: string,
-  vote: JsonVote
+  vote: Vote
 ): Promise<void> => {
   await voteRepository.saveFromJson(postId, userId, vote);
 };
@@ -314,7 +316,7 @@ const deleteSessions = (sessionRepository: SessionRepository) => async (
 
 const previousSessions = (sessionRepository: SessionRepository) => async (
   userId: string
-): Promise<JsonSessionMetadata[]> => {
+): Promise<SessionMetadata[]> => {
   const ids: number[] = await sessionRepository.query(
     `
   (
@@ -357,11 +359,11 @@ const previousSessions = (sessionRepository: SessionRepository) => async (
         canBeDeleted:
           userId === session.createdBy.id &&
           session.createdBy.accountType !== 'anonymous',
-      } as JsonSessionMetadata)
+      } as SessionMetadata)
   );
 };
 
-function getParticipants(session: Session) {
+function getParticipants(session: SessionEntity) {
   return uniqBy(
     [
       session.createdBy.toJson(),
@@ -374,13 +376,13 @@ function getParticipants(session: Session) {
   );
 }
 
-function numberOfVotes(type: VoteType, session: Session) {
+function numberOfVotes(type: VoteType, session: SessionEntity) {
   return session.posts!.reduce<number>((prev, cur) => {
     return prev + cur.votes!.filter((v) => v.type === type).length;
   }, 0);
 }
 
-function numberOfActions(session: Session) {
+function numberOfActions(session: SessionEntity) {
   return session.posts!.filter((p) => p.action !== null).length;
 }
 
