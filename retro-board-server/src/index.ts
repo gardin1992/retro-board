@@ -159,7 +159,7 @@ db().then((store) => {
   app.get('/api/me', async (req, res) => {
     const user = await getUser(store, req);
     if (user) {
-      res.status(200).send(user);
+      res.status(200).send(user.toJson());
     } else {
       res.status(401).send('Not logged in');
     }
@@ -195,7 +195,12 @@ db().then((store) => {
       const updatedUser = await store.updateUser(req.user, {
         language: req.body.language,
       });
-      res.status(200).send(updatedUser);
+      if (updatedUser) {
+        res.status(200).send(updatedUser?.toJson());
+      } else {
+        res.status(401).send();
+      }
+      
     } else {
       res.status(401).send();
     }
@@ -229,7 +234,7 @@ db().then((store) => {
       res.status(500).send();
     } else {
       await sendVerificationEmail(registerPayload.username, registerPayload.name, user.emailVerification!);
-      res.status(200).send(user);
+      res.status(200).send(user.toJson());
     }
   });
 
@@ -248,8 +253,10 @@ db().then((store) => {
         if (err) {
           console.log('Cannot login Error: ', err);
           res.status(500).send('Cannot login');
+        } else if (updatedUser) {
+          res.status(200).send(updatedUser.toJson());
         } else {
-          res.status(200).send(updatedUser);
+          res.status(500).send('Unspecified error');
         }
       });
     } else {
@@ -289,8 +296,10 @@ db().then((store) => {
         if (err) {
           console.log('Cannot login Error: ', err);
           res.status(500).send('Cannot login');
+        } else if (updatedUser) {
+          res.status(200).send(updatedUser.toJson());
         } else {
-          res.status(200).send(updatedUser);
+          res.status(500).send('Unspecified error');
         }
       });
     } else {

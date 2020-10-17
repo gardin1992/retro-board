@@ -166,7 +166,7 @@ const getSession = (
 
 const getUser = (userRepository: UserRepository) => async (
   id: string
-): Promise<JsonUser | null> => {
+): Promise<UserEntity | null> => {
   const user = await userRepository.findOne(id);
   return user || null;
 };

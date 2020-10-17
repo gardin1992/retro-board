@@ -7,7 +7,7 @@ import {
   UpdateDateColumn,
   ManyToOne,
 } from 'typeorm';
-import { AccountType } from 'retro-board-common';
+import { AccountType, User } from 'retro-board-common';
 import { SessionTemplate } from '.';
 
 @Entity({ name: 'users' })
@@ -45,5 +45,16 @@ export default class UserEntity {
     this.username = null;
     this.photo = null;
     this.emailVerification = null;
+  }
+
+  toJson(): User {
+    return {
+      accountType: this.accountType,
+      id: this.id,
+      language: this.language,
+      name: this.name,
+      photo: this.photo,
+      username: this.username
+    }
   }
 }
