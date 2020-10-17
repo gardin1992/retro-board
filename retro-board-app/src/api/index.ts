@@ -120,10 +120,13 @@ export async function anonymousLogin(
     },
     redirect: 'follow',
     referrer: 'no-referrer',
-    body: JSON.stringify({ username: anonymousUsername, password: 'none' }),
+    body: JSON.stringify({
+      username: anonymousUsername,
+      password: '<<<<<NONE>>>>>',
+    }),
   });
   if (response.ok) {
-    return await response.json();
+    return me();
   }
   return null;
 }
@@ -145,7 +148,7 @@ export async function accountLogin(
     body: JSON.stringify({ username: email, password }),
   });
   if (response.ok) {
-    return await response.json();
+    return me();
   }
   return null;
 }

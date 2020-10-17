@@ -8,7 +8,6 @@ export default async function loginUser(
   password: string
 ): Promise<UserEntity | null> {
   const user = await store.getUserByUsername(username);
-  console.log('User: ', user);
   if (!user || user.password === null) {
     return null;
   }

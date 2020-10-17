@@ -66,11 +66,14 @@ export default (store: Store) => {
         password: string,
         done: (error: any, user?: any, options?: IVerifyOptions) => void
       ) => {
-        if (password && password.length > 0) {
+        console.log('username: ', username, 'password: ', password);
+        if (password && password !== '<<<<<NONE>>>>>') {
           const user = await loginUser(store, username, password);
           done(!user ? 'User cannot log in' : null, user?.id);
         } else {
+          console.log('About to login anon');
           const user = await loginAnonymous(store, username);
+          console.log('anon user', user);
           done(null, user.id);
         }
       }
