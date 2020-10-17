@@ -32,10 +32,11 @@ export default (store: Store) => {
   ) => {
     const user: UserEntity = new UserEntity(v4(), profile.displayName);
     user.accountType = type;
-    user.photo = profile.photos?.length ? profile.photos[0].value : null,
-    user.language = 'en';
-    user.username = profile.username ||
-    (profile.emails.length ? profile.emails[0].value : null);
+    (user.photo = profile.photos?.length ? profile.photos[0].value : null),
+      (user.language = 'en');
+    user.username =
+      profile.username ||
+      (profile.emails.length ? profile.emails[0].value : null);
 
     const dbUser = await store.getOrSaveUser(user);
     cb(null, dbUser.id);
@@ -67,10 +68,10 @@ export default (store: Store) => {
       ) => {
         if (password && password.length > 0) {
           const user = await loginUser(store, username, password);
-          done(!user ? 'User cant log in' : null, user);
+          done(!user ? 'User cant log in' : null, user?.toJson());
         } else {
           const user = await loginAnonymous(store, username);
-          done(null, user);
+          done(null, user.toJson());
         }
       }
     )

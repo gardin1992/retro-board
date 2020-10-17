@@ -28,7 +28,7 @@ import getOrmConfig from './orm-config';
 import shortId from 'shortid';
 import { v4 } from 'uuid';
 import { SessionTemplate, Session, ColumnDefinition } from './entities';
-import UserEntity from './entities/User';
+import UserEntity, { ALL_FIELDS } from './entities/User';
 
 export async function getDb() {
   const connection = await createConnection(getOrmConfig());
@@ -167,14 +167,17 @@ const getSession = (
 const getUser = (userRepository: UserRepository) => async (
   id: string
 ): Promise<UserEntity | null> => {
-  const user = await userRepository.findOne(id);
+  const user = await userRepository.findOne(id, { select: ALL_FIELDS });
   return user || null;
 };
 
 const getUserByUsername = (userRepository: UserRepository) => async (
   username: string
 ): Promise<UserEntity | null> => {
-  const user = await userRepository.findOne({ username });
+  const user = await userRepository.findOne(
+    { username },
+    { select: ALL_FIELDS }
+  );
   return user || null;
 };
 
@@ -195,7 +198,7 @@ const updateUser = (userRepository: UserRepository) => async (
   const user = await userRepository.findOne(id);
   if (user) {
     await userRepository.update(id, updatedUser);
-    const newUser = await userRepository.findOne(id);
+    const newUser = await userRepository.findOne(id, { select: ALL_FIELDS });
     return newUser || null;
   }
   return null;
@@ -343,14 +346,14 @@ const previousSessions = (sessionRepository: SessionRepository) => async (
     (session) =>
       ({
         created: session.created,
-        createdBy: session.createdBy,
+        createdBy: session.createdBy.toJson(),
         id: session.id,
         name: session.name,
         numberOfNegativeVotes: numberOfVotes('dislike', session),
         numberOfPositiveVotes: numberOfVotes('like', session),
         numberOfPosts: session.posts?.length,
         numberOfActions: numberOfActions(session),
-        participants: getParticipans(session),
+        participants: getParticipants(session),
         canBeDeleted:
           userId === session.createdBy.id &&
           session.createdBy.accountType !== 'anonymous',
@@ -358,12 +361,14 @@ const previousSessions = (sessionRepository: SessionRepository) => async (
   );
 };
 
-function getParticipans(session: Session) {
+function getParticipants(session: Session) {
   return uniqBy(
     [
-      session.createdBy,
-      ...session.posts!.map((p) => p.user),
-      ...flattenDeep(session.posts!.map((p) => p.votes!.map((v) => v.user))),
+      session.createdBy.toJson(),
+      ...session.posts!.map((p) => p.user.toJson()),
+      ...flattenDeep(
+        session.posts!.map((p) => p.votes!.map((v) => v.user.toJson()))
+      ),
     ].filter(Boolean),
     (u) => u.id
   );

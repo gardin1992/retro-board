@@ -37,12 +37,3 @@ export default class PostRepository extends Repository<Post> {
     }
   }
 }
-
-// function toPost(json: JsonPost, userId: string, session: Session): Post {
-//   const post = new Post(json.id, session, json.column, json.content, {
-//     id: userId,
-//   });
-//   post.votes = undefined;
-//   post.action = json.action;
-//   return post;
-// }

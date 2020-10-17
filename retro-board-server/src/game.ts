@@ -16,6 +16,7 @@ import { v4 } from 'uuid';
 import { Store } from './types';
 import { setScope, reportQueryError } from './sentry';
 import SessionOptions from './db/entities/SessionOptions';
+import { UserEntity } from './db/entities';
 import { hasField } from './security/payload-checker';
 
 const {
@@ -51,7 +52,7 @@ interface ExtendedSocket extends socketIo.Socket {
 }
 
 interface Users {
-  [socketId: string]: User | null;
+  [socketId: string]: UserEntity | null;
 }
 
 interface UserData {
@@ -198,16 +199,15 @@ export default (store: Store, io: SocketIO.Server) => {
     const room = io.nsps['/'].adapter.rooms[getRoom(sessionId)];
     if (room) {
       const clients = Object.keys(room.sockets);
-      const names = clients.map(
+      const names: User[] = clients.map(
         (id, i) =>
-          users[id] || {
+          !!users[id] ? users[id]!.toJson() : {
             id: socket.id,
             name: `(Spectator #${i})`,
             username: null,
             photo: null,
             accountType: 'anonymous',
-            created: null,
-            updated: null,
+            language: 'en'
           }
       );
 
@@ -218,7 +218,7 @@ export default (store: Store, io: SocketIO.Server) => {
 
   const recordUser = (
     sessionId: string,
-    user: User,
+    user: UserEntity,
     socket: ExtendedSocket
   ) => {
     const socketId = socket.id;

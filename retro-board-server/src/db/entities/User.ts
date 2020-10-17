@@ -10,6 +10,20 @@ import {
 import { AccountType, User } from 'retro-board-common';
 import { SessionTemplate } from '.';
 
+export const ALL_FIELDS: Array<keyof UserEntity> = [
+  'id',
+  'name',
+  'accountType',
+  'username',
+  'password',
+  'emailVerification',
+  'photo',
+  'language',
+  'defaultTemplate',
+  'created',
+  'updated',
+];
+
 @Entity({ name: 'users' })
 @Index(['username', 'accountType'], { unique: true })
 export default class UserEntity {
@@ -22,9 +36,9 @@ export default class UserEntity {
   public accountType: AccountType;
   @Column({ nullable: true, type: 'character varying' })
   public username: string | null;
-  @Column({ nullable: true, type: 'character varying' })
+  @Column({ nullable: true, type: 'character varying', select: false })
   public password: string | null;
-  @Column({ nullable: true, type: 'character varying' })
+  @Column({ nullable: true, type: 'character varying', select: false })
   public emailVerification: string | null;
   @Column({ nullable: true, type: 'character varying' })
   public photo: string | null;
@@ -32,9 +46,9 @@ export default class UserEntity {
   public language: string;
   @ManyToOne(() => SessionTemplate, { nullable: true, eager: false })
   public defaultTemplate: SessionTemplate | null | undefined;
-  @CreateDateColumn({ type: 'timestamp with time zone' })
+  @CreateDateColumn({ type: 'timestamp with time zone', select: false })
   public created: Date | undefined;
-  @UpdateDateColumn({ type: 'timestamp with time zone' })
+  @UpdateDateColumn({ type: 'timestamp with time zone', select: false })
   public updated: Date | undefined;
   constructor(id: string, name: string, password?: string) {
     this.id = id;
@@ -54,7 +68,7 @@ export default class UserEntity {
       language: this.language,
       name: this.name,
       photo: this.photo,
-      username: this.username
-    }
+      username: this.username,
+    };
   }
 }
