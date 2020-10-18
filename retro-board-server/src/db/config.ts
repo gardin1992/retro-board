@@ -34,6 +34,7 @@ const config: Configuration = {
   GITHUB_SECRET: process.env.GITHUB_SECRET!,
   SENDGRID_API_KEY: process.env.SENDGRID_API_KEY!,
   SENDGRID_SENDER: process.env.SENDGRID_SENDER!,
+  STRIPE_SECRET: process.env.STRIPE_SECRET!,
 };
 
 export default config;

@@ -85,4 +85,5 @@ export interface Configuration {
   GITHUB_SECRET: string;
   SENDGRID_API_KEY: string;
   SENDGRID_SENDER: string;
+  STRIPE_SECRET: string;
 }

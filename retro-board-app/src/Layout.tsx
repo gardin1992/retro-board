@@ -22,6 +22,7 @@ import DisclaimerPage from './views/policies/Disclaimer';
 import { HomeOutlined } from '@material-ui/icons';
 import ValidatePage from './views/Validate';
 import ResetPasswordPage from './views/Reset';
+import PaymentPage from './views/payment/PaymentPage';
 
 const Title = styled(Typography)`
   flex-grow: 1;
@@ -74,6 +75,7 @@ function App() {
         <Route path="/game/:gameId" component={Game} />
         <Route path="/validate" component={ValidatePage} />
         <Route path="/reset" component={ResetPasswordPage} />
+        <Route path="/payment" component={PaymentPage} />
         <Route path="/privacy" component={PrivacyPolicyPage} />
         <Route path="/terms" component={TermsAndConditionsPage} />
         <Route path="/cookies" component={CookiesPolicyPage} />

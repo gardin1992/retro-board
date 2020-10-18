@@ -11,6 +11,7 @@ import config from './db/config';
 import passport from 'passport';
 import passportInit from './auth/passport';
 import authRouter from './auth/router';
+import stripeRouter from './stripe/router';
 import session from 'express-session';
 import game from './game';
 import { getUser, hashPassword } from './utils';
@@ -97,6 +98,7 @@ app.get('/healthz', async (_, res) => {
 });
 
 app.use('/api/auth', authRouter);
+app.use('/api/stripe', stripeRouter);
 
 const io = socketIo(httpServer);
 
