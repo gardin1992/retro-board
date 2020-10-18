@@ -75,15 +75,19 @@ export interface PostGroup extends PostContainer, Rankable, Entity {
   user: User;
 }
 
+export type ProStatus = 'valid' | 'payment_issue' | 'pending';
+
 export interface User extends Entity {
   name: string;
   photo: string | null;
+  pro: ProStatus | null;
 }
 
 export interface FullUser extends User {
   username: string | null;
   accountType: AccountType;
   language: string;
+  stripeId: string | null;
 }
 
 export type AccountType =

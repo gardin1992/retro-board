@@ -17,12 +17,12 @@ export interface Store {
   getUser: (id: string) => Promise<UserEntity | null>;
   getUserByUsername: (username: string) => Promise<UserEntity | null>;
   getDefaultTemplate: (userId: string) => Promise<SessionTemplateEntity | null>;
-  create: (author: User) => Promise<Session>;
+  create: (author: UserEntity) => Promise<Session>;
   createCustom: (
     options: SessionOptions,
     columns: ColumnDefinition[],
     setDefault: boolean,
-    author: User
+    author: UserEntity
   ) => Promise<Session>;
   saveSession: (userId: string, session: Session) => Promise<void>;
   getOrSaveUser: (user: UserEntity) => Promise<UserEntity>;

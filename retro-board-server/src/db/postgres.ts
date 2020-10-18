@@ -44,7 +44,7 @@ export async function getDb() {
 const create = (
   sessionRepository: SessionRepository,
   userRepository: UserRepository
-) => async (author: User): Promise<Session> => {
+) => async (author: UserEntity): Promise<Session> => {
   try {
     const id = shortId();
     const userWithDefaultTemplate = await userRepository.findOne(
@@ -97,7 +97,7 @@ const createCustom = (
   options: SessionOptions,
   columns: ColumnDefinition[],
   setDefault: boolean,
-  author: User
+  author: UserEntity
 ): Promise<Session> => {
   try {
     const id = shortId();

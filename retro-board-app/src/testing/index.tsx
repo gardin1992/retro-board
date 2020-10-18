@@ -23,6 +23,7 @@ const testingInitialState: State = {
       id: 'John Doe',
       name: 'John Doe',
       photo: null,
+      pro: null,
     },
     options: {
       maxDownVotes: null,
@@ -47,6 +48,8 @@ const AllTheProviders: React.SFC = ({ children }) => {
     accountType: 'anonymous',
     language: 'en',
     username: 'johndoe',
+    pro: null,
+    stripeId: null,
   });
   useEffect(() => {
     setUser({
@@ -56,6 +59,8 @@ const AllTheProviders: React.SFC = ({ children }) => {
       accountType: 'anonymous',
       language: 'en',
       username: 'johndoe',
+      pro: null,
+      stripeId: null,
     });
   }, []);
   return (

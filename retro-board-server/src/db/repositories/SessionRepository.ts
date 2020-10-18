@@ -38,6 +38,7 @@ export default class SessionRepository extends Repository<SessionEntity> {
 
     return {
       ...createdSession,
+      createdBy: createdSession.createdBy.toJson(),
       posts: [],
     };
   }

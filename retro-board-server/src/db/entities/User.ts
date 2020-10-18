@@ -7,7 +7,7 @@ import {
   UpdateDateColumn,
   ManyToOne,
 } from 'typeorm';
-import { AccountType, User, FullUser } from 'retro-board-common';
+import { AccountType, User, FullUser, ProStatus } from 'retro-board-common';
 import { SessionTemplateEntity } from '.';
 
 export const ALL_FIELDS: Array<keyof UserEntity> = [
@@ -41,6 +41,10 @@ export default class UserEntity {
   @Column({ nullable: true, type: 'character varying', select: false })
   public emailVerification: string | null;
   @Column({ nullable: true, type: 'character varying' })
+  public pro: string | null;
+  @Column({ nullable: true, type: 'character varying', select: false })
+  public stripeId: string | null;
+  @Column({ nullable: true, type: 'character varying' })
   public photo: string | null;
   @Column({ nullable: false, type: 'character varying', default: 'en' })
   public language: string;
@@ -59,6 +63,8 @@ export default class UserEntity {
     this.username = null;
     this.photo = null;
     this.emailVerification = null;
+    this.pro = null;
+    this.stripeId = null;
   }
 
   toJson(): User {
@@ -66,6 +72,7 @@ export default class UserEntity {
       id: this.id,
       name: this.name,
       photo: this.photo,
+      pro: this.pro as ProStatus | null,
     };
   }
 
@@ -75,6 +82,7 @@ export default class UserEntity {
       accountType: this.accountType,
       language: this.language,
       username: this.username,
+      stripeId: this.stripeId,
     };
   }
 }

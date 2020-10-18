@@ -206,6 +206,7 @@ export default (store: Store, io: SocketIO.Server) => {
               id: socket.id,
               name: `(Spectator #${i})`,
               photo: null,
+              pro: null,
             }
       );
 
