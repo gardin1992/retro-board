@@ -19,3 +19,7 @@ export interface ResetChangePasswordPayload {
   password: string;
   code: string;
 }
+
+export interface CreateCustomerPayload {
+  email: string;
+}

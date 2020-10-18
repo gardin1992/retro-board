@@ -20,6 +20,8 @@ export const ALL_FIELDS: Array<keyof UserEntity> = [
   'photo',
   'language',
   'defaultTemplate',
+  'stripeId',
+  'pro',
   'created',
   'updated',
 ];

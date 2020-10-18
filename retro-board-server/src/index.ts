@@ -98,7 +98,6 @@ app.get('/healthz', async (_, res) => {
 });
 
 app.use('/api/auth', authRouter);
-app.use('/api/stripe', stripeRouter);
 
 const io = socketIo(httpServer);
 
@@ -119,6 +118,9 @@ if (config.REDIS_ENABLED) {
 db().then((store) => {
   passportInit(store);
   game(store, io);
+
+  // Stripe
+  app.use('/api/stripe', stripeRouter(store));
 
   // Create session
   app.post('/api/create', async (req, res) => {
