@@ -23,3 +23,10 @@ export interface ResetChangePasswordPayload {
 export interface CreateCustomerPayload {
   email: string;
 }
+
+export interface CreateSubscriptionPayload {
+  customerId: string;
+  paymentMethodId: string;
+  priceId: string;
+  quantity: number;
+}

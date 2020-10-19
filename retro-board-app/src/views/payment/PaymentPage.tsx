@@ -38,7 +38,13 @@ function CardSection() {
     const cardElement = elements?.getElement(CardElement);
     console.log(stripe, user, user?.stripeId, cardElement);
     if (stripe && user && elements && user.stripeId && cardElement) {
-      await createPaymentMethod(stripe, cardElement, user.stripeId, 'xx');
+      const result = await createPaymentMethod(
+        stripe,
+        cardElement,
+        user.stripeId,
+        'price_1HdWOTCpRjtjIslJ2teM1TBT' // TODO Parameterize
+      );
+      console.log('Final result: ', result);
     }
   }, [elements, stripe, user]);
   useEffect(() => {

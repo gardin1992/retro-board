@@ -1,4 +1,5 @@
 import express, { Router } from 'express';
+import { CreateSubscriptionPayload } from 'retro-board-common';
 import config from '../db/config';
 import bodyParser from 'body-parser';
 import { Store } from '../types';
@@ -99,6 +100,36 @@ function stripeRouter(store: Store): Router {
       }
     }
     res.status(500).send();
+  });
+
+  router.post('/create-subscription', async (req, res) => {
+    const payload = req.body as CreateSubscriptionPayload;
+    // Set the default payment method on the customer
+    try {
+      await stripe.paymentMethods.attach(payload.paymentMethodId, {
+        customer: payload.customerId,
+      });
+    } catch (error) {
+      return res.status(402).send({ error: { message: error.message } });
+    }
+
+    let updateCustomerDefaultPaymentMethod = await stripe.customers.update(
+      payload.customerId,
+      {
+        invoice_settings: {
+          default_payment_method: payload.paymentMethodId,
+        },
+      }
+    );
+
+    // Create the subscription
+    const subscription = await stripe.subscriptions.create({
+      customer: payload.customerId,
+      items: [{ price: payload.priceId, quantity: payload.quantity }],
+      expand: ['latest_invoice.payment_intent', 'plan.product'],
+    });
+
+    res.send(subscription);
   });
   return router;
 }
