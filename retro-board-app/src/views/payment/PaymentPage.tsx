@@ -5,11 +5,14 @@ import React from 'react';
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { useEffect } from 'react';
 import { useContext } from 'react';
+import { noop } from 'lodash';
 import UserContext from '../../auth/Context';
 import { createStripeCustomer, createPaymentMethod } from './api';
 import { Button } from '@material-ui/core';
 import { useCallback } from 'react';
 import useUser from '../../auth/useUser';
+import styled from 'styled-components';
+import ProductDisplay from './Product';
 
 const CARD_ELEMENT_OPTIONS = {
   style: {
@@ -58,12 +61,32 @@ function CardSection() {
     link();
   }, [setUser]);
   return (
-    <label>
-      Card details
-      <CardElement options={CARD_ELEMENT_OPTIONS} />
-      <Button onClick={handlePay}>Pay</Button>
-    </label>
+    <Container>
+      <ProductDisplay
+        label="Pro Team"
+        description="Perfect for smaller teams"
+        stripePriceId="price_1HdWOTCpRjtjIslJ2teM1TBT"
+        price={0}
+        pricePer10={9.99}
+        onOrder={noop}
+      />
+      <ProductDisplay
+        label="Pro Company"
+        description="Unlimited licenses for the entire company"
+        stripePriceId="price_1HdWOTCpRjtjIslJ2teM1TBT"
+        price={49.99}
+        onOrder={noop}
+      />
+
+      <label>
+        Card details
+        <CardElement options={CARD_ELEMENT_OPTIONS} />
+        <Button onClick={handlePay}>Pay</Button>
+      </label>
+    </Container>
   );
 }
+
+const Container = styled.div``;
 
 export default CardSection;
