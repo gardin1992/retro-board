@@ -105,14 +105,19 @@ function stripeRouter(store: Store): Router {
   router.post('/create-subscription', async (req, res) => {
     const payload = req.body as CreateSubscriptionPayload;
     // Set the default payment method on the customer
+    console.log('Payload', payload);
     try {
+      console.log('Attach payment method');
       await stripe.paymentMethods.attach(payload.paymentMethodId, {
         customer: payload.customerId,
       });
+      console.log('Attach payment method success');
     } catch (error) {
+      console.log('Attach payment error', error);
       return res.status(402).send({ error: { message: error.message } });
     }
 
+    console.log('Customer update');
     let updateCustomerDefaultPaymentMethod = await stripe.customers.update(
       payload.customerId,
       {
@@ -121,15 +126,18 @@ function stripeRouter(store: Store): Router {
         },
       }
     );
+    console.log('Customer update success');
 
     // Create the subscription
+    console.log('Create sub');
     const subscription = await stripe.subscriptions.create({
       customer: payload.customerId,
       items: [{ price: payload.priceId, quantity: payload.quantity }],
       expand: ['latest_invoice.payment_intent', 'plan.product'],
     });
+    console.log('Create sub success', subscription);
 
-    res.send(subscription);
+    res.status(200).send();
   });
   return router;
 }

@@ -1,5 +1,6 @@
 import { FullUser, CreateSubscriptionPayload } from 'retro-board-common';
 import { Stripe, StripeCardElement, StripeError } from '@stripe/stripe-js';
+import { Order } from './types';
 
 const requestConfig: Partial<RequestInit> = {
   mode: 'cors',
@@ -33,7 +34,7 @@ export async function createPaymentMethod(
   stripe: Stripe,
   cardElement: StripeCardElement,
   customerId: string,
-  priceId: string
+  order: Order
 ): Promise<OperationResult> {
   const result = await stripe.createPaymentMethod({
     type: 'card',
@@ -48,7 +49,12 @@ export async function createPaymentMethod(
       error: result.error.message,
     };
   } else if (result.paymentMethod) {
-    await createSubscription(customerId, result.paymentMethod.id, priceId);
+    await createSubscription(
+      customerId,
+      result.paymentMethod.id,
+      order.stripePriceId,
+      order.quantity || 1
+    );
     return {
       success: true,
     };
@@ -63,13 +69,14 @@ export async function createPaymentMethod(
 async function createSubscription(
   customerId: string,
   paymentMethodId: string,
-  priceId: string
+  priceId: string,
+  quantity: number
 ) {
   const body: CreateSubscriptionPayload = {
     customerId,
     paymentMethodId,
     priceId,
-    quantity: 10,
+    quantity,
   };
   const response = await fetch('/api/stripe/create-subscription', {
     method: 'post',

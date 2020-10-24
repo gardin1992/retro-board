@@ -35,22 +35,32 @@ function QuantitySelector({
   const canMinus = value - step >= min;
   return (
     <Container>
-      <Value>{value}</Value>
+      <Buttons>
+        <Button disabled={!canMinus} onClick={handleMinus}>
+          -
+        </Button>
+      </Buttons>
+      <Value>{value}&nbsp;seats</Value>
       <Buttons>
         <Button disabled={!canPlus} onClick={handlePlus}>
           +
-        </Button>
-        <Button disabled={!canMinus} onClick={handleMinus}>
-          -
         </Button>
       </Buttons>
     </Container>
   );
 }
 
-const Container = styled.div``;
+const Container = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px;
+`;
 
-const Value = styled.div``;
+const Value = styled.div`
+  font-size: 2em;
+  font-weight: 100;
+`;
 
 const Buttons = styled.div``;
 
