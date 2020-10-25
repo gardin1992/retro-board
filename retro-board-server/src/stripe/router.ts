@@ -69,6 +69,40 @@ function stripeRouter(store: Store): Router {
     }
   );
 
+  router.post('/create-checkout-session', async (req, res) => {
+    const payload = req.body as CreateSubscriptionPayload;
+    console.log('Payload: ', payload);
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: [
+        {
+          // Replace `price_...` with the actual price ID for your subscription
+          // you created in step 2 of this guide.
+          price: payload.priceId,
+          quantity: payload.quantity,
+          // currency: 'GBP',
+          // amount: 49.9,
+          price_data: {
+            product: 'prod_IDyLtfQN9lZddu',
+            currency: 'GBP',
+            recurring: {
+              interval: 'month',
+              interval_count: 1,
+            },
+            // unit_amount: 49.9,
+            unit_amount: 49,
+          },
+          // name: 'Pro sub',
+        },
+      ],
+      mode: 'subscription',
+      success_url: 'http://localhost:3000/success',
+      cancel_url: 'https://localhost:3000/cancel',
+    });
+
+    res.json({ id: session.id });
+  });
+
   router.post('/create-customer', async (req, res) => {
     if (!req.user) {
       res.status(403).send();
@@ -106,12 +140,15 @@ function stripeRouter(store: Store): Router {
     const payload = req.body as CreateSubscriptionPayload;
     // Set the default payment method on the customer
     console.log('Payload', payload);
+
+    //stripe.
+
     try {
       console.log('Attach payment method');
-      await stripe.paymentMethods.attach(payload.paymentMethodId, {
+      const pm = await stripe.paymentMethods.attach(payload.paymentMethodId, {
         customer: payload.customerId,
       });
-      console.log('Attach payment method success');
+      console.log('Attach payment method success', pm);
     } catch (error) {
       console.log('Attach payment error', error);
       return res.status(402).send({ error: { message: error.message } });
@@ -126,18 +163,27 @@ function stripeRouter(store: Store): Router {
         },
       }
     );
-    console.log('Customer update success');
+    console.log('Customer update success', updateCustomerDefaultPaymentMethod);
 
     // Create the subscription
     console.log('Create sub');
-    const subscription = await stripe.subscriptions.create({
-      customer: payload.customerId,
-      items: [{ price: payload.priceId, quantity: payload.quantity }],
-      expand: ['latest_invoice.payment_intent', 'plan.product'],
-    });
-    console.log('Create sub success', subscription);
+    try {
+      const subscription = await stripe.subscriptions.create({
+        customer: payload.customerId,
+        items: [{ price: payload.priceId, quantity: payload.quantity }],
+        // expand: ['latest_invoice.payment_intent', 'plan.product'],
+      });
+      console.log('Create sub success', subscription);
 
-    res.status(200).send();
+      console.log('before json');
+      const json = JSON.stringify(subscription);
+      console.log('after json');
+
+      res.status(200).send(json);
+    } catch (e) {
+      console.log('Caught error on sub', e);
+      res.status(200).send(e);
+    }
   });
   return router;
 }

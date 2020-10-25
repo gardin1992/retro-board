@@ -7,15 +7,20 @@ import { useEffect } from 'react';
 import { useContext } from 'react';
 import { noop } from 'lodash';
 import UserContext from '../../auth/Context';
-import { createStripeCustomer, createPaymentMethod } from './api';
+import {
+  createStripeCustomer,
+  createPaymentMethod,
+  createCheckoutSession,
+} from './api';
 import { Button } from '@material-ui/core';
 import { useCallback } from 'react';
 import useUser from '../../auth/useUser';
 import styled from 'styled-components';
 import ProductDisplay from './Product';
 import { Order } from './types';
+import { StripeCardElementOptions } from '@stripe/stripe-js';
 
-const CARD_ELEMENT_OPTIONS = {
+const CARD_ELEMENT_OPTIONS: StripeCardElementOptions = {
   style: {
     base: {
       color: '#32325d',
@@ -66,6 +71,24 @@ function CardSection() {
     }
     link();
   }, [setUser]);
+  const handleCheckout = useCallback(async () => {
+    // Call your backend to create the Checkout Session
+    if (order) {
+      console.log('Order: ', order);
+      const session = await createCheckoutSession(
+        order.stripePriceId,
+        order.quantity || 1
+      );
+
+      if (session && stripe) {
+        const result = await stripe.redirectToCheckout({
+          sessionId: session.id,
+        });
+      }
+    }
+
+    // When the customer clicks on the button, redirect them to Checkout.
+  }, [stripe, order]);
   return (
     <Container>
       <Products>
@@ -85,12 +108,12 @@ function CardSection() {
         <ProductDisplay
           label="Pro Company"
           description="Unlimited licenses for the entire company"
-          stripePriceId="price_1HfpVyCpRjtjIslJgA8Zuht0"
+          stripePriceId="price_1HgCxDCpRjtjIslJNGlY5xcy"
           price={49.99}
           onOrder={setOrder}
           selected={
             (order &&
-              order.stripePriceId === 'price_1HfpVyCpRjtjIslJgA8Zuht0') ||
+              order.stripePriceId === 'price_1HgCxDCpRjtjIslJNGlY5xcy') ||
             false
           }
         />
@@ -102,6 +125,9 @@ function CardSection() {
           Pay
         </Button>
       </label>
+      <button onClick={handleCheckout} role="link">
+        Checkout
+      </button>
     </Container>
   );
 }
