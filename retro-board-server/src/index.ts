@@ -1,5 +1,4 @@
-import express, { NextFunction } from 'express';
-import bodyParser from 'body-parser';
+import express from 'express';
 import socketIo from 'socket.io';
 import socketIoRedisAdapter from 'socket.io-redis';
 import redis from 'redis';
@@ -38,8 +37,16 @@ initSentry();
 
 const app = express();
 setupSentryRequestHandler(app);
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(
+  express.json({
+    // This is a trick to get the raw buffer on the request, for Stripe
+    verify: (req, _, buf) => {
+      const request: any = req;
+      request.buf = buf;
+    },
+  })
+);
+app.use(express.urlencoded({ extended: true }));
 
 // saveUninitialized: true allows us to attach the socket id to the session
 // before we have athenticated the user

@@ -86,4 +86,5 @@ export interface Configuration {
   SENDGRID_API_KEY: string;
   SENDGRID_SENDER: string;
   STRIPE_SECRET: string;
+  STRIPE_WEBHOOK_SECRET: string;
 }
