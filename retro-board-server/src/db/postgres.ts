@@ -9,6 +9,7 @@ import {
   VoteRepository,
   UserRepository,
   SessionTemplateRepository,
+  SubscriptionRepository,
 } from './repositories';
 import {
   Session,
@@ -33,6 +34,7 @@ import {
   PostEntity,
   PostGroupEntity,
   ColumnDefinitionEntity,
+  SubscriptionEntity,
 } from './entities';
 import UserEntity, { ALL_FIELDS } from './entities/User';
 
@@ -280,6 +282,34 @@ const getOrSaveUser = (userRepository: UserRepository) => async (
   return await userRepository.save(user);
 };
 
+const activateSubscription = (
+  subscriptionRepository: SubscriptionRepository,
+  userRepository: UserRepository
+) => async (
+  userId: string,
+  stripeSubscriptionId: string
+): Promise<SubscriptionEntity> => {
+  const user = await userRepository.findOne(userId);
+  if (!user) {
+    throw Error('Cannot activate subscription on a non existing user');
+  }
+  const existingSubscription = await subscriptionRepository.activate(
+    stripeSubscriptionId,
+    user
+  );
+  return existingSubscription;
+};
+
+const cancelSubscription = (
+  subscriptionRepository: SubscriptionRepository,
+  userRepository: UserRepository
+) => async (stripeSubscriptionId: string): Promise<SubscriptionEntity> => {
+  const existingSubscription = await subscriptionRepository.cancel(
+    stripeSubscriptionId
+  );
+  return existingSubscription;
+};
+
 const deleteSessions = (sessionRepository: SessionRepository) => async (
   userId: string,
   sessionId: string
@@ -399,6 +429,9 @@ export default async function db(): Promise<Store> {
   const templateRepository = connection.getCustomRepository(
     SessionTemplateRepository
   );
+  const subscriptionRepository = connection.getCustomRepository(
+    SubscriptionRepository
+  );
   return {
     getSession: getSession(
       sessionRepository,
@@ -427,5 +460,13 @@ export default async function db(): Promise<Store> {
     previousSessions: previousSessions(sessionRepository),
     getDefaultTemplate: getDefaultTemplate(userRepository),
     deleteSession: deleteSessions(sessionRepository),
+    activateSubscription: activateSubscription(
+      subscriptionRepository,
+      userRepository
+    ),
+    cancelSubscription: cancelSubscription(
+      subscriptionRepository,
+      userRepository
+    ),
   };
 }

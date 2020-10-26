@@ -9,7 +9,11 @@ import {
   PostGroup,
   FullUser,
 } from 'retro-board-common';
-import { SessionTemplateEntity, SessionEntity } from './db/entities';
+import {
+  SessionTemplateEntity,
+  SessionEntity,
+  SubscriptionEntity,
+} from './db/entities';
 import UserEntity from './db/entities/User';
 
 export interface Store {
@@ -62,6 +66,13 @@ export interface Store {
     session: Session,
     columns: ColumnDefinition[]
   ) => Promise<ColumnDefinition[]>;
+  activateSubscription: (
+    userId: string,
+    stripeSubscriptionId: string
+  ) => Promise<SubscriptionEntity>;
+  cancelSubscription: (
+    stripeSubscriptionId: string
+  ) => Promise<SubscriptionEntity>;
 }
 
 export interface Configuration {

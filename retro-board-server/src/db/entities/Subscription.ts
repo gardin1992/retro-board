@@ -14,11 +14,11 @@ import UserEntity from './User';
 export default class SubscriptionEntity {
   @PrimaryColumn({ primary: true, generated: false, unique: true })
   public id: string;
-  @Column({ nullable: false, type: 'character varying', default: 'active' })
-  public status: string;
+  @Column({ nullable: false, default: false })
+  public active: boolean;
   @ManyToOne(() => UserEntity, { eager: true, cascade: true, nullable: false })
   public owner: UserEntity;
-  @ManyToMany((type) => UserEntity)
+  @ManyToMany(() => UserEntity)
   @JoinTable({ name: 'subscriptions-users' })
   public users: UserEntity[] | undefined;
   @CreateDateColumn({ type: 'timestamp with time zone', select: false })
@@ -28,6 +28,6 @@ export default class SubscriptionEntity {
   constructor(id: string, owner: UserEntity) {
     this.id = id;
     this.owner = owner;
-    this.status = 'active';
+    this.active = true;
   }
 }

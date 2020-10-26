@@ -6,6 +6,11 @@ import { Store } from '../types';
 import Stripe from 'stripe';
 import { getUser } from '../utils';
 import { UserEntity } from 'src/db/entities';
+import {
+  StripeEvent,
+  CheckoutCompletedPayload,
+  SubscriptionDeletedPayload,
+} from './types';
 
 const stripe = new Stripe(config.STRIPE_SECRET, {} as Stripe.StripeConfig);
 
@@ -42,7 +47,7 @@ function stripeRouter(store: Store): Router {
     }
   }
 
-  router.post('/webhook', (req, res) => {
+  router.post('/webhook', async (req, res) => {
     const signature = (req.headers['stripe-signature'] as string).trim();
     // Retrieve the event by verifying the signature using the raw body and secret.
     let event;
@@ -82,15 +87,36 @@ function stripeRouter(store: Store): Router {
         // failed and to retrieve new card details.
         break;
       case 'customer.subscription.deleted':
+        console.log('Deleted Sub', event);
+        const cancelEvent = (event as unknown) as StripeEvent<
+          SubscriptionDeletedPayload
+        >;
         if (event.request != null) {
+          console.log('Manual cancellation');
           // handle a subscription cancelled by your request
           // from above.
         } else {
+          console.log('Automatic cancellation');
           // handle subscription cancelled automatically based
           // upon your subscription settings.
         }
+        store.cancelSubscription(cancelEvent.data.object.id);
         break;
       case 'checkout.session.completed':
+        const subEvent = (event as unknown) as StripeEvent<
+          CheckoutCompletedPayload
+        >;
+        if (subEvent.data.object.payment_status === 'paid') {
+          console.log(
+            'Before activate sub',
+            subEvent.data.object.client_reference_id,
+            subEvent.data.object.subscription
+          );
+          await store.activateSubscription(
+            subEvent.data.object.client_reference_id,
+            subEvent.data.object.subscription
+          );
+        }
         console.log('Checkout session completed!', event);
 
       default:
