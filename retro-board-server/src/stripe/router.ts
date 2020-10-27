@@ -1,5 +1,9 @@
 import express, { Router } from 'express';
-import { CreateSubscriptionPayload, FullUser } from 'retro-board-common';
+import {
+  CreateSubscriptionPayload,
+  FullUser,
+  Product,
+} from 'retro-board-common';
 import config from '../db/config';
 import bodyParser from 'body-parser';
 import { Store } from '../types';
@@ -10,7 +14,9 @@ import {
   StripeEvent,
   CheckoutCompletedPayload,
   SubscriptionDeletedPayload,
+  InternalProduct,
 } from './types';
+import { plans, getProduct } from './products';
 
 const stripe = new Stripe(config.STRIPE_SECRET, {} as Stripe.StripeConfig);
 
@@ -128,6 +134,7 @@ function stripeRouter(store: Store): Router {
   router.post('/create-checkout-session', async (req, res) => {
     const payload = req.body as CreateSubscriptionPayload;
     const user = await getUser(store, req);
+    const product = getProduct(payload.plan);
 
     console.log('Payload: ', payload);
     if (user) {
@@ -137,28 +144,36 @@ function stripeRouter(store: Store): Router {
         payment_method_types: ['card'],
         client_reference_id: user.id,
         customer: customerId,
+        metadata: {
+          plan: payload.plan,
+        },
         line_items: [
           {
-            price: payload.priceId,
-            quantity: payload.quantity,
+            // price: product.priceId,
+            quantity: 1,
             price_data: {
-              product: 'prod_IGlKc0QrEh2tiv',
-              currency: 'GBP',
+              product: product.productId,
+              currency: payload.currency,
               recurring: {
                 interval: 'month',
                 interval_count: 1,
               },
-              unit_amount: 990,
+              unit_amount: product[payload.currency],
             },
           },
         ],
         mode: 'subscription',
-        success_url: 'http://localhost:3000/success',
-        cancel_url: 'https://localhost:3000/cancel',
+        success_url: `${config.BASE_URL}/success`,
+        cancel_url: `${config.BASE_URL}/cancel`,
       });
 
       res.json({ id: session.id });
     }
+  });
+
+  router.get('/products', (_, res) => {
+    const products: Product[] = plans.map(({ priceId, productId, ...p }) => p);
+    res.status(200).send(products);
   });
 
   return router;

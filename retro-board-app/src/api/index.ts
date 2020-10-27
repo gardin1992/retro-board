@@ -9,6 +9,7 @@ import {
   ResetPasswordPayload,
   ResetChangePasswordPayload,
   FullUser,
+  Product,
 } from 'retro-board-common';
 import config from '../utils/getConfig';
 import { v4 } from 'uuid';
@@ -61,6 +62,16 @@ export async function me(): Promise<FullUser | null> {
   });
   if (response.ok) {
     return (await response.json()) as FullUser;
+  }
+  return null;
+}
+
+export async function getProducts(): Promise<Product[] | null> {
+  const response = await fetch('/api/stripe/products', {
+    credentials: 'same-origin',
+  });
+  if (response.ok) {
+    return (await response.json()) as Product[];
   }
   return null;
 }

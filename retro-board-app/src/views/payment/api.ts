@@ -1,6 +1,4 @@
-import { FullUser, CreateSubscriptionPayload } from 'retro-board-common';
-import { Stripe, StripeCardElement, StripeError } from '@stripe/stripe-js';
-import { Order } from './types';
+import { CreateSubscriptionPayload, Plan, Currency } from 'retro-board-common';
 
 const requestConfig: Partial<RequestInit> = {
   mode: 'cors',
@@ -14,20 +12,21 @@ const requestConfig: Partial<RequestInit> = {
 };
 
 export async function createCheckoutSession(
-  priceId: string,
-  quantity: number
+  plan: Plan,
+  currency: Currency
 ): Promise<{ id: string } | null> {
+  const payload: CreateSubscriptionPayload = {
+    plan,
+    currency,
+  };
   const response = await fetch(`/api/stripe/create-checkout-session`, {
     method: 'POST',
     ...requestConfig,
-    body: JSON.stringify({
-      price: priceId,
-      quantity,
-    }),
+    body: JSON.stringify(payload),
   });
   if (response.ok) {
-    const user: { id: string } = await response.json();
-    return user;
+    const session: { id: string } = await response.json();
+    return session;
   }
   return null;
 }

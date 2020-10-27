@@ -77,6 +77,18 @@ export interface PostGroup extends PostContainer, Rankable, Entity {
 
 export type ProStatus = 'valid' | 'payment_issue' | 'pending';
 
+export type Plan = 'team' | 'company';
+
+export type Currency = 'gbp' | 'eur' | 'usd';
+
+export interface Product {
+  name: string;
+  plan: Plan;
+  gbp: number;
+  usd: number;
+  eur: number;
+}
+
 export interface User extends Entity {
   name: string;
   photo: string | null;

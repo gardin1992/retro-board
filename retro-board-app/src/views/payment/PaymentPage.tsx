@@ -12,26 +12,24 @@ import useUser from '../../auth/useUser';
 import styled from 'styled-components';
 import ProductDisplay from './Product';
 import { Order } from './types';
+import useProducts from './useProducts';
 
 function CardSection() {
   const { setUser } = useContext(UserContext);
   const [order, setOrder] = useState<Order | null>(null);
   const [paying, setPaying] = useState(false);
-  const elements = useElements();
   const stripe = useStripe();
   const user = useUser();
+  const products = useProducts();
 
   const handleCheckout = useCallback(async () => {
     // Call your backend to create the Checkout Session
     if (order) {
       console.log('Order: ', order);
-      const session = await createCheckoutSession(
-        order.stripePriceId,
-        order.quantity || 1
-      );
+      const session = await createCheckoutSession(order.plan, order.currency);
 
       if (session && stripe) {
-        const result = await stripe.redirectToCheckout({
+        await stripe.redirectToCheckout({
           sessionId: session.id,
         });
       }
@@ -42,11 +40,17 @@ function CardSection() {
   return (
     <Container>
       <Products>
-        <ProductDisplay
-          label="Pro Team"
-          description="Perfect for smaller teams"
-          stripePriceId="price_1HgDnuCpRjtjIslJCUMeS8pF"
-          price={9.9}
+        {products.map((product) => (
+          <ProductDisplay
+            key={product.plan}
+            product={product}
+            currency="eur"
+            onOrder={setOrder}
+            selected={(order && order.plan === product.plan) || false}
+          />
+        ))}
+        {/* <ProductDisplay
+          product={}
           onOrder={setOrder}
           selected={
             (order &&
@@ -65,7 +69,7 @@ function CardSection() {
               order.stripePriceId === 'price_1HgCxDCpRjtjIslJNGlY5xcy') ||
             false
           }
-        />
+        /> */}
       </Products>
 
       <button onClick={handleCheckout} role="link">

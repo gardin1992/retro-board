@@ -1,5 +1,6 @@
+import { Plan, Currency } from 'retro-board-common';
+
 export interface Order {
-  stripePriceId: string;
-  quantity: number | null;
-  price: number;
+  plan: Plan;
+  currency: Currency;
 }

@@ -1,3 +1,10 @@
+import { Plan, Product } from 'retro-board-common';
+
+export interface InternalProduct extends Product {
+  productId: string;
+  priceId: string;
+}
+
 export interface StripeEvent<T> {
   id: string;
   object: string;

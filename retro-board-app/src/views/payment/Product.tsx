@@ -4,61 +4,37 @@ import styled from 'styled-components';
 import { colors } from '@material-ui/core';
 import QuantitySelector from './QuantitySelector';
 import { useCallback } from 'react';
+import { Product, Currency } from 'retro-board-common';
 
 interface ProductDisplayProps {
-  stripePriceId: string;
-  label: string;
-  description: string;
-  pricePer10?: number;
-  price: number;
+  product: Product;
+  currency: Currency;
   selected: boolean;
   onOrder: (order: Order) => void;
 }
 
 function ProductDisplay({
-  stripePriceId,
-  label,
-  description,
-  pricePer10,
-  price,
+  product,
   selected,
+  currency,
   onOrder,
 }: ProductDisplayProps) {
-  const [quantity, setQuantity] = useState(10);
-  const total = price + (quantity / 10) * (pricePer10 || 0);
   const handleOrder = useCallback(() => {
     const order: Order = {
-      price: total,
-      quantity: pricePer10 ? quantity : null,
-      stripePriceId,
+      currency,
+      plan: product.plan,
     };
     onOrder(order);
-  }, [total, quantity, stripePriceId, onOrder, pricePer10]);
-  const handleQuantity = useCallback(
-    (qty: number) => {
-      setQuantity(qty);
-      handleOrder();
-    },
-    [handleOrder]
-  );
+  }, [onOrder, currency, product]);
+
   return (
     <Container onClick={handleOrder} selected={selected}>
-      <Header>{label}</Header>
-      <Description>{description}</Description>
-      <Quantity>
-        {pricePer10 ? (
-          <QuantitySelector
-            min={10}
-            max={50}
-            value={quantity}
-            onChange={handleQuantity}
-            step={10}
-          />
-        ) : (
-          <Unlimited>Unlimited</Unlimited>
-        )}
-      </Quantity>
-      <Total>{total.toFixed(2)} GBP</Total>
+      <Header>{product.name}</Header>
+      <Description>tbd</Description>
+      <Quantity>tbd</Quantity>
+      <Total>
+        {product[currency] / 100} {currency.toUpperCase()}
+      </Total>
     </Container>
   );
 }

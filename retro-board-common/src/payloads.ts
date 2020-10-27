@@ -1,3 +1,5 @@
+import { Plan, Currency } from './types';
+
 export interface RegisterPayload {
   name: string;
   username: string;
@@ -25,8 +27,6 @@ export interface CreateCustomerPayload {
 }
 
 export interface CreateSubscriptionPayload {
-  customerId: string;
-  paymentMethodId: string;
-  priceId: string;
-  quantity: number;
+  plan: Plan;
+  currency: Currency;
 }
