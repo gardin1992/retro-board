@@ -175,14 +175,11 @@ function stripeRouter(store: Store): Router {
 
   router.get('/portal', async (req, res) => {
     const user = await getUser(store, req);
-    console.log('Portal: user', user?.stripeId);
     if (user && user.stripeId) {
-      console.log('Before creating portal');
       var session = await stripe.billingPortal.sessions.create({
         customer: user.stripeId,
         return_url: `${config.BASE_URL}/account`,
       });
-      console.log('After creating portal', session);
       res.status(200).send(session);
     } else {
       res.status(500).send();

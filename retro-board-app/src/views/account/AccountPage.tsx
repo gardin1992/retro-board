@@ -1,18 +1,13 @@
 import React from 'react';
 import usePortalUrl from './usePortalUrl';
+import { Button } from '@material-ui/core';
 
 function AccountPage() {
   const url = usePortalUrl();
   return (
     <div>
       Hello
-      <iframe
-        title="Stripe portal"
-        width="100%"
-        height="1000px"
-        src={url || undefined}
-        seamless
-      ></iframe>
+      {url ? <Button href={url}>Manage my subscription</Button> : null}
     </div>
   );
 }
