@@ -84,16 +84,16 @@ app.use(passport.session());
 
 const httpServer = new http.Server(app);
 
-app.use(
-  mung.json((body, req, res) => {
-    if (body) {
-      const hasPassword = hasField('password', body);
-      if (hasPassword) {
-        console.error('The following object has a password property: ', body);
-      }
-    }
-  })
-);
+// app.use(
+//   mung.json((body, req, res) => {
+//     if (body) {
+//       const hasPassword = hasField('password', body);
+//       if (hasPassword) {
+//         console.error('The following object has a password property: ', body);
+//       }
+//     }
+//   })
+// );
 
 app.get('/api/ping', (req, res) => {
   res.send('pong');

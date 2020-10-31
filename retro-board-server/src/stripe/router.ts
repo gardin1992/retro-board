@@ -160,8 +160,8 @@ function stripeRouter(store: Store): Router {
           },
         ],
         mode: 'subscription',
-        success_url: `${config.BASE_URL}/success`,
-        cancel_url: `${config.BASE_URL}/cancel`,
+        success_url: `${config.BASE_URL}/subscribe/success`,
+        cancel_url: `${config.BASE_URL}/subscribe/cancel`,
       });
 
       res.json({ id: session.id });
@@ -171,6 +171,22 @@ function stripeRouter(store: Store): Router {
   router.get('/products', (_, res) => {
     const products: Product[] = plans.map(({ priceId, productId, ...p }) => p);
     res.status(200).send(products);
+  });
+
+  router.get('/portal', async (req, res) => {
+    const user = await getUser(store, req);
+    console.log('Portal: user', user?.stripeId);
+    if (user && user.stripeId) {
+      console.log('Before creating portal');
+      var session = await stripe.billingPortal.sessions.create({
+        customer: user.stripeId,
+        return_url: `${config.BASE_URL}/account`,
+      });
+      console.log('After creating portal', session);
+      res.status(200).send(session);
+    } else {
+      res.status(500).send();
+    }
   });
 
   return router;

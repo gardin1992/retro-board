@@ -22,7 +22,10 @@ import DisclaimerPage from './views/policies/Disclaimer';
 import { HomeOutlined } from '@material-ui/icons';
 import ValidatePage from './views/Validate';
 import ResetPasswordPage from './views/Reset';
-import PaymentPage from './views/payment/PaymentPage';
+import SubscribePage from './views/subscribe/SubscribePage';
+import SuccessPage from './views/subscribe/SuccessPage';
+import CancelPage from './views/subscribe/CancelPage';
+import AccountPage from './views/account/AccountPage';
 
 const Title = styled(Typography)`
   flex-grow: 1;
@@ -75,7 +78,10 @@ function App() {
         <Route path="/game/:gameId" component={Game} />
         <Route path="/validate" component={ValidatePage} />
         <Route path="/reset" component={ResetPasswordPage} />
-        <Route path="/payment" component={PaymentPage} />
+        <Route path="/account" component={AccountPage} />
+        <Route path="/subscribe" component={SubscribePage} exact />
+        <Route path="/subscribe/success" component={SuccessPage} exact />
+        <Route path="/subscribe/cancel" component={CancelPage} exact />
         <Route path="/privacy" component={PrivacyPolicyPage} />
         <Route path="/terms" component={TermsAndConditionsPage} />
         <Route path="/cookies" component={CookiesPolicyPage} />
