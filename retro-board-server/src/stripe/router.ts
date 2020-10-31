@@ -20,9 +20,6 @@ import { plans, getProduct } from './products';
 
 const stripe = new Stripe(config.STRIPE_SECRET, {} as Stripe.StripeConfig);
 
-console.log('Stripe secret: ', config.STRIPE_SECRET);
-console.log('Stripe webhook: secret: ', config.STRIPE_WEBHOOK_SECRET);
-
 function stripeRouter(store: Store): Router {
   const router = express.Router();
 

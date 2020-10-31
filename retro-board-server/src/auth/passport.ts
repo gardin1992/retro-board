@@ -38,8 +38,6 @@ export default (store: Store) => {
       cb: Function
     ) => {
       const profile = anyProfile as BaseProfile;
-      console.log('Profile');
-      console.log(profile);
       let user: UserEntity;
       switch (type) {
         case 'google':
