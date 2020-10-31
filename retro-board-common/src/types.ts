@@ -99,9 +99,6 @@ export interface FullUser extends User {
   accountType: AccountType;
   language: string;
   stripeId: string | null;
-}
-
-export interface CurrentUser extends FullUser {
   pro: ProStatus | null;
   subscriptionsId: string | null;
 }

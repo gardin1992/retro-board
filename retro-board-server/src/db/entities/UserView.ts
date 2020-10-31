@@ -1,10 +1,5 @@
 import { ViewEntity, ViewColumn } from 'typeorm';
-import {
-  AccountType,
-  FullUser,
-  ProStatus,
-  CurrentUser,
-} from 'retro-board-common';
+import { AccountType, FullUser, ProStatus } from 'retro-board-common';
 
 @ViewEntity({
   expression: `
@@ -13,12 +8,11 @@ select
 	u.name,
 	u."accountType",
 	u.username,
-	u.pro,
 	u."stripeId",
 	u.photo,
 	u.language,
 	coalesce(s.id, s2.id) as "subscriptionsId",
-	coalesce(s.active, s2.active) as "active"
+	coalesce(s.active, s2.active) as "pro"
 from users u 
 left join subscriptions s on s."ownerId" = u.id and s.active is true
 left join "subscriptions-users" su on su."usersId" = u.id
@@ -57,7 +51,7 @@ export default class UserView {
     this.pro = null;
   }
 
-  toJson(): CurrentUser {
+  toJson(): FullUser {
     return {
       id: this.id,
       name: this.name,

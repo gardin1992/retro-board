@@ -32,7 +32,7 @@ export interface Store {
   updateUser: (
     userId: string,
     updatedFields: Partial<UserEntity>
-  ) => Promise<UserEntity | null>;
+  ) => Promise<UserView | null>;
   savePost: (userId: string, sessionId: string, post: Post) => Promise<void>;
   savePostGroup: (
     userId: string,

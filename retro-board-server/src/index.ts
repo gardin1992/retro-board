@@ -13,7 +13,7 @@ import authRouter from './auth/router';
 import stripeRouter from './stripe/router';
 import session from 'express-session';
 import game from './game';
-import { getUser, hashPassword } from './utils';
+import { getUser, hashPassword, getUserView } from './utils';
 import {
   initSentry,
   setupSentryErrorHandler,
@@ -186,7 +186,7 @@ db().then((store) => {
   });
 
   app.get('/api/me', async (req, res) => {
-    const user = await getUser(store, req);
+    const user = await getUserView(store, req);
     if (user) {
       res.status(200).send(user.toJson());
     } else {
@@ -221,11 +221,12 @@ db().then((store) => {
 
   app.post('/api/me/language', async (req, res) => {
     if (req.user) {
-      const updatedUser = await store.updateUser(req.user, {
+      await store.updateUser(req.user, {
         language: req.body.language,
       });
+      const updatedUser = await getUserView(store, req);
       if (updatedUser) {
-        res.status(200).send(updatedUser?.toFullUser());
+        res.status(200).send(updatedUser.toJson());
       } else {
         res.status(401).send();
       }
@@ -266,7 +267,12 @@ db().then((store) => {
         registerPayload.name,
         user.emailVerification!
       );
-      res.status(200).send(user.toFullUser());
+      const userView = await store.getUserView(user.id);
+      if (userView) {
+        res.status(200).send(userView.toJson());
+      } else {
+        res.status(500).send();
+      }
     }
   });
 
@@ -289,7 +295,7 @@ db().then((store) => {
           console.log('Cannot login Error: ', err);
           res.status(500).send('Cannot login');
         } else if (updatedUser) {
-          res.status(200).send(updatedUser.toFullUser());
+          res.status(200).send(updatedUser.toJson());
         } else {
           res.status(500).send('Unspecified error');
         }
@@ -335,7 +341,7 @@ db().then((store) => {
           console.log('Cannot login Error: ', err);
           res.status(500).send('Cannot login');
         } else if (updatedUser) {
-          res.status(200).send(updatedUser.toFullUser());
+          res.status(200).send(updatedUser.toJson());
         } else {
           res.status(500).send('Unspecified error');
         }

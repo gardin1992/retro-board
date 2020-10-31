@@ -73,13 +73,13 @@ export default class UserEntity {
     };
   }
 
-  toFullUser(): FullUser {
-    return {
-      ...this.toJson(),
-      accountType: this.accountType,
-      language: this.language,
-      username: this.username,
-      stripeId: this.stripeId,
-    };
-  }
+  // toFullUser(): FullUser {
+  //   return {
+  //     ...this.toJson(),
+  //     accountType: this.accountType,
+  //     language: this.language,
+  //     username: this.username,
+  //     stripeId: this.stripeId,
+  //   };
+  // }
 }

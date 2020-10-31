@@ -203,14 +203,17 @@ const getDefaultTemplate = (userRepository: UserRepository) => async (
   return userWithDefaultTemplate?.defaultTemplate || null;
 };
 
-const updateUser = (userRepository: UserRepository) => async (
+const updateUser = (
+  userRepository: UserRepository,
+  userViewRepository: Repository<UserView>
+) => async (
   id: string,
   updatedUser: Partial<UserEntity>
-): Promise<UserEntity | null> => {
+): Promise<UserView | null> => {
   const user = await userRepository.findOne(id);
   if (user) {
     await userRepository.update(id, updatedUser);
-    const newUser = await userRepository.findOne(id, { select: ALL_FIELDS });
+    const newUser = await getUserView(userViewRepository)(id);
     return newUser || null;
   }
   return null;
@@ -460,7 +463,7 @@ export default async function db(): Promise<Store> {
     deletePost: deletePost(postRepository),
     deletePostGroup: deletePostGroup(postGroupRepository),
     getOrSaveUser: getOrSaveUser(userRepository),
-    updateUser: updateUser(userRepository),
+    updateUser: updateUser(userRepository, userViewRepository),
     create: create(sessionRepository, userRepository),
     createCustom: createCustom(
       sessionRepository,
