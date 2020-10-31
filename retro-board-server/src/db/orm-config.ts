@@ -10,6 +10,7 @@ import {
   SessionTemplateEntity,
   TemplateColumnDefinitionEntity,
   SubscriptionEntity,
+  UserView,
 } from './entities';
 
 const migrationsDirectory = 'src/db/migrations';
@@ -27,6 +28,7 @@ export default function (): ConnectionOptions {
       PostGroupEntity,
       SessionEntity,
       UserEntity,
+      UserView,
       ColumnDefinitionEntity,
       VoteEntity,
       SessionTemplateEntity,

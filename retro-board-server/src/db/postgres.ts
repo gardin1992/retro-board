@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { flattenDeep, uniqBy } from 'lodash';
-import { createConnection, Connection } from 'typeorm';
+import { createConnection, Connection, Repository } from 'typeorm';
 import {
   SessionRepository,
   PostRepository,
@@ -35,6 +35,7 @@ import {
   PostGroupEntity,
   ColumnDefinitionEntity,
   SubscriptionEntity,
+  UserView,
 } from './entities';
 import UserEntity, { ALL_FIELDS } from './entities/User';
 
@@ -172,6 +173,13 @@ const getUser = (userRepository: UserRepository) => async (
   id: string
 ): Promise<UserEntity | null> => {
   const user = await userRepository.findOne(id, { select: ALL_FIELDS });
+  return user || null;
+};
+
+const getUserView = (userRepository: Repository<UserView>) => async (
+  id: string
+): Promise<UserView | null> => {
+  const user = await userRepository.findOne({ id });
   return user || null;
 };
 
@@ -426,6 +434,7 @@ export default async function db(): Promise<Store> {
   const columnRepository = connection.getCustomRepository(ColumnRepository);
   const voteRepository = connection.getCustomRepository(VoteRepository);
   const userRepository = connection.getCustomRepository(UserRepository);
+  const userViewRepository = connection.getRepository(UserView);
   const templateRepository = connection.getCustomRepository(
     SessionTemplateRepository
   );
@@ -440,6 +449,7 @@ export default async function db(): Promise<Store> {
       columnRepository
     ),
     getUser: getUser(userRepository),
+    getUserView: getUserView(userViewRepository),
     getUserByUsername: getUserByUsername(userRepository),
     saveSession: saveSession(sessionRepository),
     updateOptions: updateOptions(sessionRepository),

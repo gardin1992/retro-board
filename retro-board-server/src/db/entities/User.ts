@@ -21,7 +21,6 @@ export const ALL_FIELDS: Array<keyof UserEntity> = [
   'language',
   'defaultTemplate',
   'stripeId',
-  'pro',
   'created',
   'updated',
 ];
@@ -42,8 +41,6 @@ export default class UserEntity {
   public password: string | null;
   @Column({ nullable: true, type: 'character varying', select: false })
   public emailVerification: string | null;
-  @Column({ nullable: true, type: 'character varying' })
-  public pro: string | null;
   @Column({ nullable: true, type: 'character varying', select: false })
   public stripeId: string | null;
   @Column({ nullable: true, type: 'character varying' })
@@ -65,7 +62,6 @@ export default class UserEntity {
     this.username = null;
     this.photo = null;
     this.emailVerification = null;
-    this.pro = null;
     this.stripeId = null;
   }
 
@@ -74,7 +70,6 @@ export default class UserEntity {
       id: this.id,
       name: this.name,
       photo: this.photo,
-      pro: this.pro as ProStatus | null,
     };
   }
 

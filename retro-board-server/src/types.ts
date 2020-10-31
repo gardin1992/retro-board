@@ -4,21 +4,20 @@ import {
   SessionOptions,
   ColumnDefinition,
   Vote,
-  User,
   SessionMetadata,
   PostGroup,
-  FullUser,
 } from 'retro-board-common';
 import {
   SessionTemplateEntity,
-  SessionEntity,
   SubscriptionEntity,
+  UserView,
 } from './db/entities';
 import UserEntity from './db/entities/User';
 
 export interface Store {
   getSession: (userId: string | null, key: string) => Promise<Session | null>;
   getUser: (id: string) => Promise<UserEntity | null>;
+  getUserView: (id: string) => Promise<UserView | null>;
   getUserByUsername: (username: string) => Promise<UserEntity | null>;
   getDefaultTemplate: (userId: string) => Promise<SessionTemplateEntity | null>;
   create: (author: UserEntity) => Promise<Session>;

@@ -188,7 +188,7 @@ db().then((store) => {
   app.get('/api/me', async (req, res) => {
     const user = await getUser(store, req);
     if (user) {
-      res.status(200).send(user.toFullUser());
+      res.status(200).send(user.toJson());
     } else {
       res.status(401).send('Not logged in');
     }
