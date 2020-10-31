@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Order } from './types';
 import styled from 'styled-components';
 import { colors } from '@material-ui/core';
-import QuantitySelector from './QuantitySelector';
 import { useCallback } from 'react';
 import { Product, Currency } from 'retro-board-common';
 
@@ -71,13 +70,6 @@ const Quantity = styled.div`
   height: 50px;
   display: flex;
   align-items: center;
-`;
-
-const Unlimited = styled.div`
-  text-align: center;
-  font-weight: 100;
-  font-size: 2em;
-  width: 100%;
 `;
 
 const Total = styled.div`

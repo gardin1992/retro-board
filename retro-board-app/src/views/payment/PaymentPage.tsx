@@ -2,24 +2,17 @@
  * Use the CSS tab above to style your Element's container.
  */
 import React, { useState } from 'react';
-import { useStripe, useElements } from '@stripe/react-stripe-js';
-
-import { useContext } from 'react';
-import UserContext from '../../auth/Context';
+import { useStripe } from '@stripe/react-stripe-js';
 import { createCheckoutSession } from './api';
 import { useCallback } from 'react';
-import useUser from '../../auth/useUser';
 import styled from 'styled-components';
 import ProductDisplay from './Product';
 import { Order } from './types';
 import useProducts from './useProducts';
 
 function CardSection() {
-  const { setUser } = useContext(UserContext);
   const [order, setOrder] = useState<Order | null>(null);
-  const [paying, setPaying] = useState(false);
   const stripe = useStripe();
-  const user = useUser();
   const products = useProducts();
 
   const handleCheckout = useCallback(async () => {
@@ -49,27 +42,6 @@ function CardSection() {
             selected={(order && order.plan === product.plan) || false}
           />
         ))}
-        {/* <ProductDisplay
-          product={}
-          onOrder={setOrder}
-          selected={
-            (order &&
-              order.stripePriceId === 'price_1HgDnuCpRjtjIslJCUMeS8pF') ||
-            false
-          }
-        />
-        <ProductDisplay
-          label="Pro Company"
-          description="Unlimited licenses for the entire company"
-          stripePriceId="price_1HgCxDCpRjtjIslJNGlY5xcy"
-          price={49.99}
-          onOrder={setOrder}
-          selected={
-            (order &&
-              order.stripePriceId === 'price_1HgCxDCpRjtjIslJNGlY5xcy') ||
-            false
-          }
-        /> */}
       </Products>
 
       <button onClick={handleCheckout} role="link">
