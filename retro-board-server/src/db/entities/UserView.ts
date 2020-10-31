@@ -10,7 +10,8 @@ select
 	u.username,
 	u."stripeId",
 	u.photo,
-	u.language,
+  u.language,
+  u.email,
 	coalesce(s.id, s2.id) as "subscriptionsId",
 	coalesce(s.active, s2.active) as "pro"
 from users u 
@@ -28,6 +29,8 @@ export default class UserView {
   public accountType: AccountType;
   @ViewColumn()
   public username: string | null;
+  @ViewColumn()
+  public email: string | null;
   @ViewColumn()
   public stripeId: string | null;
   @ViewColumn()
@@ -49,6 +52,7 @@ export default class UserView {
     this.stripeId = null;
     this.subscriptionsId = null;
     this.pro = null;
+    this.email = null;
   }
 
   toJson(): FullUser {

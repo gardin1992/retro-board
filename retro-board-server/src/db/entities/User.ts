@@ -39,6 +39,8 @@ export default class UserEntity {
   public username: string | null;
   @Column({ nullable: true, type: 'character varying', select: false })
   public password: string | null;
+  @Column({ nullable: true, type: 'character varying' })
+  public email: string | null;
   @Column({ nullable: true, type: 'character varying', select: false })
   public emailVerification: string | null;
   @Column({ nullable: true, type: 'character varying', select: false })
@@ -57,6 +59,7 @@ export default class UserEntity {
     this.id = id;
     this.name = name;
     this.password = password || null;
+    this.email = null;
     this.language = 'en';
     this.accountType = 'anonymous';
     this.username = null;
@@ -72,14 +75,4 @@ export default class UserEntity {
       photo: this.photo,
     };
   }
-
-  // toFullUser(): FullUser {
-  //   return {
-  //     ...this.toJson(),
-  //     accountType: this.accountType,
-  //     language: this.language,
-  //     username: this.username,
-  //     stripeId: this.stripeId,
-  //   };
-  // }
 }

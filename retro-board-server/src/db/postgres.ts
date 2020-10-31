@@ -288,6 +288,12 @@ const getOrSaveUser = (userRepository: UserRepository) => async (
     where: { username: user.username, accountType: user.accountType },
   });
   if (existingUser) {
+    if (existingUser.email !== user.email) {
+      return await userRepository.save({
+        ...existingUser,
+        email: user.email,
+      });
+    }
     return existingUser;
   }
   return await userRepository.save(user);
