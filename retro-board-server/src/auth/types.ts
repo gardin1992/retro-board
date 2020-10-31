@@ -85,6 +85,7 @@ export interface TwitterProfile extends BaseProfile {
   username: string;
   displayName: string;
   photos: { value: string }[];
+  emails: { value: string }[];
   provider: 'twitter';
   _raw: string;
   _json: {
@@ -132,6 +133,7 @@ export interface TwitterProfile extends BaseProfile {
     translator_type: string | null;
     suspended: boolean;
     needs_phone_verification: boolean;
+    email: string;
   };
   _accessLevel: 'read' | string;
 }

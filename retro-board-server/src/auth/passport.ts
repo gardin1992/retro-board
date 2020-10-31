@@ -66,7 +66,7 @@ export default (store: Store) => {
     user.language = 'en';
     user.photo = profile.photos?.length ? profile.photos[0].value : null;
     user.username = profile.username;
-    user.email = null; //TODO!
+    user.email = profile.emails.length ? profile.emails[0].value : null;
     return user;
   }
 
