@@ -11,11 +11,14 @@ import { Button } from '@material-ui/core';
 import { Currency, Product } from 'retro-board-common';
 import CurrencyPicker from './components/CurrencyPicker';
 import ProductPicker from './components/ProductPicker';
+import Input from '../../components/Input';
 
 function CardSection() {
   const [currency, setCurrency] = useState<Currency>('eur');
   const [product, setProduct] = useState<Product | null>(null);
+  const [domain, setDomain] = useState<string>('acme.com');
   const stripe = useStripe();
+  const needDomain = product && product.seats === null;
 
   const handleCheckout = useCallback(async () => {
     if (product) {
@@ -48,8 +51,17 @@ function CardSection() {
           onChange={setProduct}
         />
       </Step>
+      {needDomain ? (
+        <Step
+          index={3}
+          title="Domain"
+          description="Your unlimited subscription applies to a given domain."
+        >
+          <Input value={domain} onChangeValue={setDomain} />
+        </Step>
+      ) : null}
       <Step
-        index={3}
+        index={needDomain ? 4 : 3}
         title="Checkout"
         description="You will be redirected to our partner, Stripe, for payment"
       >
