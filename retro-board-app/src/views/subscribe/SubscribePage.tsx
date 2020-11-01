@@ -9,9 +9,14 @@ import styled from 'styled-components';
 import ProductDisplay from './Product';
 import { Order } from './types';
 import useProducts from './useProducts';
+import Step from './components/Step';
+import { Button } from '@material-ui/core';
+import { Currency } from 'retro-board-common';
+import CurrencyPicker from './components/CurrencyPicker';
 
 function CardSection() {
   const [order, setOrder] = useState<Order | null>(null);
+  const [currency, setCurrency] = useState<Currency>('eur');
   const stripe = useStripe();
   const products = useProducts();
 
@@ -32,21 +37,39 @@ function CardSection() {
   }, [stripe, order]);
   return (
     <Container>
-      <Products>
-        {products.map((product) => (
-          <ProductDisplay
-            key={product.plan}
-            product={product}
-            currency="eur"
-            onOrder={setOrder}
-            selected={(order && order.plan === product.plan) || false}
-          />
-        ))}
-      </Products>
-
-      <button onClick={handleCheckout} role="link">
-        Checkout
-      </button>
+      <Step
+        index={1}
+        title="Currency"
+        description="Pick a currency you would like to be billed with"
+      >
+        <CurrencyPicker value={currency} onChange={setCurrency} />
+      </Step>
+      <Step
+        index={2}
+        title="Plan"
+        description="Choose the plan that fits your use case!"
+      >
+        <Products>
+          {products.map((product) => (
+            <ProductDisplay
+              key={product.plan}
+              product={product}
+              currency={currency}
+              onOrder={setOrder}
+              selected={(order && order.plan === product.plan) || false}
+            />
+          ))}
+        </Products>
+      </Step>
+      <Step
+        index={3}
+        title="Checkout"
+        description="You will be redirected to our partner, Stripe, for payment"
+      >
+        <Button onClick={handleCheckout} variant="contained" color="primary">
+          Checkout
+        </Button>
+      </Step>
     </Container>
   );
 }
