@@ -60,6 +60,7 @@ export default class UserView {
       id: this.id,
       name: this.name,
       photo: this.photo,
+      email: this.email,
       pro: this.pro,
       subscriptionsId: this.subscriptionsId,
       accountType: this.accountType,

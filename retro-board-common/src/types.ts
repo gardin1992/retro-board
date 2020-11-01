@@ -99,6 +99,7 @@ export interface FullUser extends User {
   username: string | null;
   accountType: AccountType;
   language: string;
+  email: string | null;
   stripeId: string | null;
   pro: ProStatus | null;
   subscriptionsId: string | null;
