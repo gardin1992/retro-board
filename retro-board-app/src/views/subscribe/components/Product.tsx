@@ -1,5 +1,4 @@
 import React from 'react';
-import { Order } from './types';
 import styled from 'styled-components';
 import { colors, Paper } from '@material-ui/core';
 import { useCallback } from 'react';
@@ -9,22 +8,18 @@ interface ProductDisplayProps {
   product: Product;
   currency: Currency;
   selected: boolean;
-  onOrder: (order: Order) => void;
+  onSelect: (product: Product) => void;
 }
 
 function ProductDisplay({
   product,
   selected,
   currency,
-  onOrder,
+  onSelect,
 }: ProductDisplayProps) {
   const handleOrder = useCallback(() => {
-    const order: Order = {
-      currency,
-      plan: product.plan,
-    };
-    onOrder(order);
-  }, [onOrder, currency, product]);
+    onSelect(product);
+  }, [onSelect, product]);
 
   return (
     <Container onClick={handleOrder} selected={selected}>

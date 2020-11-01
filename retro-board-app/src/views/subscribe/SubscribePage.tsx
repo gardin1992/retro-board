@@ -6,25 +6,20 @@ import { useStripe } from '@stripe/react-stripe-js';
 import { createCheckoutSession } from './api';
 import { useCallback } from 'react';
 import styled from 'styled-components';
-import ProductDisplay from './Product';
-import { Order } from './types';
-import useProducts from './useProducts';
 import Step from './components/Step';
 import { Button } from '@material-ui/core';
-import { Currency } from 'retro-board-common';
+import { Currency, Product } from 'retro-board-common';
 import CurrencyPicker from './components/CurrencyPicker';
+import ProductPicker from './components/ProductPicker';
 
 function CardSection() {
-  const [order, setOrder] = useState<Order | null>(null);
   const [currency, setCurrency] = useState<Currency>('eur');
+  const [product, setProduct] = useState<Product | null>(null);
   const stripe = useStripe();
-  const products = useProducts();
 
   const handleCheckout = useCallback(async () => {
-    // Call your backend to create the Checkout Session
-    if (order) {
-      console.log('Order: ', order);
-      const session = await createCheckoutSession(order.plan, order.currency);
+    if (product) {
+      const session = await createCheckoutSession(product.plan, currency);
 
       if (session && stripe) {
         await stripe.redirectToCheckout({
@@ -32,9 +27,7 @@ function CardSection() {
         });
       }
     }
-
-    // When the customer clicks on the button, redirect them to Checkout.
-  }, [stripe, order]);
+  }, [stripe, product, currency]);
   return (
     <Container>
       <Step
@@ -49,17 +42,11 @@ function CardSection() {
         title="Plan"
         description="Choose the plan that fits your use case!"
       >
-        <Products>
-          {products.map((product) => (
-            <ProductDisplay
-              key={product.plan}
-              product={product}
-              currency={currency}
-              onOrder={setOrder}
-              selected={(order && order.plan === product.plan) || false}
-            />
-          ))}
-        </Products>
+        <ProductPicker
+          value={product}
+          currency={currency}
+          onChange={setProduct}
+        />
       </Step>
       <Step
         index={3}
@@ -70,7 +57,7 @@ function CardSection() {
           onClick={handleCheckout}
           variant="contained"
           color="primary"
-          disabled={!order}
+          disabled={!product}
         >
           Checkout
         </Button>
@@ -80,13 +67,5 @@ function CardSection() {
 }
 
 const Container = styled.div``;
-
-const Products = styled.div`
-  display: flex;
-  justify-content: center;
-  > * {
-    margin: 20px;
-  }
-`;
 
 export default CardSection;
