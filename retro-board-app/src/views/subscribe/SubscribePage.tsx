@@ -1,6 +1,3 @@
-/**
- * Use the CSS tab above to style your Element's container.
- */
 import React, { useState, useMemo } from 'react';
 import { useStripe } from '@stripe/react-stripe-js';
 import { createCheckoutSession } from './api';
