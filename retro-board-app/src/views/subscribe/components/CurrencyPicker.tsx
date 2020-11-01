@@ -15,13 +15,11 @@ function CurrencyPicker({ value, onChange }: CurrencyPickerProps) {
     <Container>
       {currencies.map((currency) => (
         <CurrencyContainer
+          key={currency.value}
           selected={currency.value === value}
           onClick={() => onChange(currency.value)}
         >
-          <Flag
-            className={`flag-icon flag-icon-${currency.iso}`}
-            key={currency.value}
-          >
+          <Flag className={`flag-icon flag-icon-${currency.iso}`}>
             <FlagOverlay />
           </Flag>
           <CurrencyValue>{currency.value.toUpperCase()}</CurrencyValue>

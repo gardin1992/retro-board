@@ -23,6 +23,7 @@ import {
   VoteType,
   User,
   FullUser,
+  Plan,
 } from 'retro-board-common';
 import { Store } from '../types';
 import getOrmConfig from './orm-config';
@@ -304,7 +305,9 @@ const activateSubscription = (
   userRepository: UserRepository
 ) => async (
   userId: string,
-  stripeSubscriptionId: string
+  stripeSubscriptionId: string,
+  plan: Plan,
+  domain: string | null
 ): Promise<SubscriptionEntity> => {
   const user = await userRepository.findOne(userId);
   if (!user) {
@@ -312,7 +315,9 @@ const activateSubscription = (
   }
   const existingSubscription = await subscriptionRepository.activate(
     stripeSubscriptionId,
-    user
+    user,
+    plan,
+    domain
   );
   return existingSubscription;
 };

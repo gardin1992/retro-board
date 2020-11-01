@@ -1,4 +1,4 @@
-import { Plan, Product } from 'retro-board-common';
+import { Product, CreateSubscriptionPayload } from 'retro-board-common';
 
 export interface InternalProduct extends Product {
   productId: string;
@@ -38,6 +38,7 @@ export interface CheckoutCompletedPayload {
    */
   subscription: string;
   success_url: string;
+  metadata: CreateSubscriptionPayload;
 }
 
 export interface SubscriptionDeletedPayload {

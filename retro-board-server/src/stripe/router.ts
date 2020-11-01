@@ -109,19 +109,16 @@ function stripeRouter(store: Store): Router {
         const subEvent = (event as unknown) as StripeEvent<
           CheckoutCompletedPayload
         >;
+
         if (subEvent.data.object.payment_status === 'paid') {
-          console.log(
-            'Before activate sub',
-            subEvent.data.object.client_reference_id,
-            subEvent.data.object.subscription
-          );
           await store.activateSubscription(
             subEvent.data.object.client_reference_id,
-            subEvent.data.object.subscription
+            subEvent.data.object.subscription,
+            subEvent.data.object.metadata.plan,
+            subEvent.data.object.metadata.currency
           );
         }
-        console.log('Checkout session completed!', event);
-
+        break;
       default:
       // Unexpected event type
     }
@@ -140,7 +137,7 @@ function stripeRouter(store: Store): Router {
         client_reference_id: user.id,
         customer: customerId,
         metadata: {
-          plan: payload.plan,
+          ...payload,
         },
         line_items: [
           {

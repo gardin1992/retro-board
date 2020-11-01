@@ -1,6 +1,6 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { UserEntity, SubscriptionEntity } from '../entities';
-import { User as JsonUser } from 'retro-board-common';
+import { User as JsonUser, Plan } from 'retro-board-common';
 
 @EntityRepository(SubscriptionEntity)
 export default class SubscriptionRepository extends Repository<
@@ -8,19 +8,24 @@ export default class SubscriptionRepository extends Repository<
 > {
   async activate(
     stripeSubscriptionId: string,
-    owner: UserEntity
+    owner: UserEntity,
+    plan: Plan,
+    domain: string | null
   ): Promise<SubscriptionEntity> {
     const existingSub = await this.findOne(stripeSubscriptionId);
 
     if (!existingSub) {
       const newSubscription = new SubscriptionEntity(
         stripeSubscriptionId,
-        owner
+        owner,
+        plan
       );
+      newSubscription.domain = domain;
       newSubscription.active = true;
       return await this.save(newSubscription);
     }
     existingSub.active = true;
+    existingSub.domain = domain;
     return await this.save(existingSub);
   }
 

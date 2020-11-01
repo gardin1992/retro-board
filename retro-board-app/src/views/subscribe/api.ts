@@ -13,11 +13,13 @@ const requestConfig: Partial<RequestInit> = {
 
 export async function createCheckoutSession(
   plan: Plan,
-  currency: Currency
+  currency: Currency,
+  domain: string | null
 ): Promise<{ id: string } | null> {
   const payload: CreateSubscriptionPayload = {
     plan,
     currency,
+    domain,
   };
   const response = await fetch(`/api/stripe/create-checkout-session`, {
     method: 'POST',

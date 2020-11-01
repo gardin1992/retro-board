@@ -38,7 +38,11 @@ function SubscriberPage() {
 
   const handleCheckout = useCallback(async () => {
     if (product) {
-      const session = await createCheckoutSession(product.plan, currency);
+      const session = await createCheckoutSession(
+        product.plan,
+        currency,
+        !product.seats ? domain : null
+      );
 
       if (session && stripe) {
         await stripe.redirectToCheckout({
@@ -46,7 +50,7 @@ function SubscriberPage() {
         });
       }
     }
-  }, [stripe, product, currency]);
+  }, [stripe, product, currency, domain]);
   return (
     <Container>
       <Step

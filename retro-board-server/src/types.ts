@@ -6,6 +6,7 @@ import {
   Vote,
   SessionMetadata,
   PostGroup,
+  Plan,
 } from 'retro-board-common';
 import {
   SessionTemplateEntity,
@@ -67,7 +68,9 @@ export interface Store {
   ) => Promise<ColumnDefinition[]>;
   activateSubscription: (
     userId: string,
-    stripeSubscriptionId: string
+    stripeSubscriptionId: string,
+    plan: Plan,
+    domain: string | null
   ) => Promise<SubscriptionEntity>;
   cancelSubscription: (
     stripeSubscriptionId: string

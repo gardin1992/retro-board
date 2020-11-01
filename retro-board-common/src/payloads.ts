@@ -29,4 +29,5 @@ export interface CreateCustomerPayload {
 export interface CreateSubscriptionPayload {
   plan: Plan;
   currency: Currency;
+  domain: string | null;
 }
