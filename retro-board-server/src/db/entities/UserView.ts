@@ -10,14 +10,15 @@ select
 	u.username,
 	u."stripeId",
 	u.photo,
-  u.language,
-  u.email,
-	coalesce(s.id, s2.id) as "subscriptionsId",
-	coalesce(s.active, s2.active) as "pro"
+	u.language,
+	u.email,
+	coalesce(s.id, s2.id, s3.id) as "subscriptionsId",
+	coalesce(s.active, s2.active, s3.active) as "pro"
 from users u 
 left join subscriptions s on s."ownerId" = u.id and s.active is true
 left join "subscriptions-users" su on su."usersId" = u.id
 left join subscriptions s2 on s2.id = su."subscriptionsId" and s2.active is true
+left join subscriptions s3 on s3.domain = split_part(u.email, '@', 2) and s3.active is true
   `,
 })
 export default class UserView {

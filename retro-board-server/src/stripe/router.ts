@@ -115,7 +115,7 @@ function stripeRouter(store: Store): Router {
             subEvent.data.object.client_reference_id,
             subEvent.data.object.subscription,
             subEvent.data.object.metadata.plan,
-            subEvent.data.object.metadata.currency
+            subEvent.data.object.metadata.domain
           );
         }
         break;

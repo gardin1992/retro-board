@@ -16,6 +16,7 @@ export default async function registerUser(
   const newUser = new UserEntity(v4(), details.name, hashedPassword);
   newUser.language = details.language;
   newUser.username = details.username;
+  newUser.email = details.username;
   newUser.emailVerification = v4();
   newUser.accountType = 'password';
 
