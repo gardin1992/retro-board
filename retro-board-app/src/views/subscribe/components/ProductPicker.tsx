@@ -31,8 +31,15 @@ function ProductPicker({ value, currency, onChange }: ProductPickerProps) {
 const Container = styled.div`
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
   > * {
     margin: 20px;
+  }
+
+  @media screen and (max-width: 450px) {
+    > * {
+      width: 100%;
+    }
   }
 `;
 

@@ -29,6 +29,10 @@ const Container = styled.div`
   margin: 10px;
   padding: 20px;
   display: flex;
+
+  @media screen and (max-width: 450px) {
+    padding: 5px;
+  }
 `;
 
 const Index = styled.div`
@@ -37,6 +41,12 @@ const Index = styled.div`
   font-weight: 100;
   margin-right: 20px;
   color: ${colors.grey[500]};
+
+  @media screen and (max-width: 450px) {
+    margin-right: 5px;
+    font-size: 2em;
+    align-self: flex-start;
+  }
 `;
 
 const Main = styled.div``;
