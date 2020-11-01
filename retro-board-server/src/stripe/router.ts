@@ -133,10 +133,8 @@ function stripeRouter(store: Store): Router {
     const user = await getUser(store, req);
     const product = getProduct(payload.plan);
 
-    console.log('Payload: ', payload);
     if (user) {
       const customerId = await getCustomerId(user);
-      console.log('Strip customer id: ', customerId);
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
         client_reference_id: user.id,

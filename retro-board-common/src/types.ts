@@ -87,6 +87,7 @@ export interface Product {
   gbp: number;
   usd: number;
   eur: number;
+  seats: number | null;
 }
 
 export interface User extends Entity {

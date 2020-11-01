@@ -1,7 +1,7 @@
 import React from 'react';
 import { Order } from './types';
 import styled from 'styled-components';
-import { colors } from '@material-ui/core';
+import { colors, Paper } from '@material-ui/core';
 import { useCallback } from 'react';
 import { Product, Currency } from 'retro-board-common';
 
@@ -28,30 +28,25 @@ function ProductDisplay({
 
   return (
     <Container onClick={handleOrder} selected={selected}>
-      <Header>{product.name}</Header>
-      <Description>tbd</Description>
-      <Quantity>tbd</Quantity>
-      <Total>
-        {product[currency] / 100} {currency.toUpperCase()}
-      </Total>
+      <Paper elevation={3}>
+        <Header>{product.name}</Header>
+        <Description>tbd</Description>
+        <Seats>{product.seats ? `${product.seats} users` : 'Unlimited'}</Seats>
+        <Total>
+          {(product[currency] / 100).toFixed(2)} {currency.toUpperCase()}
+          <PerMonth>/ month</PerMonth>
+        </Total>
+      </Paper>
     </Container>
   );
 }
 
 const Container = styled.div<{ selected: boolean }>`
-  border: 1px solid ${colors.deepPurple[500]};
-  margin: 20px;
-  ${(props) =>
-    props.selected
-      ? `
-    border: 3px solid ${colors.deepPurple[500]};
-    margin: 18px;
-  `
-      : null};
-  border-radius: 10px;
-  width: 300px;
   display: flex;
   flex-direction: column;
+  width: 300px;
+  outline: ${(props) => (props.selected ? '1' : '0')}px solid
+    ${colors.deepPurple[500]};
 `;
 
 const Header = styled.div`
@@ -66,19 +61,25 @@ const Description = styled.div`
   flex: 1;
 `;
 
-const Quantity = styled.div`
+const Seats = styled.div`
   height: 50px;
   display: flex;
   align-items: center;
+  justify-content: center;
+  font-size: 1.5em;
+  font-weight: 100;
 `;
 
 const Total = styled.div`
   background-color: ${colors.deepPurple[500]};
-  border-radius: 0 0 10px 10px;
   color: white;
   text-align: center;
   font-size: 2em;
   font-weight: 100;
+`;
+
+const PerMonth = styled.span`
+  font-size: 0.4em;
 `;
 
 export default ProductDisplay;

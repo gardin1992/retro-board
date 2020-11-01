@@ -66,7 +66,12 @@ function CardSection() {
         title="Checkout"
         description="You will be redirected to our partner, Stripe, for payment"
       >
-        <Button onClick={handleCheckout} variant="contained" color="primary">
+        <Button
+          onClick={handleCheckout}
+          variant="contained"
+          color="primary"
+          disabled={!order}
+        >
           Checkout
         </Button>
       </Step>
@@ -80,7 +85,7 @@ const Products = styled.div`
   display: flex;
   justify-content: center;
   > * {
-    margin: 50px;
+    margin: 20px;
   }
 `;
 
