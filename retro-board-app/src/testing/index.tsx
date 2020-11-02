@@ -51,6 +51,7 @@ const AllTheProviders: React.SFC = ({ children }) => {
     pro: null,
     stripeId: null,
     subscriptionsId: null,
+    currency: null,
   });
   useEffect(() => {
     setUser({
@@ -64,6 +65,7 @@ const AllTheProviders: React.SFC = ({ children }) => {
       pro: null,
       stripeId: null,
       subscriptionsId: null,
+      currency: null,
     });
   }, []);
   return (

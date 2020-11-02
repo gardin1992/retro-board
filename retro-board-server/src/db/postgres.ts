@@ -24,6 +24,7 @@ import {
   User,
   FullUser,
   Plan,
+  Currency,
 } from 'retro-board-common';
 import { Store } from '../types';
 import getOrmConfig from './orm-config';
@@ -307,7 +308,8 @@ const activateSubscription = (
   userId: string,
   stripeSubscriptionId: string,
   plan: Plan,
-  domain: string | null
+  domain: string | null,
+  currency: Currency
 ): Promise<SubscriptionEntity> => {
   const user = await userRepository.findOne(userId);
   if (!user) {
@@ -319,6 +321,8 @@ const activateSubscription = (
     plan,
     domain
   );
+  user.currency = currency;
+  await userRepository.save(user);
   return existingSubscription;
 };
 

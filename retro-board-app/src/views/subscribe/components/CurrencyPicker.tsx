@@ -1,4 +1,5 @@
 import React from 'react';
+import { noop } from 'lodash';
 import { Currency } from 'retro-board-common';
 import 'flag-icon-css/css/flag-icon.min.css';
 import { currencies } from './types';
@@ -7,17 +8,18 @@ import { colors } from '@material-ui/core';
 
 interface CurrencyPickerProps {
   value: Currency;
+  disabled: boolean;
   onChange: (value: Currency) => void;
 }
 
-function CurrencyPicker({ value, onChange }: CurrencyPickerProps) {
+function CurrencyPicker({ value, disabled, onChange }: CurrencyPickerProps) {
   return (
     <Container>
       {currencies.map((currency) => (
         <CurrencyContainer
           key={currency.value}
           selected={currency.value === value}
-          onClick={() => onChange(currency.value)}
+          onClick={() => (!disabled ? onChange(currency.value) : noop)}
         >
           <Flag className={`flag-icon flag-icon-${currency.iso}`}>
             <FlagOverlay />

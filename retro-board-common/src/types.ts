@@ -103,6 +103,7 @@ export interface FullUser extends User {
   stripeId: string | null;
   pro: ProStatus | null;
   subscriptionsId: string | null;
+  currency: Currency | null;
 }
 
 export type AccountType =

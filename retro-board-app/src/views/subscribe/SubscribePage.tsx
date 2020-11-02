@@ -10,22 +10,26 @@ import CurrencyPicker from './components/CurrencyPicker';
 import ProductPicker from './components/ProductPicker';
 import Input from '../../components/Input';
 import useUser from '../../auth/useUser';
+import { Alert } from '@material-ui/lab';
+import { useEffect } from 'react';
 
-function guessDomain(user: FullUser | null): string {
-  if (user && user.email) {
+function guessDomain(user: FullUser): string {
+  if (user.email) {
     const parts = user.email.split('@');
     if (parts.length === 2) {
       return parts[1];
     }
   }
-  return 'acme.com';
+  return DEFAULT_DOMAIN;
 }
+
+const DEFAULT_DOMAIN = 'acme.com';
 
 function SubscriberPage() {
   const user = useUser();
   const [currency, setCurrency] = useState<Currency>('eur');
   const [product, setProduct] = useState<Product | null>(null);
-  const [domain, setDomain] = useState<string>(guessDomain(user));
+  const [domain, setDomain] = useState<string>(DEFAULT_DOMAIN);
   const stripe = useStripe();
   const needDomain = product && product.seats === null;
 
@@ -35,6 +39,15 @@ function SubscriberPage() {
   }, [domain]);
 
   const validForm = (!needDomain || validDomain) && !!product;
+
+  useEffect(() => {
+    if (user && domain === DEFAULT_DOMAIN) {
+      if (user.currency) {
+        setCurrency(user.currency);
+      }
+      setDomain(guessDomain(user));
+    }
+  }, [user, domain]);
 
   const handleCheckout = useCallback(async () => {
     if (product) {
@@ -53,12 +66,34 @@ function SubscriberPage() {
   }, [stripe, product, currency, domain]);
   return (
     <Container>
+      {user && user.pro && !user.subscriptionsId ? (
+        <Alert severity="info">
+          You already are a Pro user, so you might not need another
+          subscription.
+        </Alert>
+      ) : null}
+      {user && user.subscriptionsId ? (
+        <Alert severity="info">
+          You already have a subscription, so you might not need another
+          subscription.
+        </Alert>
+      ) : null}
       <Step
         index={1}
         title="Currency"
         description="Pick a currency you would like to be billed with"
       >
-        <CurrencyPicker value={currency} onChange={setCurrency} />
+        {user && !!user.currency ? (
+          <Alert severity="warning" style={{ marginBottom: 10 }}>
+            Your account is already set to use {currency.toUpperCase()}, so you
+            cannot change the currency anymore.
+          </Alert>
+        ) : null}
+        <CurrencyPicker
+          disabled={(user && !!user.currency) || false}
+          value={currency}
+          onChange={setCurrency}
+        />
       </Step>
       <Step
         index={2}

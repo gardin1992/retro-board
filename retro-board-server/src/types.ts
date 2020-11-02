@@ -7,6 +7,7 @@ import {
   SessionMetadata,
   PostGroup,
   Plan,
+  Currency,
 } from 'retro-board-common';
 import {
   SessionTemplateEntity,
@@ -70,7 +71,8 @@ export interface Store {
     userId: string,
     stripeSubscriptionId: string,
     plan: Plan,
-    domain: string | null
+    domain: string | null,
+    currency: Currency
   ) => Promise<SubscriptionEntity>;
   cancelSubscription: (
     stripeSubscriptionId: string

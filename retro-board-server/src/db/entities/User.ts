@@ -7,7 +7,13 @@ import {
   UpdateDateColumn,
   ManyToOne,
 } from 'typeorm';
-import { AccountType, User, FullUser, ProStatus } from 'retro-board-common';
+import {
+  AccountType,
+  User,
+  FullUser,
+  ProStatus,
+  Currency,
+} from 'retro-board-common';
 import { SessionTemplateEntity } from '.';
 
 export const ALL_FIELDS: Array<keyof UserEntity> = [
@@ -41,6 +47,8 @@ export default class UserEntity {
   public password: string | null;
   @Column({ nullable: true, type: 'character varying' })
   public email: string | null;
+  @Column({ nullable: true, type: 'character varying' })
+  public currency: Currency | null;
   @Column({ nullable: true, type: 'character varying', select: false })
   public emailVerification: string | null;
   @Column({ nullable: true, type: 'character varying', select: false })
@@ -66,6 +74,7 @@ export default class UserEntity {
     this.photo = null;
     this.emailVerification = null;
     this.stripeId = null;
+    this.currency = null;
   }
 
   toJson(): User {

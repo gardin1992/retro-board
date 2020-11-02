@@ -1,5 +1,5 @@
 import { ViewEntity, ViewColumn } from 'typeorm';
-import { AccountType, FullUser, ProStatus } from 'retro-board-common';
+import { AccountType, FullUser, ProStatus, Currency } from 'retro-board-common';
 
 @ViewEntity({
   expression: `
@@ -7,7 +7,8 @@ select
 	u.id,
 	u.name,
 	u."accountType",
-	u.username,
+  u.username,
+  u.currency,
 	u."stripeId",
 	u.photo,
 	u.language,
@@ -41,6 +42,8 @@ export default class UserView {
   @ViewColumn()
   public subscriptionsId: string | null;
   @ViewColumn()
+  public currency: Currency | null;
+  @ViewColumn()
   public pro: ProStatus | null;
 
   constructor(id: string, name: string) {
@@ -54,6 +57,7 @@ export default class UserView {
     this.subscriptionsId = null;
     this.pro = null;
     this.email = null;
+    this.currency = null;
   }
 
   toJson(): FullUser {
@@ -68,6 +72,7 @@ export default class UserView {
       language: this.language,
       username: this.username,
       stripeId: this.stripeId,
+      currency: this.currency,
     };
   }
 }

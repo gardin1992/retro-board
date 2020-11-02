@@ -39,7 +39,7 @@ function stripeRouter(store: Store): Router {
         preferred_locales: [user.language],
       });
 
-      const updatedUser = await store.updateUser(user.id, {
+      await store.updateUser(user.id, {
         stripeId: customer.id,
       });
       return customer.id;
@@ -115,7 +115,8 @@ function stripeRouter(store: Store): Router {
             subEvent.data.object.client_reference_id,
             subEvent.data.object.subscription,
             subEvent.data.object.metadata.plan,
-            subEvent.data.object.metadata.domain
+            subEvent.data.object.metadata.domain,
+            subEvent.data.object.metadata.currency
           );
         }
         break;
