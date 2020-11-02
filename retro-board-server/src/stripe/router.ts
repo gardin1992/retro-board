@@ -1,11 +1,6 @@
 import express, { Router } from 'express';
-import {
-  CreateSubscriptionPayload,
-  FullUser,
-  Product,
-} from 'retro-board-common';
+import { CreateSubscriptionPayload, Product } from 'retro-board-common';
 import config from '../db/config';
-import bodyParser from 'body-parser';
 import { Store } from '../types';
 import Stripe from 'stripe';
 import { getUser } from '../utils';
@@ -14,7 +9,6 @@ import {
   StripeEvent,
   CheckoutCompletedPayload,
   SubscriptionDeletedPayload,
-  InternalProduct,
 } from './types';
 import { plans, getProduct } from './products';
 
