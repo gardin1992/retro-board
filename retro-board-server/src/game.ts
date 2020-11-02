@@ -19,6 +19,7 @@ import SessionOptionsEntity from './db/entities/SessionOptions';
 import { UserEntity } from './db/entities';
 import { hasField } from './security/payload-checker';
 import { getSession } from './db/actions/sessions';
+import { getUser } from './db/actions/users';
 
 const {
   RECEIVE_POST,
@@ -266,7 +267,7 @@ export default (store: Store, io: SocketIO.Server) => {
       socket.sessionId = session.id;
       sendToSelf(socket, RECEIVE_BOARD, session);
       if (userId) {
-        const user = await store.getUser(userId);
+        const user = await getUser(connection, userId);
         if (user) {
           recordUser(session.id, user, socket);
         }
@@ -336,7 +337,7 @@ export default (store: Store, io: SocketIO.Server) => {
     if (!userId) {
       return;
     }
-    const user = await store.getUser(userId);
+    const user = await getUser(connection, userId);
     const post = find(session.posts, (p) => p.id === data.post.id);
     if (post && user) {
       const existingVote: Vote | undefined = find(

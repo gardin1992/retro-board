@@ -13,7 +13,11 @@ import authRouter from './auth/router';
 import stripeRouter from './stripe/router';
 import session from 'express-session';
 import game from './game';
-import { getUser, hashPassword, getUserView } from './utils';
+import {
+  hashPassword,
+  getUserFromRequest,
+  getUserViewFromRequest,
+} from './utils';
 import {
   initSentry,
   setupSentryErrorHandler,
@@ -33,6 +37,7 @@ import { v4 } from 'uuid';
 import mung from 'express-mung';
 import { hasField } from './security/payload-checker';
 import { createSession, createCustom } from './db/actions/sessions';
+import { updateUser, getUserByUsername, getUserView } from './db/actions/users';
 
 initSentry();
 
@@ -126,7 +131,7 @@ if (config.REDIS_ENABLED) {
 db().then((store) => {
   const connection = store.connection;
 
-  passportInit(store);
+  passportInit(connection);
   game(store, io);
 
   // Stripe
@@ -134,7 +139,7 @@ db().then((store) => {
 
   // Create session
   app.post('/api/create', async (req, res) => {
-    const user = await getUser(store, req);
+    const user = await getUserFromRequest(connection, req);
     setScope(async (scope) => {
       if (user) {
         try {
@@ -154,7 +159,7 @@ db().then((store) => {
   });
 
   app.post('/api/create-custom', async (req, res) => {
-    const user = await getUser(store, req);
+    const user = await getUserFromRequest(connection, req);
     setScope(async (scope) => {
       if (user) {
         try {
@@ -190,7 +195,7 @@ db().then((store) => {
   });
 
   app.get('/api/me', async (req, res) => {
-    const user = await getUserView(store, req);
+    const user = await getUserViewFromRequest(connection, req);
     if (user) {
       res.status(200).send(user.toJson());
     } else {
@@ -199,7 +204,7 @@ db().then((store) => {
   });
 
   app.get('/api/previous', async (req, res) => {
-    const user = await getUser(store, req);
+    const user = await getUserFromRequest(connection, req);
     if (user) {
       const sessions = await store.previousSessions(user.id);
       res.status(200).send(sessions);
@@ -210,7 +215,7 @@ db().then((store) => {
 
   app.delete('/api/session/:sessionId', async (req, res) => {
     const sessionId = req.params.sessionId;
-    const user = await getUser(store, req);
+    const user = await getUserFromRequest(connection, req);
     if (user && user.accountType !== 'anonymous') {
       const success = await store.deleteSession(user.id, sessionId);
       if (success) {
@@ -225,10 +230,10 @@ db().then((store) => {
 
   app.post('/api/me/language', async (req, res) => {
     if (req.user) {
-      await store.updateUser(req.user, {
+      await updateUser(connection, req.user, {
         language: req.body.language,
       });
-      const updatedUser = await getUserView(store, req);
+      const updatedUser = await getUserViewFromRequest(connection, req);
       if (updatedUser) {
         res.status(200).send(updatedUser.toJson());
       } else {
@@ -258,11 +263,13 @@ db().then((store) => {
       return;
     }
     const registerPayload = req.body as RegisterPayload;
-    if ((await store.getUserByUsername(registerPayload.username)) !== null) {
+    if (
+      (await getUserByUsername(connection, registerPayload.username)) !== null
+    ) {
       res.status(403).send('User already exists');
       return;
     }
-    const user = await registerUser(store, registerPayload);
+    const user = await registerUser(connection, registerPayload);
     if (!user) {
       res.status(500).send();
     } else {
@@ -271,7 +278,7 @@ db().then((store) => {
         registerPayload.name,
         user.emailVerification!
       );
-      const userView = await store.getUserView(user.id);
+      const userView = await getUserView(connection, user.id);
       if (userView) {
         res.status(200).send(userView.toJson());
       } else {
@@ -282,7 +289,7 @@ db().then((store) => {
 
   app.post('/api/validate', async (req, res) => {
     const validatePayload = req.body as ValidateEmailPayload;
-    const user = await store.getUserByUsername(validatePayload.email);
+    const user = await getUserByUsername(connection, validatePayload.email);
     if (!user) {
       res.status(404).send('Email not found');
       return;
@@ -291,7 +298,7 @@ db().then((store) => {
       user.emailVerification &&
       user.emailVerification === validatePayload.code
     ) {
-      const updatedUser = await store.updateUser(user.id, {
+      const updatedUser = await updateUser(connection, user.id, {
         emailVerification: null,
       });
       req.logIn(user.id, (err) => {
@@ -311,13 +318,13 @@ db().then((store) => {
 
   app.post('/api/reset', async (req, res) => {
     const resetPayload = req.body as ResetPasswordPayload;
-    const user = await store.getUserByUsername(resetPayload.email);
+    const user = await getUserByUsername(connection, resetPayload.email);
     if (!user) {
       res.status(404).send('Email not found');
       return;
     }
     const code = v4();
-    await store.updateUser(user.id, {
+    await updateUser(connection, user.id, {
       emailVerification: code,
     });
     await sendResetPassword(resetPayload.email, user.name, code);
@@ -326,7 +333,7 @@ db().then((store) => {
 
   app.post('/api/reset-password', async (req, res) => {
     const validatePayload = req.body as ResetChangePasswordPayload;
-    const user = await store.getUserByUsername(validatePayload.email);
+    const user = await getUserByUsername(connection, validatePayload.email);
     if (!user) {
       res.status(404).send('Email not found');
       return;
@@ -336,7 +343,7 @@ db().then((store) => {
       user.emailVerification === validatePayload.code
     ) {
       const hashedPassword = await hashPassword(validatePayload.password);
-      const updatedUser = await store.updateUser(user.id, {
+      const updatedUser = await updateUser(connection, user.id, {
         emailVerification: null,
         password: hashedPassword,
       });

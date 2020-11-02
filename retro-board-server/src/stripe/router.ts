@@ -3,18 +3,20 @@ import { CreateSubscriptionPayload, Product } from 'retro-board-common';
 import config from '../db/config';
 import { Store } from '../types';
 import Stripe from 'stripe';
-import { getUser } from '../utils';
-import { UserEntity } from 'src/db/entities';
+import { UserEntity } from '../db/entities';
 import {
   StripeEvent,
   CheckoutCompletedPayload,
   SubscriptionDeletedPayload,
 } from './types';
 import { plans, getProduct } from './products';
+import { updateUser } from '../db/actions/users';
+import { getUserFromRequest } from '../utils';
 
 const stripe = new Stripe(config.STRIPE_SECRET, {} as Stripe.StripeConfig);
 
 function stripeRouter(store: Store): Router {
+  const connection = store.connection;
   const router = express.Router();
 
   async function getCustomerId(user: UserEntity): Promise<string> {
@@ -33,7 +35,7 @@ function stripeRouter(store: Store): Router {
         preferred_locales: [user.language],
       });
 
-      await store.updateUser(user.id, {
+      await updateUser(connection, user.id, {
         stripeId: customer.id,
       });
       return customer.id;
@@ -122,7 +124,7 @@ function stripeRouter(store: Store): Router {
 
   router.post('/create-checkout-session', async (req, res) => {
     const payload = req.body as CreateSubscriptionPayload;
-    const user = await getUser(store, req);
+    const user = await getUserFromRequest(connection, req);
     const product = getProduct(payload.plan);
 
     if (user) {
@@ -164,7 +166,7 @@ function stripeRouter(store: Store): Router {
   });
 
   router.get('/portal', async (req, res) => {
-    const user = await getUser(store, req);
+    const user = await getUserFromRequest(connection, req);
     if (user && user.stripeId) {
       var session = await stripe.billingPortal.sessions.create({
         customer: user.stripeId,

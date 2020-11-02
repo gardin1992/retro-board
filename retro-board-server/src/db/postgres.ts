@@ -46,30 +46,6 @@ export async function getDb() {
   return connection;
 }
 
-const getUser = (userRepository: UserRepository) => async (
-  id: string
-): Promise<UserEntity | null> => {
-  const user = await userRepository.findOne(id, { select: ALL_FIELDS });
-  return user || null;
-};
-
-const getUserView = (userRepository: Repository<UserView>) => async (
-  id: string
-): Promise<UserView | null> => {
-  const user = await userRepository.findOne({ id });
-  return user || null;
-};
-
-const getUserByUsername = (userRepository: UserRepository) => async (
-  username: string
-): Promise<UserEntity | null> => {
-  const user = await userRepository.findOne(
-    { username },
-    { select: ALL_FIELDS }
-  );
-  return user || null;
-};
-
 const getDefaultTemplate = (userRepository: UserRepository) => async (
   id: string
 ): Promise<SessionTemplateEntity | null> => {
@@ -78,22 +54,6 @@ const getDefaultTemplate = (userRepository: UserRepository) => async (
     { relations: ['defaultTemplate', 'defaultTemplate.columns'] }
   );
   return userWithDefaultTemplate?.defaultTemplate || null;
-};
-
-const updateUser = (
-  userRepository: UserRepository,
-  userViewRepository: Repository<UserView>
-) => async (
-  id: string,
-  updatedUser: Partial<UserEntity>
-): Promise<UserView | null> => {
-  const user = await userRepository.findOne(id);
-  if (user) {
-    await userRepository.update(id, updatedUser);
-    const newUser = await getUserView(userViewRepository)(id);
-    return newUser || null;
-  }
-  return null;
 };
 
 const saveSession = (sessionRepository: SessionRepository) => async (
@@ -156,24 +116,6 @@ const deletePostGroup = (postGroupRepository: PostGroupRepository) => async (
   groupId: string
 ): Promise<void> => {
   await postGroupRepository.delete({ id: groupId, user: { id: userId } });
-};
-
-const getOrSaveUser = (userRepository: UserRepository) => async (
-  user: UserEntity
-): Promise<UserEntity> => {
-  const existingUser = await userRepository.findOne({
-    where: { username: user.username, accountType: user.accountType },
-  });
-  if (existingUser) {
-    if (existingUser.email !== user.email) {
-      return await userRepository.save({
-        ...existingUser,
-        email: user.email,
-      });
-    }
-    return existingUser;
-  }
-  return await userRepository.save(user);
 };
 
 const activateSubscription = (
@@ -336,9 +278,6 @@ export default async function db(): Promise<Store> {
   );
   return {
     connection,
-    getUser: getUser(userRepository),
-    getUserView: getUserView(userViewRepository),
-    getUserByUsername: getUserByUsername(userRepository),
     saveSession: saveSession(sessionRepository),
     updateOptions: updateOptions(sessionRepository),
     updateColumns: updateColumns(columnRepository),
@@ -347,8 +286,6 @@ export default async function db(): Promise<Store> {
     saveVote: saveVote(voteRepository),
     deletePost: deletePost(postRepository),
     deletePostGroup: deletePostGroup(postGroupRepository),
-    getOrSaveUser: getOrSaveUser(userRepository),
-    updateUser: updateUser(userRepository, userViewRepository),
     previousSessions: previousSessions(sessionRepository),
     getDefaultTemplate: getDefaultTemplate(userRepository),
     deleteSession: deleteSessions(sessionRepository),

@@ -19,16 +19,8 @@ import { Connection } from 'typeorm';
 
 export interface Store {
   connection: Connection;
-  getUser: (id: string) => Promise<UserEntity | null>;
-  getUserView: (id: string) => Promise<UserView | null>;
-  getUserByUsername: (username: string) => Promise<UserEntity | null>;
   getDefaultTemplate: (userId: string) => Promise<SessionTemplateEntity | null>;
   saveSession: (userId: string, session: Session) => Promise<void>;
-  getOrSaveUser: (user: UserEntity) => Promise<UserEntity>;
-  updateUser: (
-    userId: string,
-    updatedFields: Partial<UserEntity>
-  ) => Promise<UserView | null>;
   savePost: (userId: string, sessionId: string, post: Post) => Promise<void>;
   savePostGroup: (
     userId: string,
