@@ -32,6 +32,7 @@ import { sendVerificationEmail, sendResetPassword } from './email/emailSender';
 import { v4 } from 'uuid';
 import mung from 'express-mung';
 import { hasField } from './security/payload-checker';
+import { createSession, createCustom } from './db/actions/sessions';
 
 initSentry();
 
@@ -123,6 +124,8 @@ if (config.REDIS_ENABLED) {
 }
 
 db().then((store) => {
+  const connection = store.connection;
+
   passportInit(store);
   game(store, io);
 
@@ -135,7 +138,7 @@ db().then((store) => {
     setScope(async (scope) => {
       if (user) {
         try {
-          const session = await store.create(user);
+          const session = await createSession(connection, user);
           res.status(200).send(session);
         } catch (err) {
           reportQueryError(scope, err);
@@ -155,7 +158,8 @@ db().then((store) => {
     setScope(async (scope) => {
       if (user) {
         try {
-          const session = await store.createCustom(
+          const session = await createCustom(
+            connection,
             req.body.options,
             req.body.columns,
             req.body.setDefault,

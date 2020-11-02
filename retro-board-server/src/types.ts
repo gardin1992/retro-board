@@ -15,20 +15,14 @@ import {
   UserView,
 } from './db/entities';
 import UserEntity from './db/entities/User';
+import { Connection } from 'typeorm';
 
 export interface Store {
-  getSession: (userId: string | null, key: string) => Promise<Session | null>;
+  connection: Connection;
   getUser: (id: string) => Promise<UserEntity | null>;
   getUserView: (id: string) => Promise<UserView | null>;
   getUserByUsername: (username: string) => Promise<UserEntity | null>;
   getDefaultTemplate: (userId: string) => Promise<SessionTemplateEntity | null>;
-  create: (author: UserEntity) => Promise<Session>;
-  createCustom: (
-    options: SessionOptions,
-    columns: ColumnDefinition[],
-    setDefault: boolean,
-    author: UserEntity
-  ) => Promise<Session>;
   saveSession: (userId: string, session: Session) => Promise<void>;
   getOrSaveUser: (user: UserEntity) => Promise<UserEntity>;
   updateUser: (

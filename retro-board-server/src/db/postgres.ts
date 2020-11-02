@@ -46,131 +46,6 @@ export async function getDb() {
   return connection;
 }
 
-const create = (
-  sessionRepository: SessionRepository,
-  userRepository: UserRepository
-) => async (author: UserEntity): Promise<Session> => {
-  try {
-    const id = shortId();
-    const userWithDefaultTemplate = await userRepository.findOne(
-      { id: author.id },
-      { relations: ['defaultTemplate', 'defaultTemplate.columns'] }
-    );
-    if (userWithDefaultTemplate?.defaultTemplate) {
-      const template = userWithDefaultTemplate.defaultTemplate;
-      const newSession = await sessionRepository.saveFromJson(
-        {
-          ...defaultSession,
-          id,
-          options: { ...template.options },
-          columns: template.columns!.map(
-            (c) =>
-              ({
-                ...c,
-                id: v4(),
-                author: { id: author.id },
-              } as ColumnDefinition)
-          ),
-        },
-        author.id
-      );
-      return newSession;
-    } else {
-      const newSession = await sessionRepository.saveFromJson(
-        {
-          ...defaultSession,
-          columns: defaultSession.columns.map((c) => ({
-            ...c,
-            id: v4(),
-          })),
-          id,
-        },
-        author.id
-      );
-      return newSession;
-    }
-  } catch (err) {
-    throw err;
-  }
-};
-
-const createCustom = (
-  sessionRepository: SessionRepository,
-  templateRepository: SessionTemplateRepository,
-  userRepository: UserRepository
-) => async (
-  options: SessionOptions,
-  columns: ColumnDefinition[],
-  setDefault: boolean,
-  author: UserEntity
-): Promise<Session> => {
-  try {
-    const id = shortId();
-    const session = await sessionRepository.findOne({ id });
-    if (!session) {
-      const newSession = await sessionRepository.saveFromJson(
-        {
-          ...defaultSession,
-          id,
-          options,
-          columns,
-        },
-        author.id
-      );
-
-      if (setDefault) {
-        const defaultTemplate = await templateRepository.saveFromJson(
-          'Default Template',
-          columns,
-          options,
-          author.id
-        );
-        await userRepository.persistTemplate(author.id, defaultTemplate.id);
-      }
-
-      return newSession;
-    }
-  } catch (err) {
-    throw err;
-  }
-  throw Error('The session already exists');
-};
-
-const getSession = (
-  sessionRepository: SessionRepository,
-  postRepository: PostRepository,
-  postGroupRepository: PostGroupRepository,
-  columnRepository: ColumnRepository
-) => async (_: string | null, sessionId: string): Promise<Session | null> => {
-  try {
-    const session = await sessionRepository.findOne({ id: sessionId });
-    if (session) {
-      const posts = (await postRepository.find({
-        where: { session },
-        order: { created: 'ASC' },
-      })) as PostEntity[];
-      const groups = (await postGroupRepository.find({
-        where: { session },
-        order: { created: 'ASC' },
-      })) as PostGroupEntity[];
-      const columns = (await columnRepository.find({
-        where: { session },
-        order: { index: 'ASC' },
-      })) as ColumnDefinitionEntity[];
-      return {
-        ...session.toJson(),
-        columns: columns.map((c) => c.toJson()),
-        posts: posts.map((p) => p.toJson()),
-        groups: groups.map((g) => g.toJson()),
-      };
-    } else {
-      return null;
-    }
-  } catch (err) {
-    throw err;
-  }
-};
-
 const getUser = (userRepository: UserRepository) => async (
   id: string
 ): Promise<UserEntity | null> => {
@@ -460,12 +335,7 @@ export default async function db(): Promise<Store> {
     SubscriptionRepository
   );
   return {
-    getSession: getSession(
-      sessionRepository,
-      postRepository,
-      postGroupRepository,
-      columnRepository
-    ),
+    connection,
     getUser: getUser(userRepository),
     getUserView: getUserView(userViewRepository),
     getUserByUsername: getUserByUsername(userRepository),
@@ -479,12 +349,6 @@ export default async function db(): Promise<Store> {
     deletePostGroup: deletePostGroup(postGroupRepository),
     getOrSaveUser: getOrSaveUser(userRepository),
     updateUser: updateUser(userRepository, userViewRepository),
-    create: create(sessionRepository, userRepository),
-    createCustom: createCustom(
-      sessionRepository,
-      templateRepository,
-      userRepository
-    ),
     previousSessions: previousSessions(sessionRepository),
     getDefaultTemplate: getDefaultTemplate(userRepository),
     deleteSession: deleteSessions(sessionRepository),
