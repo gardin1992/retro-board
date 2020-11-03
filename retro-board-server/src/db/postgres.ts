@@ -70,47 +70,6 @@ const updateColumns = (columnRepository: ColumnRepository) => async (
   return await columnRepository.updateColumns(session, columns);
 };
 
-const savePost = (postRepository: PostRepository) => async (
-  userId: string,
-  sessionId: string,
-  post: Post
-): Promise<void> => {
-  await postRepository.saveFromJson(sessionId, userId, post);
-};
-
-const savePostGroup = (postGroupRepository: PostGroupRepository) => async (
-  userId: string,
-  sessionId: string,
-  group: PostGroup
-): Promise<void> => {
-  await postGroupRepository.saveFromJson(sessionId, userId, group);
-};
-
-const saveVote = (voteRepository: VoteRepository) => async (
-  userId: string,
-  sessionId: string,
-  postId: string,
-  vote: Vote
-): Promise<void> => {
-  await voteRepository.saveFromJson(postId, userId, vote);
-};
-
-const deletePost = (postRepository: PostRepository) => async (
-  userId: string,
-  _: string,
-  postId: string
-): Promise<void> => {
-  await postRepository.delete({ id: postId, user: { id: userId } });
-};
-
-const deletePostGroup = (postGroupRepository: PostGroupRepository) => async (
-  userId: string,
-  _: string,
-  groupId: string
-): Promise<void> => {
-  await postGroupRepository.delete({ id: groupId, user: { id: userId } });
-};
-
 const activateSubscription = (
   subscriptionRepository: SubscriptionRepository,
   userRepository: UserRepository
@@ -167,11 +126,6 @@ export default async function db(): Promise<Store> {
     connection,
     updateOptions: updateOptions(sessionRepository),
     updateColumns: updateColumns(columnRepository),
-    savePost: savePost(postRepository),
-    savePostGroup: savePostGroup(postGroupRepository),
-    saveVote: saveVote(voteRepository),
-    deletePost: deletePost(postRepository),
-    deletePostGroup: deletePostGroup(postGroupRepository),
     getDefaultTemplate: getDefaultTemplate(userRepository),
     activateSubscription: activateSubscription(
       subscriptionRepository,

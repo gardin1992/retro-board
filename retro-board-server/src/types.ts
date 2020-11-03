@@ -20,28 +20,6 @@ import { Connection } from 'typeorm';
 export interface Store {
   connection: Connection;
   getDefaultTemplate: (userId: string) => Promise<SessionTemplateEntity | null>;
-  savePost: (userId: string, sessionId: string, post: Post) => Promise<void>;
-  savePostGroup: (
-    userId: string,
-    sessionId: string,
-    group: PostGroup
-  ) => Promise<void>;
-  saveVote: (
-    userId: string,
-    sessionId: string,
-    postId: string,
-    vote: Vote
-  ) => Promise<void>;
-  deletePost: (
-    userId: string,
-    sessionId: string,
-    postId: string
-  ) => Promise<void>;
-  deletePostGroup: (
-    userId: string,
-    sessionId: string,
-    groupId: string
-  ) => Promise<void>;
   updateOptions: (
     session: Session,
     options: SessionOptions

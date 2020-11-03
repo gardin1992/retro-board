@@ -20,6 +20,13 @@ import { UserEntity } from './db/entities';
 import { hasField } from './security/payload-checker';
 import { getSession, saveSession } from './db/actions/sessions';
 import { getUser } from './db/actions/users';
+import {
+  savePost,
+  savePostGroup,
+  saveVote,
+  deletePost,
+  deletePostGroup,
+} from './db/actions/posts';
 
 const {
   RECEIVE_POST,
@@ -150,7 +157,7 @@ export default (store: Store, io: SocketIO.Server) => {
     if (!userId) {
       return;
     }
-    await store.savePost(userId, sessionId, post);
+    await savePost(connection, userId, sessionId, post);
   };
 
   const persistPostGroup = async (
@@ -161,7 +168,7 @@ export default (store: Store, io: SocketIO.Server) => {
     if (!userId) {
       return;
     }
-    await store.savePostGroup(userId, sessionId, group);
+    await savePostGroup(connection, userId, sessionId, group);
   };
 
   const persistVote = async (
@@ -173,10 +180,10 @@ export default (store: Store, io: SocketIO.Server) => {
     if (!userId) {
       return;
     }
-    await store.saveVote(userId, sessionId, postId, vote);
+    await saveVote(connection, userId, sessionId, postId, vote);
   };
 
-  const deletePost = async (
+  const removePost = async (
     userId: string | null,
     sessionId: string,
     postId: string
@@ -184,10 +191,10 @@ export default (store: Store, io: SocketIO.Server) => {
     if (!userId) {
       return;
     }
-    await store.deletePost(userId, sessionId, postId);
+    await deletePost(connection, userId, sessionId, postId);
   };
 
-  const deletePostGroup = async (
+  const removePostGroup = async (
     userId: string | null,
     sessionId: string,
     groupId: string
@@ -195,7 +202,7 @@ export default (store: Store, io: SocketIO.Server) => {
     if (!userId) {
       return;
     }
-    await store.deletePostGroup(userId, sessionId, groupId);
+    await deletePostGroup(connection, userId, sessionId, groupId);
   };
 
   const sendClientList = (sessionId: string, socket: ExtendedSocket) => {
@@ -310,7 +317,7 @@ export default (store: Store, io: SocketIO.Server) => {
       return;
     }
     session.posts = session.posts.filter((p) => p.id !== data.id);
-    await deletePost(userId, session.id, data.id);
+    await removePost(userId, session.id, data.id);
     sendToAll(socket, session.id, RECEIVE_DELETE_POST, data);
   };
 
@@ -324,7 +331,7 @@ export default (store: Store, io: SocketIO.Server) => {
       return;
     }
     session.groups = session.groups.filter((g) => g.id !== data.id);
-    await deletePostGroup(userId, session.id, data.id);
+    await removePostGroup(userId, session.id, data.id);
     sendToAll(socket, session.id, RECEIVE_DELETE_POST_GROUP, data);
   };
 
