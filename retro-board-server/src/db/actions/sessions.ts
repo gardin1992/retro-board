@@ -3,15 +3,19 @@ import {
   PostEntity,
   PostGroupEntity,
   ColumnDefinitionEntity,
+  SessionEntity,
 } from '../entities';
 import {
   Session,
   defaultSession,
   ColumnDefinition,
   SessionOptions,
+  SessionMetadata,
+  VoteType,
 } from 'retro-board-common';
 import shortId from 'shortid';
 import { v4 } from 'uuid';
+import { uniqBy, flattenDeep } from 'lodash';
 import { Connection } from 'typeorm';
 import {
   UserRepository,
@@ -154,4 +158,123 @@ export async function getSession(
   } catch (err) {
     throw err;
   }
+}
+
+export async function saveSession(
+  connection: Connection,
+  userId: string,
+  session: Session
+): Promise<void> {
+  const sessionRepository = connection.getCustomRepository(SessionRepository);
+  await sessionRepository.saveFromJson(session, userId);
+}
+
+export async function deleteSessions(
+  connection: Connection,
+  userId: string,
+  sessionId: string
+): Promise<boolean> {
+  const sessionRepository = connection.getCustomRepository(SessionRepository);
+  const session = await sessionRepository.findOne(sessionId);
+  if (!session) {
+    console.info('Session not found', sessionId);
+    return false;
+  }
+  if (
+    session.createdBy.id !== userId ||
+    session.createdBy.accountType === 'anonymous'
+  ) {
+    console.error(
+      'The user is not the one who created the session, or is anonymous'
+    );
+    return false;
+  }
+  await sessionRepository.query(`delete from posts where "sessionId" = $1;`, [
+    sessionId,
+  ]);
+  await sessionRepository.query(`delete from columns where "sessionId" = $1;`, [
+    sessionId,
+  ]);
+  await sessionRepository.query(`delete from groups where "sessionId" = $1;`, [
+    sessionId,
+  ]);
+  await sessionRepository.query(`delete from sessions where id = $1;`, [
+    sessionId,
+  ]);
+
+  return true;
+}
+
+function numberOfVotes(type: VoteType, session: SessionEntity) {
+  return session.posts!.reduce<number>((prev, cur) => {
+    return prev + cur.votes!.filter((v) => v.type === type).length;
+  }, 0);
+}
+
+function numberOfActions(session: SessionEntity) {
+  return session.posts!.filter((p) => p.action !== null).length;
+}
+
+function getParticipants(session: SessionEntity) {
+  return uniqBy(
+    [
+      session.createdBy.toJson(),
+      ...session.posts!.map((p) => p.user.toJson()),
+      ...flattenDeep(
+        session.posts!.map((p) => p.votes!.map((v) => v.user.toJson()))
+      ),
+    ].filter(Boolean),
+    (u) => u.id
+  );
+}
+
+export async function previousSessions(
+  connection: Connection,
+  userId: string
+): Promise<SessionMetadata[]> {
+  const sessionRepository = connection.getCustomRepository(SessionRepository);
+  const ids: number[] = await sessionRepository.query(
+    `
+  (
+		select distinct id from sessions where "createdById" = $1
+	)
+	union
+	(
+		select distinct sessions.id from sessions 
+		left join posts on sessions.id = posts."sessionId"
+		where posts."userId" = $1
+	)
+	union
+	(
+		select distinct sessions.id from sessions 
+		left join posts on sessions.id = posts."sessionId"
+		left join votes on posts.id = votes."userId"
+		where votes."userId" = $1
+	)
+  `,
+    [userId]
+  );
+
+  const sessions = await sessionRepository.findByIds(ids, {
+    relations: ['posts', 'posts.votes'],
+    order: { created: 'DESC' },
+  });
+
+  return sessions.map(
+    (session) =>
+      ({
+        created: session.created,
+        createdBy: session.createdBy.toJson(),
+        id: session.id,
+        name: session.name,
+        numberOfNegativeVotes: numberOfVotes('dislike', session),
+        numberOfPositiveVotes: numberOfVotes('like', session),
+        numberOfPosts: session.posts?.length,
+        numberOfActions: numberOfActions(session),
+        participants: getParticipants(session),
+        canBeDeleted:
+          userId === session.createdBy.id &&
+          session.createdBy.accountType !== 'anonymous',
+      } as SessionMetadata)
+  );
 }

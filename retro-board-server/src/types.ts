@@ -20,7 +20,6 @@ import { Connection } from 'typeorm';
 export interface Store {
   connection: Connection;
   getDefaultTemplate: (userId: string) => Promise<SessionTemplateEntity | null>;
-  saveSession: (userId: string, session: Session) => Promise<void>;
   savePost: (userId: string, sessionId: string, post: Post) => Promise<void>;
   savePostGroup: (
     userId: string,
@@ -43,8 +42,6 @@ export interface Store {
     sessionId: string,
     groupId: string
   ) => Promise<void>;
-  previousSessions: (userId: string) => Promise<SessionMetadata[]>;
-  deleteSession: (userId: string, sessionId: string) => Promise<boolean>;
   updateOptions: (
     session: Session,
     options: SessionOptions

@@ -36,7 +36,12 @@ import { sendVerificationEmail, sendResetPassword } from './email/emailSender';
 import { v4 } from 'uuid';
 import mung from 'express-mung';
 import { hasField } from './security/payload-checker';
-import { createSession, createCustom } from './db/actions/sessions';
+import {
+  createSession,
+  createCustom,
+  previousSessions,
+  deleteSessions,
+} from './db/actions/sessions';
 import { updateUser, getUserByUsername, getUserView } from './db/actions/users';
 
 initSentry();
@@ -206,7 +211,7 @@ db().then((store) => {
   app.get('/api/previous', async (req, res) => {
     const user = await getUserFromRequest(connection, req);
     if (user) {
-      const sessions = await store.previousSessions(user.id);
+      const sessions = await previousSessions(connection, user.id);
       res.status(200).send(sessions);
     } else {
       res.status(200).send([]);
@@ -217,7 +222,7 @@ db().then((store) => {
     const sessionId = req.params.sessionId;
     const user = await getUserFromRequest(connection, req);
     if (user && user.accountType !== 'anonymous') {
-      const success = await store.deleteSession(user.id, sessionId);
+      const success = await deleteSessions(connection, user.id, sessionId);
       if (success) {
         res.status(200).send();
       } else {

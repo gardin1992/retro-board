@@ -18,7 +18,7 @@ import { setScope, reportQueryError } from './sentry';
 import SessionOptionsEntity from './db/entities/SessionOptions';
 import { UserEntity } from './db/entities';
 import { hasField } from './security/payload-checker';
-import { getSession } from './db/actions/sessions';
+import { getSession, saveSession } from './db/actions/sessions';
 import { getUser } from './db/actions/users';
 
 const {
@@ -111,7 +111,7 @@ export default (store: Store, io: SocketIO.Server) => {
     if (!userId) {
       return;
     }
-    await store.saveSession(userId, session);
+    await saveSession(connection, userId, session);
   };
 
   const updateOptions = async (
