@@ -134,14 +134,12 @@ if (config.REDIS_ENABLED) {
   console.log(chalk`{red Redis} was properly activated`);
 }
 
-db().then((store) => {
-  const connection = store.connection;
-
+db().then((connection) => {
   passportInit(connection);
-  game(store, io);
+  game(connection, io);
 
   // Stripe
-  app.use('/api/stripe', stripeRouter(store));
+  app.use('/api/stripe', stripeRouter(connection));
 
   // Create session
   app.post('/api/create', async (req, res) => {

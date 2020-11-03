@@ -13,7 +13,6 @@ import moment from 'moment';
 import socketIo from 'socket.io';
 import { find } from 'lodash';
 import { v4 } from 'uuid';
-import { Store } from './types';
 import { setScope, reportQueryError } from './sentry';
 import SessionOptionsEntity from './db/entities/SessionOptions';
 import { UserEntity } from './db/entities';
@@ -32,6 +31,7 @@ import {
   deletePost,
   deletePostGroup,
 } from './db/actions/posts';
+import { Connection } from 'typeorm';
 
 const {
   RECEIVE_POST,
@@ -87,9 +87,8 @@ interface LikeUpdate extends PostUpdate {
 
 const s = (str: string) => chalk`{blue ${str.replace('retrospected/', '')}}`;
 
-export default (store: Store, io: SocketIO.Server) => {
+export default (connection: Connection, io: SocketIO.Server) => {
   const users: Users = {};
-  const connection = store.connection;
   const d = () => chalk`{yellow [${moment().format('HH:mm:ss')}]} `;
 
   const getRoom = (sessionId: string) => `board-${sessionId}`;

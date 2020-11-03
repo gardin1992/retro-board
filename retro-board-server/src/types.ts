@@ -1,26 +1,3 @@
-import {
-  Session,
-  Post,
-  SessionOptions,
-  ColumnDefinition,
-  Vote,
-  SessionMetadata,
-  PostGroup,
-  Plan,
-  Currency,
-} from 'retro-board-common';
-import {
-  SessionTemplateEntity,
-  SubscriptionEntity,
-  UserView,
-} from './db/entities';
-import UserEntity from './db/entities/User';
-import { Connection } from 'typeorm';
-
-export interface Store {
-  connection: Connection;
-}
-
 export interface Configuration {
   DB_NAME: string;
   DB_USER: string;

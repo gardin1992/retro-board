@@ -1,8 +1,8 @@
 import chalk from 'chalk';
-import postgres from './postgres';
-import { Store } from '../types';
+import { Connection } from 'typeorm';
+import { getDb } from './postgres';
 
-export default (): Promise<Store> => {
+export default (): Promise<Connection> => {
   console.log(chalk`{yellow 💻  Using {red Postgres} database}`);
-  return postgres();
+  return getDb();
 };

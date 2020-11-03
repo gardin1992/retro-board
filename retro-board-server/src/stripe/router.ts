@@ -1,7 +1,6 @@
 import express, { Router } from 'express';
 import { CreateSubscriptionPayload, Product } from 'retro-board-common';
 import config from '../db/config';
-import { Store } from '../types';
 import Stripe from 'stripe';
 import { UserEntity } from '../db/entities';
 import {
@@ -16,11 +15,11 @@ import {
   cancelSubscription,
   activateSubscription,
 } from '../db/actions/subscriptions';
+import { Connection } from 'typeorm';
 
 const stripe = new Stripe(config.STRIPE_SECRET, {} as Stripe.StripeConfig);
 
-function stripeRouter(store: Store): Router {
-  const connection = store.connection;
+function stripeRouter(connection: Connection): Router {
   const router = express.Router();
 
   async function getCustomerId(user: UserEntity): Promise<string> {
