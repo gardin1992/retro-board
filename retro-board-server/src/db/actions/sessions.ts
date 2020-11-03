@@ -4,6 +4,7 @@ import {
   PostGroupEntity,
   ColumnDefinitionEntity,
   SessionEntity,
+  SessionTemplateEntity,
 } from '../entities';
 import {
   Session,
@@ -277,4 +278,34 @@ export async function previousSessions(
           session.createdBy.accountType !== 'anonymous',
       } as SessionMetadata)
   );
+}
+
+export async function getDefaultTemplate(
+  connection: Connection,
+  id: string
+): Promise<SessionTemplateEntity | null> {
+  const userRepository = connection.getCustomRepository(UserRepository);
+  const userWithDefaultTemplate = await userRepository.findOne(
+    { id },
+    { relations: ['defaultTemplate', 'defaultTemplate.columns'] }
+  );
+  return userWithDefaultTemplate?.defaultTemplate || null;
+}
+
+export async function updateOptions(
+  connection: Connection,
+  session: Session,
+  options: SessionOptions
+): Promise<SessionOptions> {
+  const sessionRepository = connection.getCustomRepository(SessionRepository);
+  return await sessionRepository.updateOptions(session, options);
+}
+
+export async function updateColumns(
+  connection: Connection,
+  session: Session,
+  columns: ColumnDefinition[]
+): Promise<ColumnDefinition[]> {
+  const columnRepository = connection.getCustomRepository(ColumnRepository);
+  return await columnRepository.updateColumns(session, columns);
 }

@@ -41,6 +41,7 @@ import {
   createCustom,
   previousSessions,
   deleteSessions,
+  getDefaultTemplate,
 } from './db/actions/sessions';
 import { updateUser, getUserByUsername, getUserView } from './db/actions/users';
 
@@ -251,7 +252,7 @@ db().then((store) => {
 
   app.get('/api/me/default-template', async (req, res) => {
     if (req.user) {
-      const defaultTemplate = await store.getDefaultTemplate(req.user);
+      const defaultTemplate = await getDefaultTemplate(connection, req.user);
       if (defaultTemplate) {
         res.status(200).send(defaultTemplate);
       } else {

@@ -18,7 +18,12 @@ import { setScope, reportQueryError } from './sentry';
 import SessionOptionsEntity from './db/entities/SessionOptions';
 import { UserEntity } from './db/entities';
 import { hasField } from './security/payload-checker';
-import { getSession, saveSession } from './db/actions/sessions';
+import {
+  getSession,
+  saveSession,
+  updateOptions,
+  updateColumns,
+} from './db/actions/sessions';
 import { getUser } from './db/actions/users';
 import {
   savePost,
@@ -121,7 +126,7 @@ export default (store: Store, io: SocketIO.Server) => {
     await saveSession(connection, userId, session);
   };
 
-  const updateOptions = async (
+  const modifyOptions = async (
     userId: string | null,
     session: Session,
     options: SessionOptionsEntity
@@ -132,10 +137,10 @@ export default (store: Store, io: SocketIO.Server) => {
     if (userId !== session.createdBy.id) {
       return;
     }
-    await store.updateOptions(session, options);
+    await updateOptions(connection, session, options);
   };
 
-  const updateColumns = async (
+  const modifyColumns = async (
     userId: string | null,
     session: Session,
     columns: ColumnDefinition[]
@@ -146,7 +151,7 @@ export default (store: Store, io: SocketIO.Server) => {
     if (userId !== session.createdBy.id) {
       return;
     }
-    await store.updateColumns(session, columns);
+    await updateColumns(connection, session, columns);
   };
 
   const persistPost = async (
@@ -419,7 +424,7 @@ export default (store: Store, io: SocketIO.Server) => {
       return;
     }
 
-    await updateOptions(userId, session, data);
+    await modifyOptions(userId, session, data);
 
     sendToAll(socket, session.id, RECEIVE_OPTIONS, data);
   };
@@ -438,7 +443,7 @@ export default (store: Store, io: SocketIO.Server) => {
       return;
     }
 
-    await updateColumns(userId, session, data);
+    await modifyColumns(userId, session, data);
 
     sendToAll(socket, session.id, RECEIVE_COLUMNS, data);
   };

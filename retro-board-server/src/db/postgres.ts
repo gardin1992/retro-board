@@ -46,30 +46,6 @@ export async function getDb() {
   return connection;
 }
 
-const getDefaultTemplate = (userRepository: UserRepository) => async (
-  id: string
-): Promise<SessionTemplateEntity | null> => {
-  const userWithDefaultTemplate = await userRepository.findOne(
-    { id },
-    { relations: ['defaultTemplate', 'defaultTemplate.columns'] }
-  );
-  return userWithDefaultTemplate?.defaultTemplate || null;
-};
-
-const updateOptions = (sessionRepository: SessionRepository) => async (
-  session: Session,
-  options: SessionOptions
-): Promise<SessionOptions> => {
-  return await sessionRepository.updateOptions(session, options);
-};
-
-const updateColumns = (columnRepository: ColumnRepository) => async (
-  session: Session,
-  columns: ColumnDefinition[]
-): Promise<ColumnDefinition[]> => {
-  return await columnRepository.updateColumns(session, columns);
-};
-
 export default async function db(): Promise<Store> {
   const connection = await getDb();
   const sessionRepository = connection.getCustomRepository(SessionRepository);
@@ -89,8 +65,5 @@ export default async function db(): Promise<Store> {
   );
   return {
     connection,
-    updateOptions: updateOptions(sessionRepository),
-    updateColumns: updateColumns(columnRepository),
-    getDefaultTemplate: getDefaultTemplate(userRepository),
   };
 }

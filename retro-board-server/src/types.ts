@@ -19,15 +19,6 @@ import { Connection } from 'typeorm';
 
 export interface Store {
   connection: Connection;
-  getDefaultTemplate: (userId: string) => Promise<SessionTemplateEntity | null>;
-  updateOptions: (
-    session: Session,
-    options: SessionOptions
-  ) => Promise<SessionOptions>;
-  updateColumns: (
-    session: Session,
-    columns: ColumnDefinition[]
-  ) => Promise<ColumnDefinition[]>;
 }
 
 export interface Configuration {
