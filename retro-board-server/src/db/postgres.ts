@@ -70,41 +70,6 @@ const updateColumns = (columnRepository: ColumnRepository) => async (
   return await columnRepository.updateColumns(session, columns);
 };
 
-const activateSubscription = (
-  subscriptionRepository: SubscriptionRepository,
-  userRepository: UserRepository
-) => async (
-  userId: string,
-  stripeSubscriptionId: string,
-  plan: Plan,
-  domain: string | null,
-  currency: Currency
-): Promise<SubscriptionEntity> => {
-  const user = await userRepository.findOne(userId);
-  if (!user) {
-    throw Error('Cannot activate subscription on a non existing user');
-  }
-  const existingSubscription = await subscriptionRepository.activate(
-    stripeSubscriptionId,
-    user,
-    plan,
-    domain
-  );
-  user.currency = currency;
-  await userRepository.save(user);
-  return existingSubscription;
-};
-
-const cancelSubscription = (
-  subscriptionRepository: SubscriptionRepository,
-  userRepository: UserRepository
-) => async (stripeSubscriptionId: string): Promise<SubscriptionEntity> => {
-  const existingSubscription = await subscriptionRepository.cancel(
-    stripeSubscriptionId
-  );
-  return existingSubscription;
-};
-
 export default async function db(): Promise<Store> {
   const connection = await getDb();
   const sessionRepository = connection.getCustomRepository(SessionRepository);
@@ -127,13 +92,5 @@ export default async function db(): Promise<Store> {
     updateOptions: updateOptions(sessionRepository),
     updateColumns: updateColumns(columnRepository),
     getDefaultTemplate: getDefaultTemplate(userRepository),
-    activateSubscription: activateSubscription(
-      subscriptionRepository,
-      userRepository
-    ),
-    cancelSubscription: cancelSubscription(
-      subscriptionRepository,
-      userRepository
-    ),
   };
 }

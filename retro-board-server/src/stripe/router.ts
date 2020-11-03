@@ -12,6 +12,10 @@ import {
 import { plans, getProduct } from './products';
 import { updateUser } from '../db/actions/users';
 import { getUserFromRequest } from '../utils';
+import {
+  cancelSubscription,
+  activateSubscription,
+} from '../db/actions/subscriptions';
 
 const stripe = new Stripe(config.STRIPE_SECRET, {} as Stripe.StripeConfig);
 
@@ -99,7 +103,7 @@ function stripeRouter(store: Store): Router {
           // handle subscription cancelled automatically based
           // upon your subscription settings.
         }
-        store.cancelSubscription(cancelEvent.data.object.id);
+        cancelSubscription(connection, cancelEvent.data.object.id);
         break;
       case 'checkout.session.completed':
         const subEvent = (event as unknown) as StripeEvent<
@@ -107,7 +111,8 @@ function stripeRouter(store: Store): Router {
         >;
 
         if (subEvent.data.object.payment_status === 'paid') {
-          await store.activateSubscription(
+          await activateSubscription(
+            connection,
             subEvent.data.object.client_reference_id,
             subEvent.data.object.subscription,
             subEvent.data.object.metadata.plan,

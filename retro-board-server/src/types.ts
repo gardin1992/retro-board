@@ -28,16 +28,6 @@ export interface Store {
     session: Session,
     columns: ColumnDefinition[]
   ) => Promise<ColumnDefinition[]>;
-  activateSubscription: (
-    userId: string,
-    stripeSubscriptionId: string,
-    plan: Plan,
-    domain: string | null,
-    currency: Currency
-  ) => Promise<SubscriptionEntity>;
-  cancelSubscription: (
-    stripeSubscriptionId: string
-  ) => Promise<SubscriptionEntity>;
 }
 
 export interface Configuration {
