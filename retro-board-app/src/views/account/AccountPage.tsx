@@ -44,6 +44,11 @@ function AccountPage() {
         <Value>{user.accountType}</Value>
       </Data>
 
+      <Data>
+        <Title>Plan</Title>
+        <Value>{user.plan}</Value>
+      </Data>
+
       {url ? (
         <Button
           variant="contained"
