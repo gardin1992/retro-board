@@ -12,6 +12,7 @@ import MembersEditor from './MembersEditor';
 function AccountPage() {
   const url = usePortalUrl();
   const user = useUser();
+
   const ownsThePlan =
     user &&
     !!user.ownSubscriptionsId &&

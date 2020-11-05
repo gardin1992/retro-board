@@ -158,8 +158,8 @@ function stripeRouter(connection: Connection): Router {
           },
         ],
         mode: 'subscription',
-        success_url: `${config.BASE_URL}/subscribe/success`,
-        cancel_url: `${config.BASE_URL}/subscribe/cancel`,
+        success_url: `${config.BASE_URL}/account?welcome`,
+        cancel_url: `${config.BASE_URL}/subscribe`,
       });
 
       res.json({ id: session.id });
