@@ -1,3 +1,4 @@
+import { colors } from '@material-ui/core';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -5,13 +6,34 @@ interface SectionProps {
   title: string;
 }
 
-const Section: React.FC<SectionProps> = ({ title }) => {
-  return <Container></Container>;
+const Section: React.FC<SectionProps> = ({ title, children }) => {
+  return (
+    <Container>
+      <Title>{title}</Title>
+      <Content>{children}</Content>
+    </Container>
+  );
 };
 
-const Container = styled.section``;
+const Container = styled.section`
+  border: 1px solid ${colors.grey[200]};
+  border-radius: 10px;
+  margin: 10px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
 
-const Title = styled.header``;
+  @media screen and (max-width: 450px) {
+    padding: 5px;
+  }
+`;
+
+const Title = styled.header`
+  font-size: 2em;
+  font-weight: 100;
+  margin-bottom: 20px;
+  display: block;
+`;
 
 const Content = styled.div``;
 

@@ -6,10 +6,20 @@ import useUser from '../../auth/useUser';
 import styled from 'styled-components';
 import ProPill from '../../components/ProPill';
 import { Alert } from '@material-ui/lab';
+import Section from './Section';
+import MembersEditor from './MembersEditor';
 
 function AccountPage() {
   const url = usePortalUrl();
   const user = useUser();
+  const ownsThePlan =
+    user &&
+    !!user.ownSubscriptionsId &&
+    user.ownSubscriptionsId === user.subscriptionsId;
+  const onSomebodysPlan =
+    user &&
+    !!user.subscriptionsId &&
+    user.ownSubscriptionsId !== user.subscriptionsId;
 
   if (!user) {
     return null;
@@ -29,35 +39,56 @@ function AccountPage() {
         {user.name}&nbsp;{user.pro ? <ProPill /> : null}
       </Name>
 
-      <Data>
-        <Title>Username</Title>
-        <Value>{user.username}</Value>
-      </Data>
+      <Section title="Your Details">
+        <Data>
+          <Title>Username</Title>
+          <Value>{user.username}</Value>
+        </Data>
 
-      <Data>
-        <Title>Email</Title>
-        <Value>{user.email}</Value>
-      </Data>
+        <Data>
+          <Title>Email</Title>
+          <Value>{user.email}</Value>
+        </Data>
 
-      <Data>
-        <Title>Account Type</Title>
-        <Value>{user.accountType}</Value>
-      </Data>
+        <Data>
+          <Title>Account Type</Title>
+          <Value>{user.accountType}</Value>
+        </Data>
+      </Section>
 
-      <Data>
-        <Title>Plan</Title>
-        <Value>{user.plan}</Value>
-      </Data>
+      {user.plan ? (
+        <Section title="Your Plan">
+          <Data>
+            <Title>Plan</Title>
+            <Value>{user.plan}</Value>
+          </Data>
+          {onSomebodysPlan && (
+            <Alert severity="info">
+              You are on this plan through somebody else's subscription.
+            </Alert>
+          )}
+          {ownsThePlan && (
+            <Alert severity="info">
+              You are the owner of this plan, through the subscription below.
+            </Alert>
+          )}
+        </Section>
+      ) : null}
 
-      {url ? (
-        <Button
-          variant="contained"
-          color="secondary"
-          href={url}
-          style={{ marginTop: 20 }}
-        >
-          Manage my subscription
-        </Button>
+      {ownsThePlan ? (
+        <Section title="Your Subscription">
+          {url ? (
+            <Button
+              variant="contained"
+              color="secondary"
+              href={url}
+              style={{ marginTop: 20 }}
+            >
+              Manage my subscription
+            </Button>
+          ) : null}
+          {user && user.plan && user.plan === 'team' ? <MembersEditor /> : null}
+        </Section>
       ) : null}
     </Page>
   );

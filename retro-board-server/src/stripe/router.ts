@@ -14,6 +14,7 @@ import { getUserFromRequest } from '../utils';
 import {
   cancelSubscription,
   activateSubscription,
+  getActiveSubscription,
 } from '../db/actions/subscriptions';
 import { Connection } from 'typeorm';
 
@@ -180,6 +181,17 @@ function stripeRouter(connection: Connection): Router {
     } else {
       res.status(500).send();
     }
+  });
+
+  router.get('/members', async (req, res) => {
+    const user = await getUserFromRequest(connection, req);
+    if (user) {
+      const subscription = await getActiveSubscription(connection, user.id);
+      if (subscription) {
+        return res.status(200).send(subscription.members);
+      }
+    }
+    res.status(401).send();
   });
 
   return router;

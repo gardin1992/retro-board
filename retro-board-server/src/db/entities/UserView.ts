@@ -26,8 +26,7 @@ select
   coalesce(s.plan, s2.plan, s3.plan) as "plan"
 from users u 
 left join subscriptions s on s."ownerId" = u.id and s.active is true
-left join "subscriptions-users" su on su."usersId" = u.id
-left join subscriptions s2 on s2.id = su."subscriptionsId" and s2.active is true
+left join subscriptions s2 on u.email = ANY(s2.members)
 left join subscriptions s3 on s3.domain = split_part(u.email, '@', 2) and s3.active is true
   `,
 })
