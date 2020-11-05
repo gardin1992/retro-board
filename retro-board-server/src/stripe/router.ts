@@ -15,6 +15,7 @@ import {
   cancelSubscription,
   activateSubscription,
   getActiveSubscription,
+  saveSubscription,
 } from '../db/actions/subscriptions';
 import { Connection } from 'typeorm';
 
@@ -187,8 +188,21 @@ function stripeRouter(connection: Connection): Router {
     const user = await getUserFromRequest(connection, req);
     if (user) {
       const subscription = await getActiveSubscription(connection, user.id);
-      if (subscription) {
+      if (subscription && subscription.plan === 'team') {
         return res.status(200).send(subscription.members);
+      }
+    }
+    res.status(401).send();
+  });
+
+  router.patch('/members', async (req, res) => {
+    const user = await getUserFromRequest(connection, req);
+    if (user) {
+      const subscription = await getActiveSubscription(connection, user.id);
+      if (subscription && subscription.plan === 'team') {
+        subscription.members = req.body as string[];
+        await saveSubscription(connection, subscription);
+        return res.status(200).send();
       }
     }
     res.status(401).send();

@@ -60,10 +60,19 @@ export async function getActiveSubscription(
     order: {
       updated: 'DESC',
     },
-    relations: ['users'],
   });
   if (subscriptions.length === 0) {
     return null;
   }
   return subscriptions[0];
+}
+
+export async function saveSubscription(
+  connection: Connection,
+  subscription: SubscriptionEntity
+): Promise<void> {
+  const subscriptionRepository = connection.getCustomRepository(
+    SubscriptionRepository
+  );
+  await subscriptionRepository.save(subscription);
 }
