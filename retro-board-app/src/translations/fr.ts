@@ -158,13 +158,20 @@ export default {
   },
   SocialMediaLogin: {
     header: 'Réseaux Sociaux',
-    info: 'Vous allez utiliser un de vos compte existant pour vous identifier. Vous pourrez visualiser vos précédentes sessions. Aucun mot de passe ne sera stocké.',
+    info:
+      'Vous allez utiliser un de vos compte existant pour vous identifier. Vous pourrez visualiser vos précédentes sessions. Aucun mot de passe ne sera stocké.',
   },
   AuthCommon: {
     emailField: 'Adresse e-mail',
     passwordField: 'Mot de passe',
     nameField: 'Votre nom (ou pseudo)',
-    passwordScoreWords: ['faible', 'faible', 'encore un effort', 'suffisant', 'très bien!'],
+    passwordScoreWords: [
+      'faible',
+      'faible',
+      'encore un effort',
+      'suffisant',
+      'très bien!',
+    ],
   },
   AccountLogin: {
     header: 'Classique',
@@ -172,7 +179,8 @@ export default {
     info: 'Connectez-vous avec votre email et votre mot de passe.',
     registerLink: 'Pas de compte ? Cliquez ici',
     forgotPasswordLink: 'Mot de passe oublié ?',
-    errorEmailPasswordIncorrect: 'Les identifiants communiqués sont incorrects.',
+    errorEmailPasswordIncorrect:
+      'Les identifiants communiqués sont incorrects.',
   },
   Register: {
     header: `S'enregistrer`,
@@ -180,12 +188,14 @@ export default {
     registerButton: 'Créer un compte',
     errorAlreadyRegistered: 'Désolé, cet email est déjà enregistré',
     errorGeneral: 'Une error est survenue lors de la création de votre compte.',
-    messageSuccess: 'Merci ! Vous devriez reçevoir un email pour valider votre compte.',
+    messageSuccess:
+      'Merci ! Vous devriez reçevoir un email pour valider votre compte.',
     errorInvalidEmail: `Merci d'entrer un email valide`,
   },
   ValidateAccount: {
     success: `Votre email a été validé. Ne bougez pas, je vous connecte dans quelques secondes.`,
-    error: 'Une erreur est survenue lors de la validation de votre adresse e-mail.',
+    error:
+      'Une erreur est survenue lors de la validation de votre adresse e-mail.',
     loading: 'Nous validons votre e-mail... Merci de votre patience.',
   },
   ResetPassword: {
@@ -193,10 +203,12 @@ export default {
     doneMessage: `C'est fait ! Jetez un oeuil dans votre boîte email, vous devriez reçevoir un email pour mettre à jour votre mot de passe.`,
     header: 'Changer de mot de passe',
     resetButton: 'Mettre à jour',
-    info: 'Vous avez oublié votre mot de passe ? Pas de problème, entrez votre email et vous recevrez un email en retour.',
+    info:
+      'Vous avez oublié votre mot de passe ? Pas de problème, entrez votre email et vous recevrez un email en retour.',
     // Reset Page
     success: `Votre mot de passe a été mis à jour. Je vais vous connecter dans quelques secondes.`,
-    error: 'Une erreur est survenue lors de la mise à jour de votre mot de passe.',
+    error:
+      'Une erreur est survenue lors de la mise à jour de votre mot de passe.',
     loading: 'Nous mettons votre mot de passe à jour. Merci de patienter.',
     resetInfo: 'Merci de choisir un nouveau mot de passe:',
   },
@@ -244,5 +256,31 @@ export default {
     dialogContent: `Cela va révéler (déflouter) tout les posts. L'opération n'est pas reversible.`,
     confirmButton: `Révéler`,
     cancelButton: 'Non merci',
+  },
+  AccountPage: {
+    anonymousError: `Les comptes anonymes ne peuvent avoir accès à leur profile (puisque ils n'en ont pas).`,
+    details: {
+      header: 'Vos Coordonnées',
+      username: `Nom d'utilisateur`,
+      email: 'E-Mail',
+      accountType: 'Type de compte',
+    },
+    plan: {
+      header: 'Votre Accès',
+      plan: 'Accès',
+      youAreOwner: `Vous êtes l'administrateur de cet abonnement. Vous pouvez le gérer via la section ci-dessous.`,
+      youAreMember: `Vous devez votre accès Pro grâce à l'abonnement d'un tiers.`,
+    },
+    subscription: {
+      header: 'Votre Abonnement',
+      manageButton: 'Gérer mon abonnement',
+      membersEditor: {
+        title: 'Votre Equipe',
+        limitReached: (limit) =>
+          `Vous avez atteint le nombre maximum de membres (${limit}) permis par votre abonnement. Vous pouvez passer à l'abonnement Company pour un nombre de collaborateur illimité.`,
+        info: (limit) =>
+          `Ajouter des addresses emails ci-dessous pour donner un accès Pro à vos collaborateurs (dans la limite de ${limit} collaborateurs).`,
+      },
+    },
   },
 } as Translation;

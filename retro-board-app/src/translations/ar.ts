@@ -229,4 +229,28 @@ export default {
     confirmButton: undefined,
     cancelButton: undefined,
   },
+  AccountPage: {
+    anonymousError: undefined,
+    details: {
+      header: undefined,
+      username: undefined,
+      email: undefined,
+      accountType: undefined,
+    },
+    plan: {
+      header: undefined,
+      plan: undefined,
+      youAreOwner: undefined,
+      youAreMember: undefined,
+    },
+    subscription: {
+      header: undefined,
+      manageButton: undefined,
+      membersEditor: {
+        title: undefined,
+        limitReached: undefined,
+        info: undefined,
+      },
+    },
+  },
 } as Translation;

@@ -157,7 +157,8 @@ export default {
   },
   SocialMediaLogin: {
     header: 'Social Media authenticatie',
-    info: 'Dit gebruikt je social media account en slaat de sessies op onder je account. Er is geen wachtwoord nodig.',
+    info:
+      'Dit gebruikt je social media account en slaat de sessies op onder je account. Er is geen wachtwoord nodig.',
   },
   AuthCommon: {
     emailField: undefined,
@@ -242,5 +243,29 @@ export default {
     dialogContent: undefined,
     confirmButton: undefined,
     cancelButton: undefined,
+  },
+  AccountPage: {
+    anonymousError: undefined,
+    details: {
+      header: undefined,
+      username: undefined,
+      email: undefined,
+      accountType: undefined,
+    },
+    plan: {
+      header: undefined,
+      plan: undefined,
+      youAreOwner: undefined,
+      youAreMember: undefined,
+    },
+    subscription: {
+      header: undefined,
+      manageButton: undefined,
+      membersEditor: {
+        title: undefined,
+        limitReached: undefined,
+        info: undefined,
+      },
+    },
   },
 } as Translation;

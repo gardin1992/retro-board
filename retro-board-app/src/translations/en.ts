@@ -156,7 +156,8 @@ export default {
   },
   SocialMediaLogin: {
     header: 'Social Media',
-    info: 'This will use your account to authenticate you, and will allow you to retrieve all your sessions. No password is stored.',
+    info:
+      'This will use your account to authenticate you, and will allow you to retrieve all your sessions. No password is stored.',
   },
   AuthCommon: {
     emailField: 'E-mail',
@@ -178,7 +179,8 @@ export default {
     registerButton: 'Register',
     errorAlreadyRegistered: 'This email is already registered',
     errorGeneral: 'An error occurred while trying to create your account.',
-    messageSuccess: 'Thank you! You should receive an email shortly to validate your account.',
+    messageSuccess:
+      'Thank you! You should receive an email shortly to validate your account.',
     errorInvalidEmail: 'Please enter a valid email',
   },
   ValidateAccount: {
@@ -188,7 +190,8 @@ export default {
   },
   ResetPassword: {
     // Reset Modal
-    doneMessage: 'Done! Have a look in your emails, you should get a link to reset your password.',
+    doneMessage:
+      'Done! Have a look in your emails, you should get a link to reset your password.',
     header: 'Password Reset',
     resetButton: 'Reset Password',
     info: `Forgot your password? Not a problem. Enter your email below and you'll get a reset email prompto.`,
@@ -243,5 +246,34 @@ export default {
       'This will reveal all blurred cards for everyone. This cannot be undone.',
     confirmButton: `Let's reveal!`,
     cancelButton: 'No thanks',
+  },
+  AccountPage: {
+    anonymousError: `Anonymous accounts cannot have access to their profile (because they don't have one).`,
+    details: {
+      header: 'Your Details',
+      username: 'Username',
+      email: 'Email',
+      accountType: 'Account Type',
+    },
+    plan: {
+      header: 'Your Plan',
+      plan: 'Plan',
+      youAreOwner:
+        'You are the owner of this plan, through the subscription below.',
+      youAreMember: `You are on this plan through somebody else's subscription.`,
+    },
+    subscription: {
+      header: 'Your Subscription',
+      manageButton: 'Manage my subscription',
+      membersEditor: {
+        title: 'Your Team',
+        limitReached: (limit) =>
+          `You reached the limit of your subscription (${limit} users, including yourself). Please remove members, or upgrade to an unlimited Company account.`,
+        info: (
+          limit
+        ) => `Add emails below to grant Pro accounts to up to ${limit} other
+        colleagues.`,
+      },
+    },
   },
 } as Translation;
