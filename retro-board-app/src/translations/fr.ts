@@ -5,6 +5,7 @@ export default {
     logout: 'Déconnexion',
     leave: 'Sortir',
     summaryMode: 'Mode Résumé',
+    account: 'Mon compte',
   },
   LanguagePicker: {
     header: 'Changez de langue',

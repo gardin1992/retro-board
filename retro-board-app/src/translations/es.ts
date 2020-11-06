@@ -5,6 +5,7 @@ export default {
     logout: 'Cerrar sesión',
     leave: 'Salir',
     summaryMode: 'Modo resumido',
+    account: undefined,
   },
   LanguagePicker: {
     header: 'Escoje un idioma',

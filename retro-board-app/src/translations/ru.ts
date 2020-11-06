@@ -5,6 +5,7 @@ export default {
     leave: 'Выйти',
     logout: 'Выйти с учётной записи',
     summaryMode: 'Показать итоги',
+    account: undefined,
   },
   LanguagePicker: {
     header: 'Выбрать язык',

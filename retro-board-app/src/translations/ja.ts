@@ -5,6 +5,7 @@ export default {
     logout: 'ログアウト',
     leave: '退室',
     summaryMode: '要約モード',
+    account: undefined,
   },
   LanguagePicker: {
     header: '言語を選択',

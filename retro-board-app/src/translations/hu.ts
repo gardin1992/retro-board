@@ -5,6 +5,7 @@ export default {
     logout: 'Kijelentkezés',
     leave: 'Távozás',
     summaryMode: 'Összesített mód',
+    account: undefined,
   },
   LanguagePicker: {
     header: 'Válassz nyelvet',

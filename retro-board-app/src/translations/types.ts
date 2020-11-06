@@ -4,6 +4,7 @@ export interface Translation {
     logout?: string;
     leave?: string;
     summaryMode?: string;
+    account?: string;
   };
   LanguagePicker: {
     header?: string;
@@ -230,22 +231,22 @@ export interface Translation {
   };
   AccountPage: {
     anonymousError?: string;
-    details?: {
+    details: {
       header?: string;
       username?: string;
       email?: string;
       accountType?: string;
     };
-    plan?: {
+    plan: {
       header?: string;
       plan?: string;
       youAreOwner?: string;
       youAreMember?: string;
     };
-    subscription?: {
+    subscription: {
       header?: string;
       manageButton?: string;
-      membersEditor?: {
+      membersEditor: {
         title?: string;
         limitReached?: (limit: number) => string;
         info?: (limit: number) => string;

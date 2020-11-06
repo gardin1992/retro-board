@@ -5,6 +5,7 @@ export default {
     logout: 'Wyloguj',
     leave: 'Wyjdź',
     summaryMode: 'Tryb Podsumowania',
+    account: undefined,
   },
   LanguagePicker: {
     header: 'Wybierz język',

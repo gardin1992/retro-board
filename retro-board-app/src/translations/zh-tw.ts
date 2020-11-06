@@ -5,6 +5,7 @@ export default {
     logout: '登出',
     leave: '離開',
     summaryMode: '主旨模式',
+    account: undefined,
   },
   LanguagePicker: {
     header: '切換語言',

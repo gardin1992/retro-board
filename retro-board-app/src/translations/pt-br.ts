@@ -5,6 +5,7 @@ export default {
     logout: 'Logout',
     leave: 'Sair',
     summaryMode: 'Modo Sumário',
+    account: undefined,
   },
   LanguagePicker: {
     header: 'Escolha uma língua',
