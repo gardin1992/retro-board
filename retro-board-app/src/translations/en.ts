@@ -277,4 +277,39 @@ export default {
       },
     },
   },
+  SubscribePage: {
+    alertAlreadyPro: `You already are a Pro user, so you might not need another subscription.`,
+    alertAlreadySubscribed: `You already have a subscription, so you might not need another subscription.`,
+    currency: {
+      title: 'Currency',
+      description: 'Pick a currency you would like to be billed with',
+      warning: (currency: string) =>
+        `Your account is already set to use ${currency}, so you cannot change the currency anymore.`,
+    },
+    plan: {
+      title: 'Plan',
+      description: 'Choose the plan that fits your use case!',
+    },
+    domain: {
+      title: 'Domain',
+      description: 'Your unlimited subscription applies to a given domain.',
+      invalidDomain: 'Please provide a valid domain',
+    },
+    subscribe: {
+      title: 'Checkout',
+      description: 'You will be redirected to our partner, Stripe, for payment',
+      cannotRegisterWithAnon:
+        'You cannot register with an anonymous account. Please register with a Social Media or a Password account before continuing.',
+      checkout: 'Checkout',
+    },
+  },
+  Products: {
+    team:
+      'Perfect for smaller teams, you can select up to 20 colleagues who will be upgraded to a Pro account.',
+    company:
+      'If you are a bigger company, you will enjoy an unlimited number of Pro accounts',
+    users: (users: number) => `${users} users`,
+    unlimited: 'Unlimited',
+    month: 'month',
+  },
 } as Translation;

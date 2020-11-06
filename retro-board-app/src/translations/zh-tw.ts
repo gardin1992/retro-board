@@ -255,4 +255,35 @@ export default {
       },
     },
   },
+  SubscribePage: {
+    alertAlreadyPro: undefined,
+    alertAlreadySubscribed: undefined,
+    currency: {
+      title: undefined,
+      description: undefined,
+      warning: undefined,
+    },
+    plan: {
+      title: undefined,
+      description: undefined,
+    },
+    domain: {
+      title: undefined,
+      description: undefined,
+      invalidDomain: undefined,
+    },
+    subscribe: {
+      title: undefined,
+      description: undefined,
+      cannotRegisterWithAnon: undefined,
+      checkout: undefined,
+    },
+  },
+  Products: {
+    team: undefined,
+    company: undefined,
+    users: undefined,
+    unlimited: undefined,
+    month: undefined,
+  },
 } as Translation;

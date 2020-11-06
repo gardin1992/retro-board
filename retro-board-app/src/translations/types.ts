@@ -253,4 +253,35 @@ export interface Translation {
       };
     };
   };
+  SubscribePage: {
+    alertAlreadyPro?: string;
+    alertAlreadySubscribed?: string;
+    currency: {
+      title?: string;
+      description?: string;
+      warning?: (currency: string) => string;
+    };
+    plan: {
+      title?: string;
+      description?: string;
+    };
+    domain: {
+      title?: string;
+      description?: string;
+      invalidDomain?: string;
+    };
+    subscribe: {
+      title?: string;
+      description?: string;
+      cannotRegisterWithAnon?: string;
+      checkout?: string;
+    };
+  };
+  Products: {
+    team?: string;
+    company?: string;
+    users?: (users: number) => string;
+    unlimited?: string;
+    month?: string;
+  };
 }

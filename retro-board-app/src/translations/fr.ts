@@ -284,4 +284,37 @@ export default {
       },
     },
   },
+  SubscribePage: {
+    alertAlreadyPro: `Vous avez déjà un compte Pro, vous n'avez peut-être donc pas besoin d'un abonnement supplémentaire.`,
+    alertAlreadySubscribed: `Vous avez déjà un abonnement, vous n'avez peut-être donc pas besoin d'un abonnement supplémentaire.`,
+    currency: {
+      title: 'Devise',
+      description: 'Choisissez une devise de facturation.',
+      warning: (currency: string) =>
+        `Votre compte est déjà en ${currency}, vous ne pouvez donc plus en changer.`,
+    },
+    plan: {
+      title: 'Abonnement',
+      description: `Choisissez l'abonnement qui vous convient`,
+    },
+    domain: {
+      title: 'Nom de domaine',
+      description:
+        'Votre abonnement illimité est basé sur le nom de domaine de votre email.',
+      invalidDomain: `Merci d'entrer un nom de domaine valide.`,
+    },
+    subscribe: {
+      title: 'Payer',
+      description: `Vous serez redirigé vers notre partenaire Stripe. Aucune coordonnées bancaire n'est stockée par Retrospected.`,
+      cannotRegisterWithAnon: `Vous ne pouvez vous abonner en utilisant un compte anonyme. Merci de vous enregistrer avec un compte classique (mot de passe) ou via un l'authentification tierce (Google, Github).`,
+      checkout: 'Payer',
+    },
+  },
+  Products: {
+    team: `Parfait pour une équipe, vous pouvez sélectioner jusqu'à 20 collègues qui recevront un compte Pro.`,
+    company: `Si vous avez besoin de plus, l'abonnement "Company" vous donnera un nombre de compte Pro illimité`,
+    users: (users: number) => `${users} utilisateurs`,
+    unlimited: 'Illimité',
+    month: 'mois',
+  },
 } as Translation;
