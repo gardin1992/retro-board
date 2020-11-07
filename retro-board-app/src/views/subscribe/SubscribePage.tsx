@@ -12,7 +12,7 @@ import Input from '../../components/Input';
 import useUser from '../../auth/useUser';
 import { Alert } from '@material-ui/lab';
 import { useEffect } from 'react';
-import useTranslations from '../../translations';
+import useTranslations, { useLanguage } from '../../translations';
 
 function guessDomain(user: FullUser): string {
   if (user.email) {
@@ -33,6 +33,7 @@ function SubscriberPage() {
   const [domain, setDomain] = useState<string>(DEFAULT_DOMAIN);
   const stripe = useStripe();
   const { SubscribePage: translations } = useTranslations();
+  const language = useLanguage();
   const needDomain = product && product.seats === null;
 
   const validDomain = useMemo(() => {
@@ -60,6 +61,7 @@ function SubscriberPage() {
       const session = await createCheckoutSession(
         product.plan,
         currency,
+        language.stripeLocale,
         !product.seats ? domain : null
       );
 
@@ -69,7 +71,7 @@ function SubscriberPage() {
         });
       }
     }
-  }, [stripe, product, currency, domain]);
+  }, [stripe, product, currency, domain, language]);
 
   return (
     <Container>
