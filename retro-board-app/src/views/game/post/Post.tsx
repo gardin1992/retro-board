@@ -36,6 +36,7 @@ import ActionButton from './ActionButton';
 import ActionsBar from './ActionsBar';
 import { trackEvent } from '../../../track';
 import useCrypto from './useCrypto';
+import { getLorem } from './lorem';
 
 interface PostItemProps {
   index: number;
@@ -110,14 +111,23 @@ const PostItem = ({
     },
     [onEditGiphy]
   );
-  const [actualContent, encrypt] = useCrypto(post, isBlurred);
+  const { encrypt, decrypt } = useCrypto();
   const handleEdit = useCallback(
-    (update: string) => {
-      console.log('handle edit: ', update);
-      onEdit(encrypt(update));
+    (postContent: string) => {
+      onEdit(encrypt(postContent));
     },
     [onEdit, encrypt]
   );
+  const handleEditAction = useCallback(
+    (action: string) => {
+      onEditAction(encrypt(action));
+    },
+    [onEditAction, encrypt]
+  );
+
+  const actualContent = useMemo(() => {
+    return isBlurred ? generateLoremIpsum(post.content) : decrypt(post.content);
+  }, [decrypt, isBlurred, post.content]);
 
   return (
     <>
@@ -182,8 +192,8 @@ const PostItem = ({
                 <Typography variant="caption">{translations.title}:</Typography>
                 <Typography variant="body1">
                   <EditableLabel
-                    value={post.action || ''}
-                    onChange={onEditAction}
+                    value={decrypt(post.action || '')}
+                    onChange={handleEditAction}
                     label={translations.title}
                     focused={actionsToggled && !post.action}
                     multiline
@@ -398,5 +408,10 @@ const LabelContainer = styled.div<{ blurred: boolean }>`
   }`
       : null}
 `;
+
+function generateLoremIpsum(originalText: string) {
+  const count = originalText.split(' ').length;
+  return getLorem(count);
+}
 
 export default PostItem;

@@ -19,6 +19,7 @@ import {
   DroppableStateSnapshot,
 } from 'react-beautiful-dnd';
 import { ColumnContent } from './types';
+import useCrypto from './post/useCrypto';
 
 interface ColumnProps {
   column: ColumnContent;
@@ -65,6 +66,7 @@ const Column: SFC<ColumnProps> = ({
   const isLoggedIn = !!user;
   const { Column: columnTranslations } = useTranslations();
   const [content, setContent] = useState('');
+  const { encrypt } = useCrypto();
   const onContentChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => setContent(e.target.value),
     [setContent]
@@ -73,11 +75,11 @@ const Column: SFC<ColumnProps> = ({
   const onKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
       if (e.keyCode === 13 && content) {
-        onAdd(content);
+        onAdd(encrypt(content));
         setContent('');
       }
     },
-    [onAdd, setContent, content]
+    [onAdd, setContent, content, encrypt]
   );
   return (
     <ColumnWrapper>
