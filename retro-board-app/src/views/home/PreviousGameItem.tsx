@@ -126,7 +126,9 @@ const PreviousGameItem = ({
         open={deleteDialogOpen}
       >
         <DialogTitle id="delete-session-dialog">
-          {DeleteSession.header!(session.name || defaultSessionName!)}
+          {DeleteSession.header!(
+            decrypt(session.name, encryptionKey) || defaultSessionName!
+          )}
         </DialogTitle>
         <DialogContent>
           <DialogContentText>{DeleteSession.firstLine}</DialogContentText>
