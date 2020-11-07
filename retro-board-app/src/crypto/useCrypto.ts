@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
-import { useLocation } from 'react-router-dom';
-import { decrypt, encrypt } from './crypto';
+import { CANT_DECRYPT, decrypt, encrypt } from './crypto';
+import { useEncryptionKey } from './useEncryptionKey';
 
 type UseCryptoHook = {
   encrypt: (clear: string | null) => string;
@@ -8,21 +8,27 @@ type UseCryptoHook = {
 };
 
 export default function useCrypto(): UseCryptoHook {
-  const { hash } = useLocation();
-  const key = hash ? hash.slice(1) : null;
+  const [key, storeKey] = useEncryptionKey();
 
   const encryptCallback = useCallback(
     (clear: string | null) => {
+      if (key) {
+        storeKey(key);
+      }
       return encrypt(clear, key);
     },
-    [key]
+    [key, storeKey]
   );
 
   const decryptCallback = useCallback(
     (encrypted: string | null) => {
-      return decrypt(encrypted, key);
+      const decrypted = decrypt(encrypted, key);
+      if (key && decrypted && decrypted !== CANT_DECRYPT) {
+        storeKey(key);
+      }
+      return decrypted;
     },
-    [key]
+    [key, storeKey]
   );
 
   return { encrypt: encryptCallback, decrypt: decryptCallback };

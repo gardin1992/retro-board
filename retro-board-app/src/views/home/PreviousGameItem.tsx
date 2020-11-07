@@ -21,10 +21,12 @@ import styled from 'styled-components';
 import useOnHover from '../../hooks/useOnHover';
 import useTranslations, { useLanguage } from '../../translations';
 import { DeleteForever } from '@material-ui/icons';
+import { useEncryptionKey } from '../../crypto/useEncryptionKey';
+import { decrypt } from '../../crypto/crypto';
 
 interface PreviousGameItemProps {
   session: SessionMetadata;
-  onClick: (session: SessionMetadata) => void;
+  onClick: (session: SessionMetadata, encryptionKey: string | null) => void;
   onDelete: (session: SessionMetadata) => void;
 }
 
@@ -39,10 +41,11 @@ const PreviousGameItem = ({
     DeleteSession,
   } = useTranslations();
   const language = useLanguage();
+  const [encryptionKey] = useEncryptionKey(session.id);
   const [hover, hoverRef] = useOnHover();
   const handleClick = useCallback(() => {
-    onClick(session);
-  }, [onClick, session]);
+    onClick(session, encryptionKey);
+  }, [onClick, session, encryptionKey]);
   const handleDelete = useCallback(() => {
     setDeleteDialogOpen(false);
     onDelete(session);
@@ -81,7 +84,7 @@ const PreviousGameItem = ({
             </Top>
           </Typography>
           <Typography variant="h5" component="h2">
-            {session.name || defaultSessionName}
+            {decrypt(session.name, encryptionKey) || defaultSessionName}
           </Typography>
           <Typography color="textSecondary" style={{ marginBottom: 20 }}>
             {translations.createdBy} <em>{session.createdBy.name}</em>
