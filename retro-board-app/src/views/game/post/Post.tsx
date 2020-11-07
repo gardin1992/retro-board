@@ -1,6 +1,5 @@
 import React, { useState, useCallback, useMemo, useRef } from 'react';
 import styled from 'styled-components';
-import { getLorem } from './lorem';
 import {
   Typography,
   makeStyles,
@@ -36,6 +35,7 @@ import VoteButton from './VoteButton';
 import ActionButton from './ActionButton';
 import ActionsBar from './ActionsBar';
 import { trackEvent } from '../../../track';
+import useCrypto from './useCrypto';
 
 interface PostItemProps {
   index: number;
@@ -110,9 +110,15 @@ const PostItem = ({
     },
     [onEditGiphy]
   );
-  const actualContent = useMemo(() => {
-    return !isBlurred ? post.content : generateLoremIpsum(post.content);
-  }, [isBlurred, post]);
+  const [actualContent, encrypt] = useCrypto(post, isBlurred);
+  const handleEdit = useCallback(
+    (update: string) => {
+      console.log('handle edit: ', update);
+      onEdit(encrypt(update));
+    },
+    [onEdit, encrypt]
+  );
+
   return (
     <>
       <Draggable
@@ -138,7 +144,7 @@ const PostItem = ({
                   <EditableLabel
                     readOnly={!canEdit || isBlurred}
                     value={actualContent}
-                    onChange={onEdit}
+                    onChange={handleEdit}
                     label="Post content"
                     multiline
                   />
@@ -392,10 +398,5 @@ const LabelContainer = styled.div<{ blurred: boolean }>`
   }`
       : null}
 `;
-
-function generateLoremIpsum(originalText: string) {
-  const count = originalText.split(' ').length;
-  return getLorem(count);
-}
 
 export default PostItem;
