@@ -33,6 +33,7 @@ import { getNext, getMiddle } from './lexorank';
 import RevealButton from './RevealButton';
 import ModifyOptions from './ModifyOptions';
 import useCanModifyOptions from './useCanModifyOptions';
+import useCrypto from './post/useCrypto';
 
 interface GameModeProps {
   columns: ColumnContent[];
@@ -103,6 +104,7 @@ function GameMode({
   const isLoggedIn = !!user;
   const canReveal = useCanReveal();
   const canModifyOptions = useCanModifyOptions();
+  const { encrypt, decrypt } = useCrypto();
 
   const handleReveal = useCallback(() => {
     if (state && state.session) {
@@ -147,6 +149,13 @@ function GameMode({
     [onMovePost, onCombinePost, columns]
   );
 
+  const handleRenameSession = useCallback(
+    (name: string) => {
+      onRenameSession(encrypt(name));
+    },
+    [onRenameSession, encrypt]
+  );
+
   if (!state.session) {
     return <span>Loading...</span>;
   }
@@ -176,9 +185,9 @@ function GameMode({
           >
             <EditableLabel
               placeholder={translations.SessionName.defaultSessionName}
-              value={state.session.name || ''}
+              value={decrypt(state.session.name)}
               centered
-              onChange={onRenameSession}
+              onChange={handleRenameSession}
               readOnly={!isLoggedIn}
             />
           </Typography>

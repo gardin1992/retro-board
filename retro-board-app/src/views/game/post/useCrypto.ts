@@ -4,8 +4,8 @@ import aes from 'crypto-js/aes';
 import { stringify } from 'crypto-js/enc-utf8';
 
 type UseCryptoHook = {
-  encrypt: (clear: string) => string;
-  decrypt: (encrypted: string) => string;
+  encrypt: (clear: string | null) => string;
+  decrypt: (encrypted: string | null) => string;
 };
 
 export default function useCrypto(): UseCryptoHook {
@@ -13,7 +13,10 @@ export default function useCrypto(): UseCryptoHook {
   const key = hash ? hash.slice(1) : null;
 
   const encrypt = useCallback(
-    (clear: string) => {
+    (clear: string | null) => {
+      if (!clear) {
+        return '';
+      }
       if (key) {
         const encrypted = aes.encrypt(clear, key).toString();
         console.log('-- Encrypt --');
@@ -28,7 +31,10 @@ export default function useCrypto(): UseCryptoHook {
   );
 
   const decrypt = useCallback(
-    (encrypted: string) => {
+    (encrypted: string | null) => {
+      if (!encrypted) {
+        return '';
+      }
       if (key) {
         const bytes = aes.decrypt(encrypted, key);
         var clear = stringify(bytes);
