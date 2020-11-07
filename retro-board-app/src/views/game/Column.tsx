@@ -19,7 +19,7 @@ import {
   DroppableStateSnapshot,
 } from 'react-beautiful-dnd';
 import { ColumnContent } from './types';
-import useCrypto from './post/useCrypto';
+import useCrypto from '../../crypto/useCrypto';
 
 interface ColumnProps {
   column: ColumnContent;

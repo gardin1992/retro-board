@@ -23,7 +23,7 @@ import SpeedDial from './SpeedDial';
 import { calculateSummary } from './calculate-summary';
 import { ColumnStats, ColumnStatsItem, ActionItem } from './types';
 import useTranslation from '../../../translations';
-import useCrypto from '../post/useCrypto';
+import useCrypto from '../../../crypto/useCrypto';
 
 interface SummaryModeProps {
   columns: ColumnContent[];

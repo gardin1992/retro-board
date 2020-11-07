@@ -11,7 +11,7 @@ import { Delete } from '@material-ui/icons';
 import EditableLabel from '../../components/EditableLabel';
 import { Alert, AlertTitle } from '@material-ui/lab';
 import useTranslations from '../../translations';
-import useCrypto from './post/useCrypto';
+import useCrypto from '../../crypto/useCrypto';
 
 interface GroupProps {
   group: PostGroup;

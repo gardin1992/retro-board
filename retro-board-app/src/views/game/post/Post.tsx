@@ -35,7 +35,7 @@ import VoteButton from './VoteButton';
 import ActionButton from './ActionButton';
 import ActionsBar from './ActionsBar';
 import { trackEvent } from '../../../track';
-import useCrypto from './useCrypto';
+import useCrypto from '../../../crypto/useCrypto';
 import { getLorem } from './lorem';
 
 interface PostItemProps {
