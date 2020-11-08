@@ -37,6 +37,7 @@ import ActionsBar from './ActionsBar';
 import { trackEvent } from '../../../track';
 import useCrypto from '../../../crypto/useCrypto';
 import { getLorem } from './lorem';
+import useCanDecrypt from '../../../crypto/useCanDecrypt';
 
 interface PostItemProps {
   index: number;
@@ -86,6 +87,8 @@ const PostItem = ({
   } = useUserPermissions(post);
   const classes = useStyles();
   const { Actions: translations, Post: postTranslations } = useTranslations();
+  const { encrypt, decrypt } = useCrypto();
+  const canDecrypt = useCanDecrypt();
   const [giphyImageUrl, showGiphyImage, toggleShowGiphyImage] = useGiphy(
     post.giphy
   );
@@ -97,6 +100,7 @@ const PostItem = ({
   const upVoters = useMemo(() => enumerateVotes(post, 'like'), [post]);
   const downVoters = useMemo(() => enumerateVotes(post, 'dislike'), [post]);
   const displayAction = actionsToggled || !!post.action;
+  const readOnly = !canEdit || isBlurred || !canDecrypt;
   const handleShowGiphy = useCallback(() => {
     setShowGiphyEditor(true);
     trackEvent('game/post/giphy/open');
@@ -111,7 +115,7 @@ const PostItem = ({
     },
     [onEditGiphy]
   );
-  const { encrypt, decrypt } = useCrypto();
+
   const handleEdit = useCallback(
     (postContent: string) => {
       onEdit(encrypt(postContent));
@@ -152,7 +156,7 @@ const PostItem = ({
               <LabelContainer blurred={isBlurred}>
                 <Typography variant="body1">
                   <EditableLabel
-                    readOnly={!canEdit || isBlurred}
+                    readOnly={readOnly}
                     value={actualContent}
                     onChange={handleEdit}
                     label="Post content"

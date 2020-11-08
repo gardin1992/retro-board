@@ -170,7 +170,8 @@ function GameMode({
       {!canDecrypt ? (
         <Alert severity="error">
           This session is encrypted, and you don't seem to have the decryption
-          key stored locally.
+          key stored locally. Please use the original link, including the
+          decryption key.
         </Alert>
       ) : null}
       <Box className={classes.container}>
