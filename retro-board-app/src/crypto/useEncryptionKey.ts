@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import useGlobalState from '../state';
+import { getStoredEncryptionKey, storeEncryptionKeyLocally } from './crypto';
 
 type UseEncryptionKeyValue = [
   value: string | null,
@@ -15,18 +16,13 @@ export function useEncryptionKey(
 ): UseEncryptionKeyValue {
   const { hash } = useLocation();
   const { state } = useGlobalState();
-  const actualSessionId = sessionId || state.session?.id;
-  const localStorageKey = actualSessionId
-    ? `session-encryption-key-${actualSessionId}`
-    : null;
+  const actualSessionId = sessionId || state.session?.id || null;
 
   const storeKey = useCallback(
     (key: string) => {
-      if (localStorageKey) {
-        localStorage.setItem(localStorageKey, key);
-      }
+      storeEncryptionKeyLocally(actualSessionId, key);
     },
-    [localStorageKey]
+    [actualSessionId]
   );
 
   const result = useMemo((): UseEncryptionKeyValue => {
@@ -35,12 +31,12 @@ export function useEncryptionKey(
       return [key, storeKey];
     }
 
-    if (localStorageKey) {
-      const key = localStorage.getItem(localStorageKey);
-      return [key, storeKey];
+    const localKey = getStoredEncryptionKey(actualSessionId);
+    if (localKey) {
+      return [localKey, storeKey];
     }
 
     return [null, storeKey];
-  }, [hash, localStorageKey, storeKey]);
+  }, [hash, actualSessionId, storeKey]);
   return result;
 }

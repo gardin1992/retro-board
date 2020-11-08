@@ -29,7 +29,8 @@ import {
 
 export async function createSession(
   connection: Connection,
-  author: UserEntity
+  author: UserEntity,
+  encryptionCheck?: string
 ): Promise<Session> {
   const userRepository = connection.getCustomRepository(UserRepository);
   const sessionRepository = connection.getCustomRepository(SessionRepository);
@@ -45,6 +46,7 @@ export async function createSession(
         {
           ...defaultSession,
           id,
+          encrypted: encryptionCheck || null,
           options: { ...template.options },
           columns: template.columns!.map(
             (c) =>
@@ -67,6 +69,7 @@ export async function createSession(
             id: v4(),
           })),
           id,
+          encrypted: encryptionCheck || null,
         },
         author.id
       );

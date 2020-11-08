@@ -43,3 +43,27 @@ export function decrypt(encrypted: string | null, key: string | null): string {
 
   return encrypted;
 }
+
+function getLocalStorageKey(sessionId: string | null): string | null {
+  return sessionId ? `session-encryption-key-${sessionId}` : null;
+}
+
+export function storeEncryptionKeyLocally(
+  sessionId: string | null,
+  key: string
+) {
+  const localStorageKey = getLocalStorageKey(sessionId);
+  if (localStorageKey) {
+    localStorage.setItem(localStorageKey, key);
+  }
+}
+
+export function getStoredEncryptionKey(
+  sessionId: string | null
+): string | null {
+  const localStorageKey = getLocalStorageKey(sessionId);
+  if (localStorageKey) {
+    return localStorage.getItem(localStorageKey);
+  }
+  return null;
+}
