@@ -15,7 +15,7 @@ import { colors } from '@material-ui/core';
 function EncryptionModal() {
   const [password, setPassword] = useState('');
   const { state } = useGlobalState();
-  const [_, storeKey] = useEncryptionKey();
+  const storeKey = useEncryptionKey()[1];
   const history = useHistory();
   const location = useLocation();
   const isCorrectPassword = useMemo(() => {
