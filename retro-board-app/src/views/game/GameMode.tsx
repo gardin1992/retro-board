@@ -35,6 +35,7 @@ import ModifyOptions from './ModifyOptions';
 import useCanModifyOptions from './useCanModifyOptions';
 import useCrypto from '../../crypto/useCrypto';
 import useCanDecrypt from '../../crypto/useCanDecrypt';
+import EncryptionModal from './EncryptionModal';
 
 interface GameModeProps {
   columns: ColumnContent[];
@@ -164,6 +165,7 @@ function GameMode({
 
   return (
     <Page>
+      {!canDecrypt ? <EncryptionModal /> : null}
       {!isLoggedIn ? (
         <Alert severity="warning">{translations.PostBoard.notLoggedIn}</Alert>
       ) : null}
