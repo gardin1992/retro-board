@@ -34,6 +34,7 @@ import RevealButton from './RevealButton';
 import ModifyOptions from './ModifyOptions';
 import useCanModifyOptions from './useCanModifyOptions';
 import useCrypto from '../../crypto/useCrypto';
+import useCanDecrypt from '../../crypto/useCanDecrypt';
 
 interface GameModeProps {
   columns: ColumnContent[];
@@ -105,6 +106,7 @@ function GameMode({
   const canReveal = useCanReveal();
   const canModifyOptions = useCanModifyOptions();
   const { encrypt, decrypt } = useCrypto();
+  const canDecrypt = useCanDecrypt();
 
   const handleReveal = useCallback(() => {
     if (state && state.session) {
@@ -165,6 +167,12 @@ function GameMode({
       {!isLoggedIn ? (
         <Alert severity="warning">{translations.PostBoard.notLoggedIn}</Alert>
       ) : null}
+      {!canDecrypt ? (
+        <Alert severity="error">
+          This session is encrypted, and you don't seem to have the decryption
+          key stored locally.
+        </Alert>
+      ) : null}
       <Box className={classes.container}>
         <HeaderWrapper>
           <ExtraOptions>
@@ -188,7 +196,7 @@ function GameMode({
               value={decrypt(state.session.name)}
               centered
               onChange={handleRenameSession}
-              readOnly={!isLoggedIn}
+              readOnly={!isLoggedIn || !canDecrypt}
             />
           </Typography>
           <RemainingVotes up={remainingVotes.up} down={remainingVotes.down} />

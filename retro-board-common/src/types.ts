@@ -18,6 +18,7 @@ export interface SessionMetadata extends Entity {
   created: Date;
   createdBy: User;
   canBeDeleted: boolean;
+  encrypted: string;
 }
 
 export interface SessionTemplate extends Entity {

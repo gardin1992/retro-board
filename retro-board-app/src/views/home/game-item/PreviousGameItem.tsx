@@ -15,14 +15,15 @@ import {
 } from '@material-ui/core';
 import { SessionMetadata } from 'retro-board-common';
 import { AvatarGroup } from '@material-ui/lab';
-import CustomAvatar from '../../components/Avatar';
-import ItemStat from './ItemStat';
+import CustomAvatar from '../../../components/Avatar';
+import ItemStat from '../ItemStat';
 import styled from 'styled-components';
-import useOnHover from '../../hooks/useOnHover';
-import useTranslations, { useLanguage } from '../../translations';
+import useOnHover from '../../../hooks/useOnHover';
+import useTranslations, { useLanguage } from '../../../translations';
 import { DeleteForever } from '@material-ui/icons';
-import { useEncryptionKey } from '../../crypto/useEncryptionKey';
-import { decrypt } from '../../crypto/crypto';
+import { useEncryptionKey } from '../../../crypto/useEncryptionKey';
+import { decrypt } from '../../../crypto/crypto';
+import EncryptedLock from './EncryptedLock';
 
 interface PreviousGameItemProps {
   session: SessionMetadata;
@@ -83,9 +84,12 @@ const PreviousGameItem = ({
               </Delete>
             </Top>
           </Typography>
-          <Typography variant="h5" component="h2">
-            {decrypt(session.name, encryptionKey) || defaultSessionName}
-          </Typography>
+          <NameContainer>
+            <Typography variant="h5" component="h2">
+              {decrypt(session.name, encryptionKey) || defaultSessionName}&nbsp;
+            </Typography>
+            <EncryptedLock session={session} />
+          </NameContainer>
           <Typography color="textSecondary" style={{ marginBottom: 20 }}>
             {translations.createdBy} <em>{session.createdBy.name}</em>
           </Typography>
@@ -185,6 +189,11 @@ const Delete = styled.div`
   }
   position: relative;
   left: 12px;
+`;
+
+const NameContainer = styled.div`
+  display: flex;
+  align-items: center;
 `;
 
 export default PreviousGameItem;

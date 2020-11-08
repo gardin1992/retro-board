@@ -269,6 +269,7 @@ export async function previousSessions(
       ({
         created: session.created,
         createdBy: session.createdBy.toJson(),
+        encrypted: session.encrypted,
         id: session.id,
         name: session.name,
         numberOfNegativeVotes: numberOfVotes('dislike', session),
