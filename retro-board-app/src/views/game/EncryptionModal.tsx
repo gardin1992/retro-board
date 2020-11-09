@@ -11,6 +11,7 @@ import { Alert } from '@material-ui/lab';
 import { useEncryptionKey } from '../../crypto/useEncryptionKey';
 import { useHistory, useLocation } from 'react-router-dom';
 import { colors } from '@material-ui/core';
+import useTranslation from '../../translations/useTranslations';
 
 function EncryptionModal() {
   const [password, setPassword] = useState('');
@@ -18,6 +19,7 @@ function EncryptionModal() {
   const storeKey = useEncryptionKey()[1];
   const history = useHistory();
   const location = useLocation();
+  const { Encryption: translations } = useTranslation();
   const isCorrectPassword = useMemo(() => {
     if (state && state.session && state.session.encrypted) {
       return decrypt(state.session.encrypted, password) === CHECK_PREFIX;
@@ -38,14 +40,16 @@ function EncryptionModal() {
   }, [isCorrectPassword, password, storeKey, location, history]);
   return (
     <Dialog open>
-      <DialogTitle>Encrypted Session - Enter Password</DialogTitle>
+      <DialogTitle>{translations.passwordModalTitle}</DialogTitle>
       <DialogContent>
         <DialogContentText>
           <Input value={password} onChange={handlePassword} />
         </DialogContentText>
         {!isCorrectPassword && password.length ? (
           <DialogContentText>
-            <Alert severity="warning">The password is incorrect.</Alert>
+            <Alert severity="warning">
+              {translations.passwordModelIncorrect}
+            </Alert>
           </DialogContentText>
         ) : null}
       </DialogContent>

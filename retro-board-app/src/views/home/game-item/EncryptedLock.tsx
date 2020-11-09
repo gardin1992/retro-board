@@ -4,6 +4,7 @@ import React from 'react';
 import { SessionMetadata } from 'retro-board-common';
 import { CHECK_PREFIX, decrypt } from '../../../crypto/crypto';
 import { useEncryptionKey } from '../../../crypto/useEncryptionKey';
+import useTranslation from '../../../translations/useTranslations';
 
 interface EncryptedLockProps {
   session: SessionMetadata;
@@ -11,6 +12,7 @@ interface EncryptedLockProps {
 
 function EncryptedLock({ session }: EncryptedLockProps) {
   const [key] = useEncryptionKey(session.id);
+  const { Encryption: translations } = useTranslation();
 
   if (!session.encrypted) {
     return null;
@@ -18,7 +20,7 @@ function EncryptedLock({ session }: EncryptedLockProps) {
 
   if (!key) {
     return (
-      <Tooltip title="This session is encrypted, and the key is not stored in your browser. You will be asked for the decryption key when opening this session">
+      <Tooltip title={translations.sessionEncryptedNoKeyTooltip!}>
         <Lock color="error" />
       </Tooltip>
     );
@@ -26,14 +28,14 @@ function EncryptedLock({ session }: EncryptedLockProps) {
 
   if (decrypt(session.encrypted, key) !== CHECK_PREFIX) {
     return (
-      <Tooltip title="This session is encrypted, and the key you have stored is not the correct key">
+      <Tooltip title={translations.sessionEncryptedWrongKeyTooltip!}>
         <Lock color="error" />
       </Tooltip>
     );
   }
 
   return (
-    <Tooltip title="This session is encrypted, and the key is stored in your browser. You can open this session without having to provide the password again.">
+    <Tooltip title={translations.sessionEncryptedHaveKeyTooltip!}>
       <LockOpen htmlColor={colors.green[500]} />
     </Tooltip>
   );

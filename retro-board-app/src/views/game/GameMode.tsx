@@ -176,9 +176,7 @@ function GameMode({
       ) : null}
       {!canDecrypt ? (
         <Alert severity="error">
-          This session is encrypted, and you don't seem to have the decryption
-          key stored locally. Please use the original link, including the
-          decryption key.
+          {translations.Encryption.sessionEncryptionError}
         </Alert>
       ) : null}
 
@@ -213,13 +211,11 @@ function GameMode({
         {shouldDisplayEncryptionWarning ? (
           <TransitionAlert
             severity="warning"
-            title="This session is encrypted locally"
+            title={translations.Encryption.newEncryptedSessionWarningTitle}
           >
-            It is very important for you to save the full URL (which contains
-            the key) somewhere safe, or at least the encryption key:{' '}
-            <b>{key}</b>.<br />
-            If you lose this encryption key, there is nothing that can be done
-            to retrieve the data.
+            {translations.Encryption.newEncryptedSessionWarningContent!(
+              key || '(unknown)'
+            )}
           </TransitionAlert>
         ) : null}
         <DragDropContext onDragEnd={handleOnDragEnd}>

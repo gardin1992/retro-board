@@ -118,7 +118,7 @@ function Home() {
           disabled={!isLoggedIn}
         >
           <Lock className={classes.buttonIcon} />
-          Encrypted Session
+          {translations.Encryption.createEncryptedSession}
         </Fab>
         <Button onClick={onOpenModal} color="primary" disabled={!isLoggedIn}>
           <Settings className={classes.buttonIcon} />
