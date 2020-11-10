@@ -89,7 +89,10 @@ function GamePage() {
             decrypt(session.name) || translations.SessionName.defaultSessionName
           } - Retrospected`}
         />
-        <meta property="og:url" content={pathname} />
+        <meta
+          property="og:url"
+          content={window.location.href.replace(hash, '')}
+        />
       </Helmet>
       {disconnected ? (
         <DisconnectedContainer>
