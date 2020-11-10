@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: []
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Read VERSION
+        id: package
+        uses: juliangruber/read-file-action@v1
+        with:
+          path: ./VERSION
+
+      - name: Echo VERSION
+        run: echo ${{ steps.package.outputs.content }}
+
+      - name: Build and push Backend
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          dockerfile: backend/Dockerfile
+          path: backend
+          repository: antoinejaussoin/compta-backend
+          tags: latest,${{ steps.package.outputs.content }}
+
+      - name: Build and push Frontend
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          dockerfile: frontend/Dockerfile
+          path: frontend
+          repository: antoinejaussoin/compta-frontend
+          tags: latest,${{ steps.package.outputs.content }}
