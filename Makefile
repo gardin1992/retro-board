@@ -4,12 +4,19 @@ PACKAGE_VERSION?=local
 
 # This is used by Travis to install Docker & Buildx
 
-install:
+install: install-docker install-buildx
+
+install-docker:
 	curl -fsSL https://get.docker.com | sh
 	echo '{"experimental":"enabled"}' | sudo tee /etc/docker/daemon.json
 	mkdir -p ~/.docker
 	echo '{"experimental":"enabled"}' | sudo tee ~/.docker/config.json
 	sudo service docker start
+	docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+	docker buildx create --name xbuilder --use
+	docker buildx inspect --bootstrap
+
+install-buildx:
 	docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
 	docker buildx create --name xbuilder --use
 	docker buildx inspect --bootstrap
